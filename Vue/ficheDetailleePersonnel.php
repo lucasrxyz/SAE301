@@ -33,8 +33,12 @@
                     <th>Date d'entrée</th>
                     <td><?= htmlspecialchars($personnel['date_entree']) ?></td>
                 </tr>
+                <tr>
+                    <td>
+                        <button type="submit">Désactiver le personnel</button>
+                    </td>
+                </tr>
             </table>
-
             <p>
                 <button type="button" onclick="window.close()">Fermer</button>
             </p>
