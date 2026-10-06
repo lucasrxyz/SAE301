@@ -42,3 +42,14 @@ CREATE TABLE Organisation (
 
     FOREIGN KEY (idPersonnel) REFERENCES Personnel(id);
 )
+
+CREATE TABLE Rattachement (
+    id serial PRIMARY KEY,
+    date_debut DATE,
+    date_fin DATE,
+    idOrganisation INT,
+
+    FOREIGN KEY (idOrganisation) REFERENCES Organisation(id)    
+    -- pas de idPersonnel car Organisation
+    -- est déja relié a personnel
+)
