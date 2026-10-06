@@ -1,16 +1,23 @@
 <?php
 require_once __DIR__ . '/config.php';
 
-$idPersonnel = $_GET['id'] ?? null;
-$personnel = null;
-$personnelIntrouvable = false;
+$nomUtilisateur = $_GET['nom'] ?? '';
+$voirTout = isset($_GET['tout']);
 
-if ($idPersonnel !== null) {
-    $requete = $pdo->prepare("SELECT * FROM Personnel WHERE id = :id");
-    $requete->execute(['id' => $idPersonnel]);
-    $personnel = $requete->fetch(PDO::FETCH_ASSOC);
+$resultats = [];
+$aucunResultat = false;
 
-    if (!$personnel) {
-        $personnelIntrouvable = true;
+if ($voirTout) {
+    $requete = $pdo->prepare("SELECT * FROM Personnel WHERE id IN (SELECT id_personnel FROM Rattachement) ORDER BY nom, prenom");
+    $requete->execute();
+    $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+} elseif ($nomUtilisateur !== '') {
+    $requete = $pdo->prepare("SELECT * FROM Personnel WHERE nom ILIKE :nom AND id IN (SELECT id_personnel FROM Rattachement) ORDER BY nom, prenom");
+    $requete->execute(['nom' => '%' . $nomUtilisateur . '%']);
+    $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($resultats) === 0) {
+        $aucunResultat = true;
     }
 }

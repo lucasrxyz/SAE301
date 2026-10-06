@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste de personnel</title>
     <link rel="stylesheet" href="style.css">
-</head><body>
+</head>
+<body>
 
     <nav class="navbar">
         <div class="navbar-logo">
@@ -16,7 +17,7 @@
         </div>
         <ul class="navbar-liens">
             <li><a href="#">Accueil</a></li>
-            <li><a href="#">Personnel</a></li>
+            <li><a href="afficherListePersonnel.php">Personnel</a></li>
             <li><a href="#">Contact</a></li>
         </ul>
     </nav>
@@ -46,16 +47,18 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Mail</th>
-                    <th>Date d'entrée</th>
+                    <th>Date d'arrivée</th>
+                    <th>État</th>
                     <th></th>
                 </tr>
 
-                <?php foreach ($resultats as $index => $ligne): ?>
+                <?php foreach ($resultats as $ligne): ?>
                     <tr>
                         <td><?= htmlspecialchars($ligne['nom']) ?></td>
                         <td><?= htmlspecialchars($ligne['prenom']) ?></td>
                         <td><?= htmlspecialchars($ligne['mail']) ?></td>
-                        <td><?= htmlspecialchars($ligne['date_entree']) ?></td>
+                        <td><?= date('d/m/Y', strtotime($ligne['date_arrivee'])) ?></td>
+                        <td><?= $ligne['date_depart'] === null ? 'Actif' : 'Parti le ' . date('d/m/Y', strtotime($ligne['date_depart'])) ?></td>
                         <td>
                             <a href="javascript:void(0)" onclick="ouvrirFichePersonnel(<?= $ligne['id'] ?>)">Choisir</a>
                         </td>
@@ -69,8 +72,9 @@
         <?php endif; ?>
 
     </div>
+
     <footer class="footer">
-        <p>&copy; <?= date('Y') ?> K.A.B.L Solution Haut de France - Tous droits réservés</p>
+        <p>&copy; <?= date('Y') ?> K.A.B.L Solution Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">
             <li><a href="#">Mentions légales</a></li>
             <li><a href="#">Contact</a></li>
