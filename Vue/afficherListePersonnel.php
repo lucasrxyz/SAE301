@@ -60,7 +60,7 @@
                         <td><?= date('d/m/Y', strtotime($ligne['date_arrivee'])) ?></td>
                         <td><?= $ligne['date_depart'] === null ? 'Actif' : 'Parti le ' . date('d/m/Y', strtotime($ligne['date_depart'])) ?></td>
                         <td>
-                            <a href="javascript:void(0)" onclick="ouvrirFichePersonnel(<?= $ligne['id'] ?>)">Choisir</a>
+                            <a href="ficheDetailleePersonnel.php?id=<?= $ligne['id'] ?>" target="_blank">Choisir</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -81,16 +81,6 @@
             <li><a href="#">Accessibilité</a></li>
         </ul>
     </footer>
-
-    <script>
-    function ouvrirFichePersonnel(id) {
-        window.open(
-            'ficheDetailleePersonnel.php?id=' + id,
-            'fichePersonnel',
-            'width=450,height=400,scrollbars=yes,resizable=yes'
-        );
-    }
-    </script>
 
 </body>
 </html>
