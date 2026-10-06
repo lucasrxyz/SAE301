@@ -70,9 +70,9 @@
         <?php endif; ?>
 
         <?php if ($ligneChoisie): ?>
-            <div id="modal">
-                <div id="modal-contenu">
-                    <table id="modal-table">
+            <div id="detail">
+                <div id="detail-contenu">
+                    <table id="detail-table">
                         <tr>
                             <th>Nom</th>
                             <td><?= htmlspecialchars($ligneChoisie['nom']) ?></td>

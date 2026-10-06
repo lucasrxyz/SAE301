@@ -142,7 +142,7 @@ tr:hover td {
     background: #f8fafc;
 }
 
-#modal {
+#detail {
     display: flex;
     position: fixed;
     top: 0;
@@ -155,7 +155,7 @@ tr:hover td {
     backdrop-filter: blur(2px);
 }
 
-#modal-contenu {
+#detail-contenu {
     background: white;
     padding: 2rem;
     margin-top: 50px;
@@ -164,7 +164,7 @@ tr:hover td {
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-#modal-table th {
+#detail-table th {
     background: none;
     text-transform: none;
     letter-spacing: normal;
@@ -172,17 +172,17 @@ tr:hover td {
     font-weight: 600;
     padding-right: 1.5rem;
 }
-#modal-table td {
+#detail-table td {
     color: #1a2733;
 }
 
-#modal-contenu button {
+#detail-contenu button {
     margin-top: 1rem;
     background: #e2e8f0;
     color: #33475b;
 }
 
-#modal-contenu button:hover {
+#detail-contenu button:hover {
     background: #d0d7e0;
 }
 
