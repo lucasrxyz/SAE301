@@ -1,3 +1,8 @@
+-- ===============================
+--
+-- TABLE "Personnel"
+--
+-- ===============================
 CREATE TABLE Personnel(
     id serial NOT NULL PRIMARY KEY,
     nom text NOT NULL,
@@ -20,3 +25,20 @@ INSERT INTO Personnel (nom, prenom, mail, date_entree) VALUES
 
 SELECT * FROM Personnel
 WHERE Personnel.nom = 'Dupont';
+
+
+-- ===============================
+--
+-- TABLE "Organisation"
+--
+-- ===============================
+CREATE TABLE Organisation (
+    id serial PRIMARY KEY,
+    nom VARCHAR(255),
+    adresse TEXT,
+    type TEXT,
+    date_creation DATE,
+    idPersonnel INT,
+
+    FOREIGN KEY (idPersonnel) REFERENCES Personnel(id);
+)
