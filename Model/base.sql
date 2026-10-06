@@ -38,7 +38,7 @@ CREATE TABLE Rattachement (
     date_fin DATE,
     idOrganisation INT,
 
-    FOREIGN KEY (idOrganisation) REFERENCES Organisation(id)    
+    FOREIGN KEY (idPersonnel) REFERENCES Personnel(id)    
     -- pas de idPersonnel car Organisation
     -- est déja relié a personnel
 )
