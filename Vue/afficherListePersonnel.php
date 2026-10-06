@@ -57,7 +57,7 @@
                         <td><?= htmlspecialchars($ligne['mail']) ?></td>
                         <td><?= htmlspecialchars($ligne['date_entree']) ?></td>
                         <td>
-                            <a href="?<?= $parametreRetour ?>&voir=<?= $index ?>">Choisir</a>
+                            <a href="javascript:void(0)" onclick="ouvrirFichePersonnel(<?= $ligne['id'] ?>)">Choisir</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -66,32 +66,6 @@
             <p>
                 <a href="?"><button type="button">Fermer la liste</button></a>
             </p>
-        <?php endif; ?>
-
-        <?php if ($ligneChoisie): ?>
-            <div id="detail">
-                <div id="detail-contenu">
-                    <table id="detail-table">
-                        <tr>
-                            <th>Nom</th>
-                            <td><?= htmlspecialchars($ligneChoisie['nom']) ?></td>
-                        </tr>
-                        <tr>
-                            <th>Prénom</th>
-                            <td><?= htmlspecialchars($ligneChoisie['prenom']) ?></td>
-                        </tr>
-                        <tr>
-                            <th>Mail</th>
-                            <td><?= htmlspecialchars($ligneChoisie['mail']) ?></td>
-                        </tr>
-                        <tr>
-                            <th>Date d'entrée</th>
-                            <td><?= htmlspecialchars($ligneChoisie['date_entree']) ?></td>
-                        </tr>
-                    </table>
-                    <a href="?<?= $parametreRetour ?>"><button>Fermer</button></a>
-                </div>
-            </div>
         <?php endif; ?>
 
     </div>
@@ -103,6 +77,16 @@
             <li><a href="#">Accessibilité</a></li>
         </ul>
     </footer>
+
+    <script>
+    function ouvrirFichePersonnel(id) {
+        window.open(
+            'ficheDetailleePersonnel.php?id=' + id,
+            'fichePersonnel',
+            'width=450,height=400,scrollbars=yes,resizable=yes'
+        );
+    }
+    </script>
 
 </body>
 </html>

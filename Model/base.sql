@@ -1,14 +1,36 @@
 -- ===============================
---
--- TABLE "Personnel"
---
+-- TABLE "Departement"
 -- ===============================
-CREATE TABLE Personnel(
-    id serial NOT NULL PRIMARY KEY,
-    nom text NOT NULL,
-    prenom text NOT NULL,
-    mail text NOT NULL,
-    date_entree DATE NOT NULL
+CREATE TABLE Departement (
+    id serial PRIMARY KEY,
+    nom TEXT NOT NULL,
+    date_debut DATE NOT NULL,
+    date_fin DATE
+);
+
+-- ===============================
+-- TABLE "Groupe"
+-- ===============================
+CREATE TABLE Groupe (
+    id serial PRIMARY KEY,
+    nom TEXT NOT NULL,
+    id_departement INT NOT NULL,
+    date_debut DATE NOT NULL,
+    date_fin DATE,
+
+    FOREIGN KEY (id_departement) REFERENCES Departement(id)
+);
+
+-- ===============================
+-- TABLE "Personnel"
+-- ===============================
+CREATE TABLE Personnel (
+    id serial PRIMARY KEY,
+    nom TEXT NOT NULL,
+    prenom TEXT NOT NULL,
+    mail TEXT NOT NULL,
+    date_entree DATE NOT NULL,
+    actif BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 INSERT INTO Personnel (nom, prenom, mail, date_entree) VALUES
@@ -23,39 +45,32 @@ INSERT INTO Personnel (nom, prenom, mail, date_entree) VALUES
 ('Richard', 'Antoine', 'antoine.richard@gmail.com', '2018-06-30'),
 ('Michel', 'Julie', 'julie.michel@gmail.com', '2022-10-12');
 
-SELECT * FROM Personnel
-WHERE Personnel.nom = 'Dupont';
-
-
 -- ===============================
---
 -- TABLE "Rattachement"
---
 -- ===============================
 CREATE TABLE Rattachement (
     id serial PRIMARY KEY,
-    date_debut DATE,
+    id_personnel INT NOT NULL,
+    id_departement INT,
+    id_groupe INT,
+    date_debut DATE NOT NULL,
     date_fin DATE,
-    idOrganisation INT,
 
-    FOREIGN KEY (idPersonnel) REFERENCES Personnel(id)    
-    -- pas de idPersonnel car Organisation
-    -- est déja relié a personnel
-)
-
+    FOREIGN KEY (id_personnel) REFERENCES Personnel(id),
+    FOREIGN KEY (id_departement) REFERENCES Departement(id),
+    FOREIGN KEY (id_groupe) REFERENCES Groupe(id),
+);
 
 -- ===============================
---
 -- TABLE "Historique"
---
 -- ===============================
 CREATE TABLE Historique (
     id serial PRIMARY KEY,
-    champ_concerné TEXT,
-    date_debut DATE,
+    id_personnel INT NOT NULL,
+    champ_concerne TEXT NOT NULL,
+    valeur TEXT NOT NULL,
+    date_debut DATE NOT NULL,
     date_fin DATE,
-    commentaire TEXT,
-    idPersonnel INT,
 
-    FOREIGN KEY (idPersonnel) REFERENCES Personnel(id)
-)
+    FOREIGN KEY (id_personnel) REFERENCES Personnel(id)
+);
