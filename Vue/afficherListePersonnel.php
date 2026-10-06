@@ -1,5 +1,5 @@
 <?php
-    require 'listepersonnel.php';
+    require __DIR__ . '/../Model/listepersonnel.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -8,8 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste de personnel</title>
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
+</head><body>
 
     <nav class="navbar">
         <div class="navbar-logo">
@@ -29,7 +28,7 @@
 
         <form action="" method="get">
             <label for="nom">Nom du personnel</label>
-            <input type="text" name="nom" id="nom" value="<?= htmlspecialchars($nomutil) ?>">
+            <input type="text" name="nom" id="nom" value="<?= htmlspecialchars($nomUtilisateur) ?>">
             <button type="submit">Rechercher</button>
         </form>
 
