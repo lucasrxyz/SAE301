@@ -1,4 +1,10 @@
 <?php
+    session_start();
+    if (empty($_SESSION['identifiant'])) {
+        header('Location: connexion.php');
+        exit;
+    }
+
     require __DIR__ . '/../Model/listepersonnel.php';
 ?>
 <!DOCTYPE html>
@@ -19,6 +25,7 @@
             <li><a href="#">Accueil</a></li>
             <li><a href="afficherListePersonnel.php">Personnel</a></li>
             <li><a href="#">Contact</a></li>
+            <li><a href="deconnexion.php">Déconnexion</a></li>
         </ul>
     </nav>
 
