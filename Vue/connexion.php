@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <nav class="navbar">
         <div class="navbar-logo">
             K.A.B.L Solution <span>Hauts-de-France</span>
@@ -39,7 +40,8 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; <?= date('Y') ?> K.A.B.L Solution Haut de France - Tous droits réservés</p>
+        <p>&copy; <?= date('Y') ?> K.A.B.L Solution Hauts-de-France - Tous droits réservés</p>
     </footer>
+
 </body>
 </html>
