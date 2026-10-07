@@ -1,4 +1,5 @@
 <?php
+    require __DIR__ . '/../Model/verifierconnexion.php';
     require __DIR__ . '/../Model/desactiverpersonnel.php';
     require __DIR__ . '/../Model/fichepersonnel.php';
 ?>
@@ -11,6 +12,8 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+    <?php require __DIR__ . '/navbar.php'; ?>
 
     <div class="page-contenu">
 

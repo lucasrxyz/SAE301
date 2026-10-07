@@ -247,4 +247,4 @@ INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin, donnee
 
 
 
-UPDATE Personnel SET actif = true, date_depart = ? WHERE id = ?;
+

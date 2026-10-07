@@ -1,10 +1,5 @@
 <?php
-    session_start();
-    if (empty($_SESSION['identifiant'])) {
-        header('Location: connexion.php');
-        exit;
-    }
-
+    require __DIR__ . '/../Model/verifierconnexion.php';
     require __DIR__ . '/../Model/listepersonnel.php';
 ?>
 <!DOCTYPE html>
@@ -17,17 +12,7 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="navbar-logo">
-            K.A.B.L Solution <span>Hauts-de-France</span>
-        </div>
-        <ul class="navbar-liens">
-            <li><a href="#">Accueil</a></li>
-            <li><a href="afficherListePersonnel.php">Personnel</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="deconnexion.php">Déconnexion</a></li>
-        </ul>
-    </nav>
+    <?php require __DIR__ . '/navbar.php'; ?>
 
     <div class="page-contenu">
 
@@ -49,29 +34,31 @@
         <?php endif; ?>
 
         <?php if ($resultats): ?>
-            <table>
-                <tr>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Mail</th>
-                    <th>Date d'arrivée</th>
-                    <th>État</th>
-                    <th></th>
-                </tr>
-
-                <?php foreach ($resultats as $ligne): ?>
+            <div class="tableau-defilant">
+                <table>
                     <tr>
-                        <td><?= htmlspecialchars($ligne['nom']) ?></td>
-                        <td><?= htmlspecialchars($ligne['prenom']) ?></td>
-                        <td><?= htmlspecialchars($ligne['mail']) ?></td>
-                        <td><?= date('d/m/Y', strtotime($ligne['date_arrivee'])) ?></td>
-                        <td><?= $ligne['date_depart'] === null ? 'Actif' : 'Parti le ' . date('d/m/Y', strtotime($ligne['date_depart'])) ?></td>
-                        <td>
-                            <a href="ficheDetailleePersonnel.php?id=<?= $ligne['id'] ?>" target="_blank">Choisir</a>
-                        </td>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Mail</th>
+                        <th>Date d'arrivée</th>
+                        <th>État</th>
+                        <th></th>
                     </tr>
-                <?php endforeach; ?>
-            </table>
+
+                    <?php foreach ($resultats as $ligne): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($ligne['nom']) ?></td>
+                            <td><?= htmlspecialchars($ligne['prenom']) ?></td>
+                            <td><?= htmlspecialchars($ligne['mail']) ?></td>
+                            <td><?= date('d/m/Y', strtotime($ligne['date_arrivee'])) ?></td>
+                            <td><?= $ligne['date_depart'] === null ? 'Actif' : 'Parti le ' . date('d/m/Y', strtotime($ligne['date_depart'])) ?></td>
+                            <td>
+                                <a href="ficheDetailleePersonnel.php?id=<?= $ligne['id'] ?>" target="_blank">Choisir</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
 
             <p>
                 <a href="?"><button type="button">Fermer la liste</button></a>

@@ -287,3 +287,82 @@ tr:hover td {
 .footer-liens a:hover {
     text-decoration: underline;
 }
+select,
+input[type="date"] {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #d5dbe2;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    background: #ffffff;
+}
+
+caption {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #33475b;
+}
+
+.tableau-defilant {
+    width: 100%;
+    overflow-x: auto;
+}
+
+@media (max-width: 900px) {
+    .navbar {
+        padding: 15px 20px;
+    }
+
+    .navbar-liens {
+        gap: 18px;
+    }
+
+    .page-contenu {
+        padding: 1.5rem;
+    }
+
+    .footer {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .navbar-liens {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .page-contenu {
+        padding: 1rem;
+    }
+
+    form {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: none;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="date"],
+    select,
+    button {
+        width: 100%;
+    }
+
+    th, td {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    .footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

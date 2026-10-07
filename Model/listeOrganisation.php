@@ -7,7 +7,8 @@
         p.nom AS person_nom
         FROM Departement d
         LEFT JOIN Groupe g ON g.id_departement = d.id_departement
-        LEFT JOIN Personnel p ON p.id = g.id_groupe
+        LEFT JOIN Rattachement r ON r.id_groupe = g.id_groupe AND r.date_fin IS NULL
+        LEFT JOIN Personnel p ON p.id = r.id_personnel
         ORDER BY d.nom, g.nom, p.nom");
 
     $requete->execute();

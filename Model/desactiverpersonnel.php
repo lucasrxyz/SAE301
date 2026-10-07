@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($datedepart) {
             $requete = $pdo->prepare('UPDATE Personnel SET actif = false, date_depart = ? WHERE id = ?');
             $requete->execute([$datedepart, $idPersonnel]);
+            $requete = $pdo->prepare('UPDATE Compte SET actif = false, date_desactivation = ? WHERE id_personnel = ?');
+            $requete->execute([$datedepart, $idPersonnel]);
             header('Location: ficheDetailleePersonnel.php?id=' . $idPersonnel . '&desactive=1');
             exit;
         } else {
