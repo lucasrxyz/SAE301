@@ -32,6 +32,10 @@
         <?php if ($personnel): ?>
             <h1>Fiche de <?= htmlspecialchars($personnel['prenom']) ?> <?= htmlspecialchars($personnel['nom']) ?></h1>
 
+            <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [])): ?>
+                <p><a href="modifierPersonnel.php?id=<?= $personnel['id'] ?>"><button type="button">Modifier les coordonnées</button></a></p>
+            <?php endif; ?>
+
             <table id="detail-table">
                 <tr>
                     <th>Nom</th>
