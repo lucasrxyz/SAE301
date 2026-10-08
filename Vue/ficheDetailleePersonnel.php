@@ -34,6 +34,7 @@
 
             <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [])): ?>
                 <p><a href="modifierPersonnel.php?id=<?= $personnel['id'] ?>"><button type="button">Modifier les coordonnées</button></a></p>
+                <p><a href="ajouterRattachement.php?id=<?= urlencode((string) $personnel['id']) ?>"><button type="button">Ajouter un rattachement</button></a></p>
             <?php endif; ?>
 
             <table id="detail-table">
