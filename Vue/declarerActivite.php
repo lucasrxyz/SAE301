@@ -30,21 +30,54 @@
             <form action="" method="post" class="formulaire-vertical">
                 <label for="id_type">Type d'activité</label>
                 <select name="id_type" id="id_type" required>
-                    <option value="1">activité1</option>
-                    <option value="2">activité2</option>
+                    <option value="">-- Choisir un type --</option>
+                    <?php foreach ($typesIndividuels as $type): ?>
+                        <option value="<?= $type['id_type'] ?>" <?= $typeactivite == $type['id_type'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($type['categorie'] . ' - ' . $type['nom_type']) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
 
                 <label for="titre">Titre de l'activité</label>
-                <input type="text" name="titre" id="titre" required>
+                <input type="text" name="titre" id="titre" value="<?= htmlspecialchars($titre) ?>" required>
 
                 <label for="date_debut">Date de début</label>
-                <input type="date" name="date_debut" id="date_debut" required>
+                <input type="date" name="date_debut" id="date_debut" value="<?= htmlspecialchars($datedebut) ?>" required>
 
                 <label for="date_fin">Date de fin (facultative)</label>
-                <input type="date" name="date_fin" id="date_fin">
+                <input type="date" name="date_fin" id="date_fin" value="<?= htmlspecialchars($datefin) ?>">
 
                 <button type="submit" name="enregistrer">Enregistrer l'activité</button>
             </form>
+        </section>
+
+        <section class="liste-activites">
+            <h2>Mes activités déclarées</h2>
+
+            <?php if ($mesActivites): ?>
+                <div class="tableau-defilant">
+                    <table>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Type</th>
+                            <th>Titre</th>
+                            <th>Du</th>
+                            <th>Au</th>
+                        </tr>
+                        <?php foreach ($mesActivites as $activite): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($activite['categorie']) ?></td>
+                                <td><?= htmlspecialchars($activite['nom_type']) ?></td>
+                                <td><?= htmlspecialchars($activite['titre']) ?></td>
+                                <td><?= date('d/m/Y', strtotime($activite['date_debut'])) ?></td>
+                                <td><?= $activite['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($activite['date_fin'])) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p>Vous n'avez encore déclaré aucune activité.</p>
+            <?php endif; ?>
         </section>
     </main>
 
