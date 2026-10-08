@@ -63,7 +63,34 @@
                 </tr>
             </table>
 
+            <h2>Historique des statuts</h2>
+
+            <?php if ($historiqueStatuts): ?>
+                <div class="tableau-defilant">
+                    <table>
+                        <tr>
+                            <th>Statut</th>
+                            <th>Quotité recherche</th>
+                            <th>Du</th>
+                            <th>Au</th>
+                        </tr>
+                        <?php foreach ($historiqueStatuts as $statut): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($statut['statut']) ?></td>
+                                <td><?= round($statut['quotite_recherche'] * 100) ?> %</td>
+                                <td><?= date('d/m/Y', strtotime($statut['date_debut'])) ?></td>
+                                <td><?= $statut['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($statut['date_fin'])) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p>Aucun statut enregistré.</p>
+            <?php endif; ?>
+
             <?php if ($personnel['date_depart'] === null): ?>
+                <h2>Désactiver le personnel</h2>
+
                 <form method="post" action="">
                     <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
 
@@ -85,6 +112,10 @@
         </p>
 
     </div>
+
+    <footer class="footer">
+        <p>&copy; <?= date('Y') ?> K.A.B.L Solution Hauts-de-France - Tous droits réservés</p>
+    </footer>
 
 </body>
 </html>
