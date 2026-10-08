@@ -19,6 +19,10 @@
         <h1>Bienvenue dans la page de personnel</h1>
         <p>Veuillez saisir le nom pour avoir plus d'info</p>
 
+        <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [])): ?>
+            <p><a href="ajouterpersonnel.php"><button type="button">Ajouter un personnel</button></a></p>
+        <?php endif; ?>
+
         <form action="" method="get">
             <label for="nom">Nom du personnel</label>
             <input type="text" name="nom" id="nom" value="<?= htmlspecialchars($nomUtilisateur) ?>">
