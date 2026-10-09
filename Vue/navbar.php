@@ -3,6 +3,7 @@
         K.A.B.L Solution <span>Hauts-de-France</span>
     </div>
     <ul class="navbar-liens">
+        <li><a href="tableauDeBord.php">Accueil</a></li>
         <li><a href="afficherListePersonnel.php">Personnel</a></li>
         <li><a href="organisation.php">Organisation</a></li>
         <li><a href="declarerActivite.php">Déclarer une activité</a></li>

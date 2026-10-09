@@ -2,7 +2,7 @@
 session_start();
 
 if (!empty($_SESSION['identifiant'])) {
-    header('Location: afficherListePersonnel.php');
+    header('Location: tableauDeBord.php');
     exit;
 }
 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['roles'] = array_column($roles, 'nom_role');
                 $_SESSION['niveau'] = $roles ? $roles[0]['niveau_pyramidal'] : 4;
 
-                header('Location: afficherListePersonnel.php');
+                header('Location: tableauDeBord.php');
                 exit;
             }
 
