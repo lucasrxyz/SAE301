@@ -319,6 +319,7 @@ h2 {
 
 .formulaire-page {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     place-items: center;
     padding: 3rem 1.5rem;
 }
@@ -621,6 +622,74 @@ h2 {
     color: #8f1d14;
 }
 
+.liste-activites {
+    width: min(100%, 1000px);
+    min-width: 0;
+    margin-top: 2rem;
+}
+
+.filtres-activites {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+    gap: 1rem;
+    width: 100%;
+    padding: 1.2rem 1.4rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.filtres-activites input[type="text"] {
+    width: 100%;
+    padding: 0.6rem 0.7rem;
+    font-family: inherit;
+}
+
+.filtres-activites input[type="text"]:focus {
+    outline: none;
+    border-color: #0098a5;
+}
+
+.champ-recherche {
+    grid-column: span 2;
+}
+
+.filtres-boutons {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.filtres-boutons button {
+    padding: 0.65rem 1.4rem;
+    background: #0098a5;
+    font-weight: 600;
+}
+
+.filtres-boutons button:hover {
+    background: #007d88;
+}
+
+.lien-effacer {
+    color: #5a6b7b;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.nombre-resultats {
+    margin-top: 1rem;
+}
+
+.lien-tri {
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.lien-tri:hover {
+    color: #0098a5;
+}
+
 @media (max-width: 900px) {
     .navbar {
         padding: 15px 20px;
@@ -652,6 +721,15 @@ h2 {
 
     .bord-grille {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .filtres-activites {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .champ-recherche,
+    .filtres-boutons {
+        grid-column: 1 / -1;
     }
 }
 
@@ -726,5 +804,15 @@ h2 {
 
     .bord-panneau {
         padding: 1rem;
+    }
+
+    .filtres-activites {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 1rem;
+    }
+
+    .filtres-boutons button {
+        width: auto;
+        flex: 1;
     }
 }
