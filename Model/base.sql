@@ -96,10 +96,17 @@ CREATE TABLE Rattachement (
     id_personnel INT NOT NULL REFERENCES Personnel(id),
     id_departement INT REFERENCES Departement(id_departement),
     id_groupe INT REFERENCES Groupe(id_groupe),
+    type_rattachement varchar(20) NOT NULL DEFAULT 'principal'
+        CHECK (type_rattachement IN ('principal', 'secondaire')),
     responsable_groupe BOOLEAN DEFAULT false,
     date_debut DATE NOT NULL,
     date_fin DATE
 );
+
+-- Migration pour les bases existantes (exécuter cette instruction seule).
+ALTER TABLE Rattachement
+ADD COLUMN IF NOT EXISTS type_rattachement varchar(20) NOT NULL DEFAULT 'principal'
+    CHECK (type_rattachement IN ('principal', 'secondaire'));
 
 -- ===============================
 -- TABLE "TypeActivite"
@@ -244,7 +251,5 @@ INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin, donnee
 (12, 4, 'Jury de thèse Université de Lille', '2024-06-14', '2024-06-14', '{"universite": "Lille"}'),
 (13, 2, 'Comité de programme ESORICS 2024', '2024-01-15', '2024-05-30', '{"conference": "ESORICS"}'),
 (1, 12, 'Commande robuste de bras manipulateurs', '2021-05-12', '2021-05-12', '{"revue": "Automatica"}');
-
-
 
 
