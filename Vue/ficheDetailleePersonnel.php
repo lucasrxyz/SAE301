@@ -51,6 +51,14 @@
         <?php if ($personnel): ?>
             <h1>Fiche de <?= htmlspecialchars($personnel['prenom']) ?> <?= htmlspecialchars($personnel['nom']) ?></h1>
 
+            <?php if ($estRH): ?>
+                <form method="get" action="">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
+                    <button type="submit" formaction="modifierPersonnel.php">Modifier les coordonnées</button>
+                    <button type="submit" formaction="ajouterRattachement.php">Ajouter un rattachement</button>
+                </form>
+            <?php endif; ?>
+
             <div class="tableau-defilant">
                 <table id="detail-table">
                     <tr>
