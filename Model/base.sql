@@ -37,15 +37,15 @@ CREATE TABLE Personnel_Statut_Historique (
     date_fin DATE
 );
 
+-- ===============================
+-- TABLE "Personnel_Nom_Historique"
+-- ===============================
 CREATE TABLE Personnel_Nom_Historique (
     id serial PRIMARY KEY,
     id_personnel INT NOT NULL REFERENCES Personnel(id),
     ancien_nom varchar(50) NOT NULL,
     date_changement DATE NOT NULL
 );
-
-INSERT INTO Personnel_Nom_Historique (id_personnel, ancien_nom, date_changement) VALUES
-(2, 'Durieux', '2023-06-01');
 
 -- ===============================
 -- TABLE "Role"
@@ -114,11 +114,6 @@ CREATE TABLE Rattachement (
     date_fin DATE
 );
 
--- Migration pour les bases existantes (exécuter cette instruction seule).
-ALTER TABLE Rattachement
-ADD COLUMN IF NOT EXISTS type_rattachement varchar(20) NOT NULL DEFAULT 'principal'
-    CHECK (type_rattachement IN ('principal', 'secondaire'));
-
 -- ===============================
 -- TABLE "TypeActivite"
 -- ===============================
@@ -160,6 +155,9 @@ INSERT INTO Personnel (nom, prenom, mail, id_orcid, id_idhal, actif, date_arrive
 ('Garnier', 'Paul', 'paul.garnier@uphf.fr', NULL, NULL, FALSE, '2017-09-01', '2023-08-31'),
 ('Lambert', 'Nadia', 'nadia.lambert@uphf.fr', NULL, NULL, TRUE, '2016-03-01', NULL),
 ('Admin', 'Système', 'admin@uphf.fr', NULL, NULL, TRUE, '2024-01-01', NULL);
+
+INSERT INTO Personnel_Nom_Historique (id_personnel, ancien_nom, date_changement) VALUES
+(2, 'Durieux', '2023-06-01');
 
 INSERT INTO Personnel_Statut_Historique (id_personnel, statut, quotite_recherche, date_debut, date_fin) VALUES
 (1, 'Maître de conférences', 0.50, '2021-03-15', NULL),
@@ -262,10 +260,3 @@ INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin, donnee
 (12, 4, 'Jury de thèse Université de Lille', '2024-06-14', '2024-06-14', '{"universite": "Lille"}'),
 (13, 2, 'Comité de programme ESORICS 2024', '2024-01-15', '2024-05-30', '{"conference": "ESORICS"}'),
 (1, 12, 'Commande robuste de bras manipulateurs', '2021-05-12', '2021-05-12', '{"revue": "Automatica"}');
-
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> aissa
