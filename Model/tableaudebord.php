@@ -2,18 +2,14 @@
     require_once __DIR__ . '/config.php';
 
     $choix = $_GET['choix'] ?? '';
-    $perimetre = 'laboratoire';
-    $idChoisi = '';
-
-    if (str_starts_with($choix, 'departement-')) {
-        $perimetre = 'departement';
-        $idChoisi = substr($choix, strlen('departement-'));
-    } elseif (str_starts_with($choix, 'groupe-')) {
-        $perimetre = 'groupe';
-        $idChoisi = substr($choix, strlen('groupe-'));
-    }
     $dateDebut = $_GET['debut'] ?? date('Y') . '-01-01';
     $dateFin = $_GET['fin'] ?? date('Y') . '-12-31';
+
+    $perimetre = 'laboratoire';
+    $idChoisi = '';
+    if ($choix !== '') {
+        [$perimetre, $idChoisi] = explode('-', $choix);
+    }
 
     $perimetreAutorise = perimetreUtilisateur($pdo);
     $perimetreImpose = $perimetreAutorise['type'] !== 'laboratoire';
@@ -22,24 +18,21 @@
         $idChoisi = $perimetreAutorise['id'];
     }
 
-    $requete = $pdo->query("SELECT id_departement, nom FROM Departement ORDER BY nom");
-    $departements = $requete->fetchAll(PDO::FETCH_ASSOC);
+    $departements = $pdo->query("SELECT id_departement, nom FROM Departement ORDER BY nom")->fetchAll();
+    $groupes = $pdo->query("SELECT id_groupe, nom FROM Groupe ORDER BY nom")->fetchAll();
 
-    $requete = $pdo->query("SELECT id_groupe, nom FROM Groupe ORDER BY nom");
-    $groupes = $requete->fetchAll(PDO::FETCH_ASSOC);
-
-    $filtre = " AND Rattachement.date_debut <= :fin
-        AND (Rattachement.date_fin >= :debut OR Rattachement.date_fin IS NULL)";
+    $filtre = " AND Rattachement.date_debut <= :fin AND (Rattachement.date_fin >= :debut OR Rattachement.date_fin IS NULL)";
     $parametres = ['debut' => $dateDebut, 'fin' => $dateFin];
 
-    if ($perimetre === 'departement' && $idChoisi !== '') {
+    if ($perimetre === 'departement') {
         $filtre .= " AND (Rattachement.id_departement = :id OR Groupe.id_departement = :id)";
         $parametres['id'] = $idChoisi;
-    } elseif ($perimetre === 'groupe' && $idChoisi !== '') {
+    } elseif ($perimetre === 'groupe') {
         $filtre .= " AND Rattachement.id_groupe = :id";
         $parametres['id'] = $idChoisi;
-    } elseif ($perimetre === 'aucun') {
-        $filtre .= " AND FALSE";
+    } elseif ($perimetre === 'personnel') {
+        $filtre .= " AND Rattachement.id_personnel = :id";
+        $parametres['id'] = $idChoisi;
     }
 
     $requete = $pdo->prepare("SELECT DISTINCT Personnel.id, Personnel.nom, Personnel.date_arrivee, Personnel.date_depart
@@ -48,12 +41,11 @@
         LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
         WHERE TRUE" . $filtre);
     $requete->execute($parametres);
-    $personnes = $requete->fetchAll(PDO::FETCH_ASSOC);
+    $personnes = $requete->fetchAll();
 
     $effectifTotal = count($personnes);
     $nombreEntrees = 0;
     $nombreSorties = 0;
-
     foreach ($personnes as $personne) {
         if ($personne['date_arrivee'] >= $dateDebut && $personne['date_arrivee'] <= $dateFin) {
             $nombreEntrees++;
@@ -71,7 +63,7 @@
         AND (Personnel_Statut_Historique.date_fin >= :debut OR Personnel_Statut_Historique.date_fin IS NULL)" . $filtre . "
         GROUP BY Personnel_Statut_Historique.statut");
     $requete->execute($parametres);
-    $effectifsParStatut = $requete->fetchAll(PDO::FETCH_ASSOC);
+    $effectifsParStatut = $requete->fetchAll();
 
     $requete = $pdo->prepare("SELECT TypeActivite.categorie, COUNT(DISTINCT Activite.id_activite) AS nombre
         FROM Activite
@@ -82,4 +74,20 @@
         AND (Activite.date_fin >= :debut OR Activite.date_fin IS NULL)" . $filtre . "
         GROUP BY TypeActivite.categorie");
     $requete->execute($parametres);
-    $activitesParCategorie = $requete->fetchAll(PDO::FETCH_ASSOC);
+    $activitesParCategorie = $requete->fetchAll();
+    $totalActivites = array_sum(array_column($activitesParCategorie, 'nombre'));
+
+    $nomPerimetre = 'Tout le laboratoire';
+    if ($perimetre === 'personnel') {
+        $nomPerimetre = 'Mes données';
+    }
+    foreach ($departements as $departement) {
+        if ($perimetre === 'departement' && $idChoisi == $departement['id_departement']) {
+            $nomPerimetre = 'Département ' . $departement['nom'];
+        }
+    }
+    foreach ($groupes as $groupe) {
+        if ($perimetre === 'groupe' && $idChoisi == $groupe['id_groupe']) {
+            $nomPerimetre = 'Groupe ' . $groupe['nom'];
+        }
+    }

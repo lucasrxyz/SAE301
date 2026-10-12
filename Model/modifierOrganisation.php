@@ -1,5 +1,7 @@
 <?php
     require_once __DIR__ . '/config.php';
+    require_once __DIR__ . '/verifierconnexion.php';
+    exigerDroit('gerer_personnel');
 
     $choix_orga = $_POST['choix_orga'] ?? null;
     $message = null;

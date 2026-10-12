@@ -12,7 +12,11 @@ function verifierDroit($action)
         return $niveau <= 4;
     }
 
-    if ($action === 'voir_tableau_bord' || $action === 'voir_personnel') {
+    if ($action === 'voir_tableau_bord') {
+        return $niveau <= 4;
+    }
+
+    if ($action === 'voir_personnel') {
         return $niveau <= 3;
     }
 
@@ -69,7 +73,7 @@ function perimetreUtilisateur($pdo)
         return ['type' => 'groupe', 'id' => $responsabilite['id_groupe']];
     }
 
-    return ['type' => 'aucun', 'id' => ''];
+    return ['type' => 'personnel', 'id' => $_SESSION['id_personnel']];
 }
 
 function conditionPerimetre($perimetre)
@@ -82,8 +86,8 @@ function conditionPerimetre($perimetre)
         return [" AND Rattachement.date_fin IS NULL AND Rattachement.id_groupe = :perimetre", ['perimetre' => $perimetre['id']]];
     }
 
-    if ($perimetre['type'] === 'aucun') {
-        return [" AND FALSE", []];
+    if ($perimetre['type'] === 'personnel') {
+        return [" AND Rattachement.id_personnel = :perimetre", ['perimetre' => $perimetre['id']]];
     }
 
     return ["", []];

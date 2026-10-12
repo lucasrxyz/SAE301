@@ -2,20 +2,6 @@
 require __DIR__ . '/../Model/verifierconnexion.php';
 exigerDroit('voir_tableau_bord');
 require __DIR__ . '/../Model/tableaudebord.php';
-
-$totalActivites = array_sum(array_column($activitesParCategorie, 'nombre'));
-
-$nomPerimetre = $perimetre === 'aucun' ? 'Aucun périmètre attribué' : 'Tout le laboratoire';
-foreach ($departements as $departement) {
-    if ($perimetre === 'departement' && $idChoisi == $departement['id_departement']) {
-        $nomPerimetre = 'Département ' . $departement['nom'];
-    }
-}
-foreach ($groupes as $groupe) {
-    if ($perimetre === 'groupe' && $idChoisi == $groupe['id_groupe']) {
-        $nomPerimetre = 'Groupe ' . $groupe['nom'];
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -26,29 +12,25 @@ foreach ($groupes as $groupe) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <?php include 'navbar.php'; ?>
+    <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu">
         <h1>Tableau de bord</h1>
         <p><?= htmlspecialchars($nomPerimetre) ?>, du <?= date('d/m/Y', strtotime($dateDebut)) ?> au <?= date('d/m/Y', strtotime($dateFin)) ?></p>
 
         <form method="get" action="tableauDeBord.php">
-                <?php if (!$perimetreImpose): ?>
+            <?php if (!$perimetreImpose): ?>
                 <label for="choix">Périmètre</label>
                 <select id="choix" name="choix">
                     <option value="">Tout le laboratoire</option>
                     <optgroup label="Départements">
                         <?php foreach ($departements as $departement): ?>
-                            <option value="departement-<?= $departement['id_departement'] ?>" <?= $choix === 'departement-' . $departement['id_departement'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($departement['nom']) ?>
-                            </option>
+                            <option value="departement-<?= $departement['id_departement'] ?>" <?= $choix === 'departement-' . $departement['id_departement'] ? 'selected' : '' ?>><?= htmlspecialchars($departement['nom']) ?></option>
                         <?php endforeach; ?>
                     </optgroup>
                     <optgroup label="Groupes">
                         <?php foreach ($groupes as $groupe): ?>
-                            <option value="groupe-<?= $groupe['id_groupe'] ?>" <?= $choix === 'groupe-' . $groupe['id_groupe'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($groupe['nom']) ?>
-                            </option>
+                            <option value="groupe-<?= $groupe['id_groupe'] ?>" <?= $choix === 'groupe-' . $groupe['id_groupe'] ? 'selected' : '' ?>><?= htmlspecialchars($groupe['nom']) ?></option>
                         <?php endforeach; ?>
                     </optgroup>
                 </select>
@@ -65,33 +47,19 @@ foreach ($groupes as $groupe) {
 
         <?php if ($effectifTotal === 0): ?>
 
-            <p class="message-erreur">
-                <?php if ($perimetre === 'aucun'): ?>
-                    Aucun groupe ni département ne vous est attribué. Contactez l'administrateur.
-                <?php else: ?>
-                    Aucune personne n'est rattachée à ce périmètre sur cette période. Essayez une autre période ou un autre périmètre.
-                <?php endif; ?>
-            </p>
+            <?php if ($perimetre === 'personnel'): ?>
+                <p class="message-erreur">Vous n'êtes rattaché à aucun groupe ni département sur cette période.</p>
+            <?php else: ?>
+                <p class="message-erreur">Aucune personne n'est rattachée à ce périmètre sur cette période. Essayez une autre période ou un autre périmètre.</p>
+            <?php endif; ?>
 
         <?php else: ?>
 
             <div class="chiffres">
-                <div class="chiffre">
-                    <strong><?= $effectifTotal ?></strong>
-                    <span>Personnes</span>
-                </div>
-                <div class="chiffre">
-                    <strong><?= $nombreEntrees ?></strong>
-                    <span>Entrées</span>
-                </div>
-                <div class="chiffre">
-                    <strong><?= $nombreSorties ?></strong>
-                    <span>Sorties</span>
-                </div>
-                <div class="chiffre">
-                    <strong><?= $totalActivites ?></strong>
-                    <span>Activités</span>
-                </div>
+                <div class="chiffre"><strong><?= $effectifTotal ?></strong><span>Personnes</span></div>
+                <div class="chiffre"><strong><?= $nombreEntrees ?></strong><span>Entrées</span></div>
+                <div class="chiffre"><strong><?= $nombreSorties ?></strong><span>Sorties</span></div>
+                <div class="chiffre"><strong><?= $totalActivites ?></strong><span>Activités</span></div>
             </div>
 
             <div class="deux-colonnes">

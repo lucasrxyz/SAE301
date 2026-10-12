@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['id_personnel'] = $compte['id_personnel'];
                 $_SESSION['identifiant'] = $compte['identifiant'];
                 $_SESSION['roles'] = array_column($roles, 'nom_role');
-                $_SESSION['niveau'] = $roles ? $roles[0]['niveau_pyramidal'] : 4;
+                $_SESSION['niveau'] = $roles ? $roles[0]['niveau_pyramidal'] : null;
                 $_SESSION['prenom'] = $personne['prenom'] ?? '';
                 $_SESSION['nom'] = $personne['nom'] ?? '';
                 header('Location: tableauDeBord.php');
