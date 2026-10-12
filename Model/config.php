@@ -2,7 +2,7 @@
 $hoteDirect = 'db.juleatlpngxjdveccilz.supabase.co';
 $port = '5432';
 $dbname = 'postgres';
-$password = 'TON_MOT_DE_PASSE';
+$password = 'Aqwzsxed59330';
 
 $testIpv6 = @fsockopen($hoteDirect, 5432, $codeErreur, $messageErreur, 1);
 
