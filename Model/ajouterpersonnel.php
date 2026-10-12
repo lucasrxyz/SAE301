@@ -3,6 +3,17 @@ require_once __DIR__ . '/config.php';
 
 exigerDroit('gerer_personnel');
 
+$statutsPossibles = [
+    'Doctorant',
+    'Post-doctorant',
+    'Maître de conférences',
+    'Professeur des universités',
+    'Chargé de recherche',
+    'Directeur de recherche',
+    'Ingénieur d\'études',
+    'Ingénieur de recherche'
+];
+
 $erreurPersonnel = '';
 $personnelCree = isset($_GET['cree']);
 $nomSaisi = '';
@@ -17,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenomSaisi = trim($_POST['prenom'] ?? '');
     $mailSaisi = trim($_POST['mail'] ?? '');
     $dateArriveeSaisie = $_POST['date_arrivee'] ?? '';
-    $statutSaisi = trim($_POST['statut'] ?? '');
+    $statutSaisi = $_POST['statut'] ?? '';
     $quotiteSaisie = $_POST['quotite'] ?? '';
 
     $date = DateTime::createFromFormat('!Y-m-d', $dateArriveeSaisie);
@@ -30,8 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (in_array('', [$nomSaisi, $prenomSaisi, $mailSaisi, $dateArriveeSaisie, $statutSaisi, $quotiteSaisie])) {
         $erreurPersonnel = 'Veuillez remplir tous les champs.';
-    } elseif (strlen($nomSaisi) > 50 || strlen($prenomSaisi) > 50 || strlen($mailSaisi) > 60 || strlen($statutSaisi) > 50) {
+    } elseif (strlen($nomSaisi) > 50 || strlen($prenomSaisi) > 50 || strlen($mailSaisi) > 60) {
         $erreurPersonnel = 'Un ou plusieurs champs dépassent la longueur autorisée.';
+    } elseif (!in_array($statutSaisi, $statutsPossibles)) {
+        $erreurPersonnel = 'Veuillez choisir un statut dans la liste.';
     } elseif (!filter_var($mailSaisi, FILTER_VALIDATE_EMAIL)) {
         $erreurPersonnel = 'Veuillez saisir une adresse mail valide.';
     } elseif ($mailDejaUtilise) {
@@ -52,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $pdo->commit();
 
-        header('Location: ajouterpersonnel.php?cree=1');
+        header('Location: ajouterRattachement.php?id=' . $idPersonnel);
         exit;
     }
 }
