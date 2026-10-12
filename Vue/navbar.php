@@ -1,3 +1,10 @@
+<?php
+$nomAffiche = trim(($_SESSION['prenom'] ?? '') . ' ' . ($_SESSION['nom'] ?? ''));
+if ($nomAffiche === '') {
+    $nomAffiche = $_SESSION['identifiant'] ?? '';
+}
+$grade = $_SESSION['roles'][0] ?? 'Personnel';
+?>
 <nav class="navbar">
     <div class="navbar-logo">
         K.A.B.L Solution <span>Hauts-de-France</span>
@@ -10,6 +17,13 @@
         <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [])): ?>
             <li><a href="creerCompte.php">Créer un compte</a></li>
         <?php endif; ?>
-        <li><a href="deconnexion.php">Se déconnecter (<?= htmlspecialchars($_SESSION['identifiant'] ?? '') ?>)</a></li>
     </ul>
+    <div class="navbar-profil">
+        <span class="avatar"><?= htmlspecialchars(mb_strtoupper(mb_substr($nomAffiche, 0, 1))) ?></span>
+        <div class="profil-texte">
+            <strong><?= htmlspecialchars($nomAffiche) ?></strong>
+            <small><?= htmlspecialchars($grade) ?></small>
+        </div>
+        <a href="deconnexion.php" class="lien-deconnexion">Se déconnecter</a>
+    </div>
 </nav>

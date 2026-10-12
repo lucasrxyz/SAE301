@@ -17,14 +17,10 @@
     <div class="page-contenu">
 
         <h1>Bienvenue dans la page de personnel</h1>
-        <p>Veuillez saisir le nom pour avoir plus d'info</p>
-
-        <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [])): ?>
-            <p><a href="ajouterpersonnel.php"><button type="button">Ajouter un personnel</button></a></p>
-        <?php endif; ?>
+        <p>Recherchez par nom (actuel ou ancien), ORCID ou IdHAL</p>
 
         <form action="" method="get">
-            <label for="nom">Nom du personnel</label>
+            <label for="nom">Rechercher</label>
             <input type="text" name="nom" id="nom" value="<?= htmlspecialchars($nomUtilisateur) ?>">
             <button type="submit">Rechercher</button>
         </form>
@@ -51,7 +47,12 @@
 
                     <?php foreach ($resultats as $ligne): ?>
                         <tr>
-                            <td><?= htmlspecialchars($ligne['nom']) ?></td>
+                            <td>
+                                <?= htmlspecialchars($ligne['nom']) ?>
+                                <?php if (in_array($ligne['nom'] . ' ' . $ligne['prenom'], $homonymes)): ?>
+                                    <span class="badge-homonyme">Homonyme</span>
+                                <?php endif; ?>
+                            </td>
                             <td><?= htmlspecialchars($ligne['prenom']) ?></td>
                             <td><?= htmlspecialchars($ligne['mail']) ?></td>
                             <td><?= date('d/m/Y', strtotime($ligne['date_arrivee'])) ?></td>

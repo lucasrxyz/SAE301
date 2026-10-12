@@ -5,7 +5,7 @@ $personnelDesactive = isset($_GET['desactive']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idPersonnel = $_POST['id_personnel'] ?? null;
-    if ($_POST['desactiver'] === 'true') {
+    if (($_POST['desactiver'] ?? '') === 'true') {
         $datedepart = $_POST['date_depart'] ?? null;
         if ($datedepart) {
             $requete = $pdo->prepare('UPDATE Personnel SET actif = false, date_depart = ? WHERE id = ?');
