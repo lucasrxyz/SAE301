@@ -70,77 +70,88 @@ foreach ($groupes as $groupe) {
             <button type="submit">Afficher</button>
         </form>
 
-        <div class="chiffres">
-            <div class="chiffre">
-                <strong><?= $effectifTotal ?></strong>
-                <span>Personnes</span>
-            </div>
-            <div class="chiffre">
-                <strong><?= $nombreEntrees ?></strong>
-                <span>Entrées</span>
-            </div>
-            <div class="chiffre">
-                <strong><?= $nombreSorties ?></strong>
-                <span>Sorties</span>
-            </div>
-            <div class="chiffre">
-                <strong><?= $totalActivites ?></strong>
-                <span>Activités</span>
-            </div>
-        </div>
+        <?php if ($effectifTotal === 0): ?>
 
-        <div class="deux-colonnes">
-            <section>
-                <h2>Effectifs par statut</h2>
-                <?php if ($effectifsParStatut): ?>
-                    <div class="tableau-defilant">
-                        <table>
-                            <tr>
-                                <th>Statut</th>
-                                <th>Nombre</th>
-                                <th class="colonne-barre"></th>
-                            </tr>
-                            <?php foreach ($effectifsParStatut as $ligne): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($ligne['statut']) ?></td>
-                                    <td><?= $ligne['nombre'] ?></td>
-                                    <td><div class="fond-barre"><div class="barre" style="width: <?= round($ligne['nombre'] / $effectifTotal * 100) ?>%"></div></div></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </table>
-                    </div>
+            <p class="message-erreur">
+                <?php if ($perimetre === 'aucun'): ?>
+                    Aucun groupe ni département ne vous est attribué. Contactez l'administrateur.
                 <?php else: ?>
-                    <p>Aucune donnée sur cette période.</p>
+                    Aucune personne n'est rattachée à ce périmètre sur cette période. Essayez une autre période ou un autre périmètre.
                 <?php endif; ?>
-            </section>
+            </p>
 
-            <section>
-                <h2>Activités par catégorie</h2>
-                <?php if ($activitesParCategorie): ?>
-                    <div class="tableau-defilant">
-                        <table>
-                            <tr>
-                                <th>Catégorie</th>
-                                <th>Nombre</th>
-                                <th class="colonne-barre"></th>
-                            </tr>
-                            <?php foreach ($activitesParCategorie as $ligne): ?>
+        <?php else: ?>
+
+            <div class="chiffres">
+                <div class="chiffre">
+                    <strong><?= $effectifTotal ?></strong>
+                    <span>Personnes</span>
+                </div>
+                <div class="chiffre">
+                    <strong><?= $nombreEntrees ?></strong>
+                    <span>Entrées</span>
+                </div>
+                <div class="chiffre">
+                    <strong><?= $nombreSorties ?></strong>
+                    <span>Sorties</span>
+                </div>
+                <div class="chiffre">
+                    <strong><?= $totalActivites ?></strong>
+                    <span>Activités</span>
+                </div>
+            </div>
+
+            <div class="deux-colonnes">
+                <section>
+                    <h2>Effectifs par statut</h2>
+                    <?php if ($effectifsParStatut): ?>
+                        <div class="tableau-defilant">
+                            <table>
                                 <tr>
-                                    <td><?= htmlspecialchars($ligne['categorie']) ?></td>
-                                    <td><?= $ligne['nombre'] ?></td>
-                                    <td><div class="fond-barre"><div class="barre" style="width: <?= round($ligne['nombre'] / $totalActivites * 100) ?>%"></div></div></td>
+                                    <th>Statut</th>
+                                    <th>Nombre</th>
+                                    <th class="colonne-barre"></th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </table>
-                    </div>
-                <?php else: ?>
-                    <p>Aucune activité sur cette période.</p>
-                <?php endif; ?>
-            </section>
-        </div>
+                                <?php foreach ($effectifsParStatut as $ligne): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($ligne['statut']) ?></td>
+                                        <td><?= $ligne['nombre'] ?></td>
+                                        <td><div class="fond-barre"><div class="barre" style="width: <?= round($ligne['nombre'] / $effectifTotal * 100) ?>%"></div></div></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <p class="aide">Aucun statut enregistré sur cette période.</p>
+                    <?php endif; ?>
+                </section>
 
-        <h2>Personnes du périmètre</h2>
-        <?php if ($personnes): ?>
+                <section>
+                    <h2>Activités par catégorie</h2>
+                    <?php if ($activitesParCategorie): ?>
+                        <div class="tableau-defilant">
+                            <table>
+                                <tr>
+                                    <th>Catégorie</th>
+                                    <th>Nombre</th>
+                                    <th class="colonne-barre"></th>
+                                </tr>
+                                <?php foreach ($activitesParCategorie as $ligne): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($ligne['categorie']) ?></td>
+                                        <td><?= $ligne['nombre'] ?></td>
+                                        <td><div class="fond-barre"><div class="barre" style="width: <?= round($ligne['nombre'] / $totalActivites * 100) ?>%"></div></div></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <p class="aide">Aucune activité déclarée sur cette période.</p>
+                    <?php endif; ?>
+                </section>
+            </div>
+
+            <h2>Personnes du périmètre</h2>
             <div class="tableau-defilant">
                 <table>
                     <tr>
@@ -157,8 +168,7 @@ foreach ($groupes as $groupe) {
                     <?php endforeach; ?>
                 </table>
             </div>
-        <?php else: ?>
-            <p>Personne sur cette période.</p>
+
         <?php endif; ?>
     </main>
 
