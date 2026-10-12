@@ -24,6 +24,14 @@
         <title>Tableau de bord</title>
         <link rel="stylesheet" href="style.css">
     </head>
+        <footer class="footer">
+            <p>&copy; <?= date('Y') ?> K.A.B.L Solution Hauts-de-France - Tous droits réservés</p>
+            <ul class="footer-liens">
+                <li><a href="#">Mentions légales</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Accessibilité</a></li>
+            </ul>
+        </footer>
     <body>
         <?php include 'navbar.php'; ?>
 

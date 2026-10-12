@@ -1,8 +1,8 @@
 <?php
 session_start();
-
+require_once __DIR__ . '/droits.php';
 if (!empty($_SESSION['identifiant'])) {
-    header('Location: tableauDeBord.php');
+    header('Location: ' . pageAccueil());
     exit;
 }
 

@@ -1,5 +1,6 @@
 <?php
     require __DIR__ . '/../Model/verifierconnexion.php';
+    exigerDroit('voir_personnel');
     require __DIR__ . '/../Model/desactiverpersonnel.php';
     require __DIR__ . '/../Model/modifieridentite.php';
     require __DIR__ . '/../Model/cloturerrattachement.php';
@@ -40,11 +41,11 @@
         <?php endif; ?>
 
         <?php if ($rattachementCloture): ?>
-            <p style="color: green">Le rattachement a été clôturé.</p>
+            <p class="message-succes">Le rattachement a été clôturé.</p>
         <?php endif; ?>
 
         <?php if ($erreurClotureRattachement !== ''): ?>
-            <p style="color: red"><?= htmlspecialchars($erreurClotureRattachement) ?></p>
+            <p class="message-erreur"><?= htmlspecialchars($erreurClotureRattachement) ?></p>
         <?php endif; ?>
 
         <?php if ($personnel): ?>
@@ -125,36 +126,7 @@
                 <p>Aucun statut enregistré.</p>
             <?php endif; ?>
 
-            <?php if ($estRH): ?>
-                <h2>Identifiants ORCID et IdHAL</h2>
-                <form method="post" action="">
-                    <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
-
-                    <label for="id_orcid">ORCID</label>
-                    <input type="text" name="id_orcid" id="id_orcid" placeholder="0000-0000-0000-0000" value="<?= htmlspecialchars($personnel['id_orcid'] ?? '') ?>">
-
-                    <label for="id_idhal">IdHAL</label>
-                    <input type="text" name="id_idhal" id="id_idhal" value="<?= htmlspecialchars($personnel['id_idhal'] ?? '') ?>">
-
-                    <button type="submit" name="modifier_identifiants">Enregistrer</button>
-                </form>
-
-                <h2>Changer le nom d'usage</h2>
-                <form method="post" action="">
-                    <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
-
-                    <label for="nouveau_nom">Nouveau nom</label>
-                    <input type="text" name="nouveau_nom" id="nouveau_nom" required>
-
-                    <label for="date_changement">Date du changement</label>
-                    <input type="date" name="date_changement" id="date_changement" value="<?= date('Y-m-d') ?>" required>
-
-                    <button type="submit" name="changer_nom">Changer le nom</button>
-                </form>
-            <?php endif; ?>
-
             <h2>Historique des rattachements</h2>
-
             <?php if ($historiqueRattachements): ?>
                 <div class="tableau-defilant">
                     <table>
@@ -163,7 +135,7 @@
                             <th>Type de rattachement</th>
                             <th>Du</th>
                             <th>Au</th>
-                            <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? [], true) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [], true)): ?>
+                            <?php if ($estRH): ?>
                                 <th>Action</th>
                             <?php endif; ?>
                         </tr>
@@ -173,7 +145,7 @@
                                 <td><?= htmlspecialchars(ucfirst($rattachement['type_rattachement'])) ?></td>
                                 <td><?= date('d/m/Y', strtotime($rattachement['date_debut'])) ?></td>
                                 <td><?= $rattachement['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($rattachement['date_fin'])) ?></td>
-                                <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? [], true) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [], true)): ?>
+                                <?php if ($estRH): ?>
                                     <td>
                                         <?php if ($rattachement['date_fin'] === null): ?>
                                             <?php
@@ -208,7 +180,35 @@
                 <p>Aucun rattachement enregistré.</p>
             <?php endif; ?>
 
-            <?php if ($personnel['date_depart'] === null): ?>
+            <?php if ($estRH): ?>
+                <h2>Identifiants ORCID et IdHAL</h2>
+                <form method="post" action="">
+                    <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
+
+                    <label for="id_orcid">ORCID</label>
+                    <input type="text" name="id_orcid" id="id_orcid" placeholder="0000-0000-0000-0000" value="<?= htmlspecialchars($personnel['id_orcid'] ?? '') ?>">
+
+                    <label for="id_idhal">IdHAL</label>
+                    <input type="text" name="id_idhal" id="id_idhal" value="<?= htmlspecialchars($personnel['id_idhal'] ?? '') ?>">
+
+                    <button type="submit" name="modifier_identifiants">Enregistrer</button>
+                </form>
+
+                <h2>Changer le nom d'usage</h2>
+                <form method="post" action="">
+                    <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
+
+                    <label for="nouveau_nom">Nouveau nom</label>
+                    <input type="text" name="nouveau_nom" id="nouveau_nom" required>
+
+                    <label for="date_changement">Date du changement</label>
+                    <input type="date" name="date_changement" id="date_changement" value="<?= date('Y-m-d') ?>" required>
+
+                    <button type="submit" name="changer_nom">Changer le nom</button>
+                </form>
+            <?php endif; ?>
+
+            <?php if ($personnel['date_depart'] === null && $estRH): ?>
                 <h2>Désactiver le personnel</h2>
                 <form method="post" action="">
                     <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
