@@ -23,7 +23,7 @@
     $requete = $pdo->query('SELECT id_departement, nom FROM Departement ORDER BY nom');
     $departements = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-    $requete = $pdo->query('SELECT Groupe.id_groupe, Groupe.nom AS nom_groupe, Departement.nom AS nom_departement
+    $requete = $pdo->query('SELECT Groupe.id_groupe, Groupe.nom AS nom_groupe, Groupe.date_fin, Departement.nom AS nom_departement
         FROM Groupe
         JOIN Departement ON Departement.id_departement = Groupe.id_departement
         ORDER BY Departement.nom, Groupe.nom');
@@ -38,9 +38,11 @@
         $idGroupe = $idGroupeChoisi !== '' ? (int) $idGroupeChoisi : null;
         $idDepartement = $idDepartementChoisi !== '' ? (int) $idDepartementChoisi : null;
 
-        $requete = $pdo->prepare('SELECT COUNT(*) FROM Groupe WHERE id_groupe = ?');
+        $requete = $pdo->prepare('SELECT date_fin FROM Groupe WHERE id_groupe = ?');
         $requete->execute([$idGroupe ?? 0]);
-        $groupeExiste = $requete->fetchColumn() > 0;
+        $groupeChoisi = $requete->fetch(PDO::FETCH_ASSOC);
+        $groupeExiste = $groupeChoisi !== false;
+        $groupeCloture = $groupeExiste && $groupeChoisi['date_fin'] !== null && $groupeChoisi['date_fin'] < $dateDebutSaisie;
 
         $requete = $pdo->prepare('SELECT COUNT(*) FROM Departement WHERE id_departement = ?');
         $requete->execute([$idDepartement ?? 0]);
@@ -68,6 +70,8 @@
             $erreurRattachement = 'Choisissez un type de rattachement valide.';
         } elseif (($idGroupe !== null && !$groupeExiste) || ($idDepartement !== null && !$departementExiste)) {
             $erreurRattachement = 'Le groupe ou le département sélectionné est invalide.';
+        } elseif ($idGroupe !== null && $groupeCloture) {
+            $erreurRattachement = 'Ce groupe est clôturé depuis le ' . date('d/m/Y', strtotime($groupeChoisi['date_fin'])) . ', impossible d\'y rattacher quelqu\'un à cette date.';
         } elseif ($idGroupe !== null && $dejaRattache) {
             $erreurRattachement = 'Ce personnel possède déjà un rattachement à ce groupe sur une période qui chevauche les dates saisies.';
         } else {

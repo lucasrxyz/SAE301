@@ -34,8 +34,7 @@
                     <option value="">-- Aucun groupe --</option>
                     <?php foreach ($groupes as $groupe): ?>
                         <option value="<?= $groupe['id_groupe'] ?>" <?= (string) $idGroupeChoisi === (string) $groupe['id_groupe'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($groupe['nom_departement'] . ' - ' . $groupe['nom_groupe']) ?>
-                        </option>
+                            <?= htmlspecialchars($groupe['nom_departement'] . ' - ' . $groupe['nom_groupe']) ?><?= $groupe['date_fin'] ? ' (clôturé le ' . date('d/m/Y', strtotime($groupe['date_fin'])) . ')' : '' ?>                        </option>
                     <?php endforeach; ?>
                 </select>
 
