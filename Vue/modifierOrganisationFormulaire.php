@@ -16,22 +16,24 @@
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <div class="page-contenu">
-        <h1>Ajouter ou Modifier Departement</h1>
+        <h1>Bienvenue sur la page de modification de l'organisation.</h1>
 
         <?php if ($message): ?><p><?= $message ?></p><?php endif; ?>
 
-        <label>Que souhaitez vous faire : </label>
+        <label>Selectionnez l'action souhaitée : </label>
         <form action="" method="post" class="form-choix">
             <div class="filtres-boutons">
-                <button type="submit" name="choix_orga" value="ajouterDepartement">Ajouter un Département</button>
-                <button type="submit" name="choix_orga" value="modifierDepartement">Modifier un Département</button>
-                <button type="submit" name="choix_orga" value="supprimerDepartement">Fermer un Département</button>
+                <label>Départements : </label>
+                <button type="submit" name="choix_orga" value="ajouterDepartement">Ajouter</button>
+                <button type="submit" name="choix_orga" value="modifierDepartement">Modifier</button>
+                <button type="submit" name="choix_orga" value="supprimerDepartement">Clôturer</button>
             </div>
 
             <div class="filtres-boutons">
-                <button type="submit" name="choix_orga" value="ajouterGroupe">Ajouter un Groupe</button>
-                <button type="submit" name="choix_orga" value="modifierGroupe">Modifier un Groupe</button>
-                <button type="submit" name="choix_orga" value="supprimerGroupe">Fermer un Groupe</button>
+                <label>Groupes : </label>
+                <button type="submit" name="choix_orga" value="ajouterGroupe">Ajouter</button>
+                <button type="submit" name="choix_orga" value="modifierGroupe">Modifier</button>
+                <button type="submit" name="choix_orga" value="supprimerGroupe">Clôturer</button>
             </div>
         </form>
 
