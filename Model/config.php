@@ -1,9 +1,19 @@
 <?php
-$host = 'aws-1-eu-west-3.pooler.supabase.com';
+$hoteDirect = 'db.juleatlpngxjdveccilz.supabase.co';
 $port = '5432';
 $dbname = 'postgres';
-$user = 'postgres.juleatlpngxjdveccilz';
-$password = 'Aqwzsxed59330';
+$password = 'TON_MOT_DE_PASSE';
+
+$testIpv6 = @fsockopen($hoteDirect, 5432, $codeErreur, $messageErreur, 1);
+
+if ($testIpv6) {
+    fclose($testIpv6);
+    $host = $hoteDirect;
+    $user = 'postgres';
+} else {
+    $host = 'aws-1-eu-west-3.pooler.supabase.com';
+    $user = 'postgres.juleatlpngxjdveccilz';
+}
 
 $pdo = new PDO(
     "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require",
