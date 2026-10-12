@@ -3,9 +3,9 @@ require_once __DIR__ . '/config.php';
 $erreurDesactivation = '';
 $personnelDesactive = isset($_GET['desactive']);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifierDroit('gerer_personnel')) {
     $idPersonnel = $_POST['id_personnel'] ?? null;
-    if ($_POST['desactiver'] === 'true') {
+    if (($_POST['desactiver'] ?? null) === 'true') {
         $datedepart = $_POST['date_depart'] ?? null;
         if ($datedepart) {
             $requete = $pdo->prepare('UPDATE Personnel SET actif = false, date_depart = ? WHERE id = ?');

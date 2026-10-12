@@ -6,6 +6,13 @@
     $dateDebut = $_GET['debut'] ?? date('Y') . '-01-01';
     $dateFin = $_GET['fin'] ?? date('Y') . '-12-31';
 
+    $perimetreAutorise = perimetreUtilisateur($pdo);
+    $perimetreImpose = $perimetreAutorise['type'] !== 'laboratoire';
+    if ($perimetreImpose) {
+        $perimetre = $perimetreAutorise['type'];
+        $idChoisi = $perimetreAutorise['id'];
+    }
+
     $requete = $pdo->query("SELECT id_departement, nom FROM Departement ORDER BY nom");
     $departements = $requete->fetchAll(PDO::FETCH_ASSOC);
 
@@ -22,6 +29,8 @@
     } elseif ($perimetre === 'groupe' && $idChoisi !== '') {
         $filtre .= " AND Rattachement.id_groupe = :id";
         $parametres['id'] = $idChoisi;
+    } elseif ($perimetre === 'aucun') {
+        $filtre .= " AND FALSE";
     }
 
     $requete = $pdo->prepare("SELECT DISTINCT Personnel.id, Personnel.nom, Personnel.date_arrivee, Personnel.date_depart

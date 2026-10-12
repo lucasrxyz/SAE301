@@ -1,8 +1,8 @@
 <?php
 session_start();
-
+require_once __DIR__ . '/droits.php';
 if (!empty($_SESSION['identifiant'])) {
-    header('Location: tableauDeBord.php');
+    header('Location: ' . pageAccueil());
     exit;
 }
 
@@ -37,14 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
                 $requete->execute(['idCompte' => $compte['id_compte']]);
                 $roles = $requete->fetchAll(PDO::FETCH_ASSOC);
-
+                $requete = $pdo->prepare('SELECT prenom, nom FROM Personnel WHERE id = :id');
+                $requete->execute(['id' => $compte['id_personnel']]);
+                $personne = $requete->fetch(PDO::FETCH_ASSOC);
                 session_regenerate_id(true);
                 $_SESSION['id_compte'] = $compte['id_compte'];
                 $_SESSION['id_personnel'] = $compte['id_personnel'];
                 $_SESSION['identifiant'] = $compte['identifiant'];
                 $_SESSION['roles'] = array_column($roles, 'nom_role');
                 $_SESSION['niveau'] = $roles ? $roles[0]['niveau_pyramidal'] : 4;
-
+                $_SESSION['prenom'] = $personne['prenom'] ?? '';
+                $_SESSION['nom'] = $personne['nom'] ?? '';
                 header('Location: tableauDeBord.php');
                 exit;
             }
