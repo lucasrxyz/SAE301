@@ -3,6 +3,7 @@
     require __DIR__ . '/../Model/desactiverpersonnel.php';
     require __DIR__ . '/../Model/modifieridentite.php';
     require __DIR__ . '/../Model/fichepersonnel.php';
+    exigerDroit('voir_personnel');    
 ?>
 <!doctype html>
 <html lang="fr">
@@ -38,7 +39,7 @@
             <p class="message-erreur"><?= htmlspecialchars($erreurIdentite) ?></p>
         <?php endif; ?>
 
-        <?php if ($personnel): ?>
+        <?php if ($personnel['date_depart'] === null && $estRH): ?>
             <h1>Fiche de <?= htmlspecialchars($personnel['prenom']) ?> <?= htmlspecialchars($personnel['nom']) ?></h1>
 
             <div class="tableau-defilant">

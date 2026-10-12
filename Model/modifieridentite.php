@@ -3,7 +3,7 @@ require_once __DIR__ . '/config.php';
 
 $erreurIdentite = '';
 $messageIdentite = '';
-$estRH = in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? []);
+$estRH = verifierDroit('gerer_personnel');
 
 if (isset($_GET['identifiants'])) {
     $messageIdentite = 'Les identifiants ORCID et IdHAL ont été mis à jour.';

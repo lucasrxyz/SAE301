@@ -3,19 +3,30 @@ $nomAffiche = trim(($_SESSION['prenom'] ?? '') . ' ' . ($_SESSION['nom'] ?? ''))
 if ($nomAffiche === '') {
     $nomAffiche = $_SESSION['identifiant'] ?? '';
 }
-$grade = $_SESSION['roles'][0] ?? 'Personnel';
+$grade = $_SESSION['roles'][0] ?? 'Aucun rôle';
 ?>
 <nav class="navbar">
     <div class="navbar-logo">
         K.A.B.L Solution <span>Hauts-de-France</span>
     </div>
     <ul class="navbar-liens">
-        <li><a href="tableauDeBord.php">Accueil</a></li>
-        <li><a href="afficherListePersonnel.php">Personnel</a></li>
-        <li><a href="organisation.php">Organisation</a></li>
-        <li><a href="declarerActivite.php">Déclarer une activité</a></li>
-        <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [])): ?>
+        <?php if (verifierDroit('voir_tableau_bord')): ?>
+            <li><a href="tableauDeBord.php">Accueil</a></li>
+        <?php endif; ?>
+        <?php if (verifierDroit('voir_personnel')): ?>
+            <li><a href="afficherListePersonnel.php">Personnel</a></li>
+        <?php endif; ?>
+        <?php if (verifierDroit('voir_organisation')): ?>
+            <li><a href="organisation.php">Organisation</a></li>
+        <?php endif; ?>
+        <?php if (verifierDroit('declarer_activite')): ?>
+            <li><a href="declarerActivite.php">Déclarer une activité</a></li>
+        <?php endif; ?>
+        <?php if (verifierDroit('gerer_personnel')): ?>
             <li><a href="creerCompte.php">Créer un compte</a></li>
+        <?php endif; ?>
+        <?php if (verifierDroit('gerer_roles')): ?>
+            <li><a href="gererRoles.php">Rôles</a></li>
         <?php endif; ?>
     </ul>
     <div class="navbar-profil">

@@ -8,8 +8,15 @@ $historiqueStatuts = [];
 $anciensNoms = [];
 
 if ($idPersonnel !== null) {
-    $requete = $pdo->prepare("SELECT * FROM Personnel WHERE id = :id");
-    $requete->execute(['id' => $idPersonnel]);
+    [$filtrePerimetre, $parametres] = conditionPerimetre(perimetreUtilisateur($pdo));
+    $parametres['id'] = $idPersonnel;
+
+    $requete = $pdo->prepare("SELECT DISTINCT Personnel.*
+        FROM Personnel
+        LEFT JOIN Rattachement ON Rattachement.id_personnel = Personnel.id
+        LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
+        WHERE Personnel.id = :id" . $filtrePerimetre);
+    $requete->execute($parametres);
     $personnel = $requete->fetch(PDO::FETCH_ASSOC);
 
     if (!$personnel) {
