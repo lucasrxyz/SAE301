@@ -1,8 +1,17 @@
 <?php
     require_once __DIR__ . '/config.php';
 
-    $perimetre = $_GET['perimetre'] ?? 'laboratoire';
-    $idChoisi = $_GET['id'] ?? '';
+    $choix = $_GET['choix'] ?? '';
+    $perimetre = 'laboratoire';
+    $idChoisi = '';
+
+    if (str_starts_with($choix, 'departement-')) {
+        $perimetre = 'departement';
+        $idChoisi = substr($choix, strlen('departement-'));
+    } elseif (str_starts_with($choix, 'groupe-')) {
+        $perimetre = 'groupe';
+        $idChoisi = substr($choix, strlen('groupe-'));
+    }
     $dateDebut = $_GET['debut'] ?? date('Y') . '-01-01';
     $dateFin = $_GET['fin'] ?? date('Y') . '-12-31';
 

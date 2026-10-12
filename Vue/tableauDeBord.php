@@ -33,27 +33,20 @@ foreach ($groupes as $groupe) {
         <p><?= htmlspecialchars($nomPerimetre) ?>, du <?= date('d/m/Y', strtotime($dateDebut)) ?> au <?= date('d/m/Y', strtotime($dateFin)) ?></p>
 
         <form method="get" action="tableauDeBord.php">
-            <?php if (!$perimetreImpose): ?>
-                <label for="perimetre">Périmètre</label>
-                <select id="perimetre" name="perimetre">
-                    <option value="laboratoire" <?= $perimetre === 'laboratoire' ? 'selected' : '' ?>>Laboratoire</option>
-                    <option value="departement" <?= $perimetre === 'departement' ? 'selected' : '' ?>>Département</option>
-                    <option value="groupe" <?= $perimetre === 'groupe' ? 'selected' : '' ?>>Groupe</option>
-                </select>
-
-                <label for="id">Lequel</label>
-                <select id="id" name="id">
+                <?php if (!$perimetreImpose): ?>
+                <label for="choix">Périmètre</label>
+                <select id="choix" name="choix">
                     <option value="">Tout le laboratoire</option>
                     <optgroup label="Départements">
                         <?php foreach ($departements as $departement): ?>
-                            <option value="<?= $departement['id_departement'] ?>" <?= $perimetre === 'departement' && $idChoisi == $departement['id_departement'] ? 'selected' : '' ?>>
+                            <option value="departement-<?= $departement['id_departement'] ?>" <?= $choix === 'departement-' . $departement['id_departement'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($departement['nom']) ?>
                             </option>
                         <?php endforeach; ?>
                     </optgroup>
                     <optgroup label="Groupes">
                         <?php foreach ($groupes as $groupe): ?>
-                            <option value="<?= $groupe['id_groupe'] ?>" <?= $perimetre === 'groupe' && $idChoisi == $groupe['id_groupe'] ? 'selected' : '' ?>>
+                            <option value="groupe-<?= $groupe['id_groupe'] ?>" <?= $choix === 'groupe-' . $groupe['id_groupe'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($groupe['nom']) ?>
                             </option>
                         <?php endforeach; ?>
