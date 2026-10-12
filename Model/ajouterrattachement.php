@@ -6,8 +6,9 @@
     $idPersonnel = $_POST['id_personnel'] ?? $_GET['id'] ?? '';
     $erreurRattachement = '';
     $rattachementAjoute = isset($_GET['ajoute']);
-    $idGroupeChoisi = $_POST['id_groupe'] ?? '';
-    $idDepartementChoisi = $_POST['id_departement'] ?? '';
+    $choix = $_POST['choix'] ?? '';
+    $idGroupeChoisi = str_starts_with($choix, 'groupe-') ? substr($choix, strlen('groupe-')) : '';
+    $idDepartementChoisi = str_starts_with($choix, 'departement-') ? substr($choix, strlen('departement-')) : '';
     $typeRattachementChoisi = $_POST['type_rattachement'] ?? 'principal';
     $dateDebutSaisie = $_POST['date_debut'] ?? date('Y-m-d');
     $dateFinSaisie = $_POST['date_fin'] ?? '';

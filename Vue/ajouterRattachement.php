@@ -32,27 +32,25 @@ require __DIR__ . '/../Model/ajouterrattachement.php';
                 <form action="" method="post" class="formulaire-vertical">
                     <input type="hidden" name="id_personnel" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
 
-                    <label for="id_groupe">Groupe</label>
-                    <select name="id_groupe" id="id_groupe">
-                        <option value="">-- Aucun groupe --</option>
-                        <?php foreach ($groupes as $groupe): ?>
-                            <option value="<?= $groupe['id_groupe'] ?>" <?= (string) $idGroupeChoisi === (string) $groupe['id_groupe'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($groupe['nom_departement'] . ' - ' . $groupe['nom_groupe']) ?><?= $groupe['date_fin'] ? ' (clôturé le ' . date('d/m/Y', strtotime($groupe['date_fin'])) . ')' : '' ?>
-                            </option>
-                        <?php endforeach; ?>
+                    <label for="choix">Groupe ou département</label>
+                    <select name="choix" id="choix" required>
+                        <option value="">-- Choisir --</option>
+                        <optgroup label="Groupes">
+                            <?php foreach ($groupes as $groupe): ?>
+                                <option value="groupe-<?= $groupe['id_groupe'] ?>" <?= $choix === 'groupe-' . $groupe['id_groupe'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($groupe['nom_departement'] . ' - ' . $groupe['nom_groupe']) ?><?= $groupe['date_fin'] ? ' (clôturé le ' . date('d/m/Y', strtotime($groupe['date_fin'])) . ')' : '' ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </optgroup>
+                        <optgroup label="Départements">
+                            <?php foreach ($departements as $departement): ?>
+                                <option value="departement-<?= $departement['id_departement'] ?>" <?= $choix === 'departement-' . $departement['id_departement'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($departement['nom']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </optgroup>
                     </select>
-                    <p class="aide">Laisser vide pour un rattachement à un département.</p>
-
-                    <label for="id_departement">Département</label>
-                    <select name="id_departement" id="id_departement">
-                        <option value="">-- Aucun département --</option>
-                        <?php foreach ($departements as $departement): ?>
-                            <option value="<?= $departement['id_departement'] ?>" <?= (string) $idDepartementChoisi === (string) $departement['id_departement'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($departement['nom']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <p class="aide">Laisser vide pour un rattachement à un groupe.</p>
+                    <p class="aide">Un rattachement se fait soit à un groupe, soit directement à un département.</p>
 
                     <label for="type_rattachement">Type de rattachement</label>
                     <select name="type_rattachement" id="type_rattachement" required>
