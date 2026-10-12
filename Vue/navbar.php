@@ -4,6 +4,12 @@ if ($nomAffiche === '') {
     $nomAffiche = $_SESSION['identifiant'] ?? '';
 }
 $grade = $_SESSION['roles'][0] ?? 'Aucun rôle';
+$initiale = function_exists('mb_substr')
+    ? mb_substr($nomAffiche, 0, 1, 'UTF-8')
+    : (preg_match('/^./us', $nomAffiche, $premiereLettre) ? $premiereLettre[0] : '');
+$initiale = function_exists('mb_strtoupper')
+    ? mb_strtoupper($initiale, 'UTF-8')
+    : strtoupper($initiale);
 ?>
 <nav class="navbar">
     <a href="index.php" class="navbar-logo">
@@ -30,7 +36,7 @@ $grade = $_SESSION['roles'][0] ?? 'Aucun rôle';
         <?php endif; ?>
     </ul>
     <div class="navbar-profil">
-        <span class="avatar"><?= htmlspecialchars(mb_strtoupper(mb_substr($nomAffiche, 0, 1))) ?></span>
+        <span class="avatar"><?= htmlspecialchars($initiale) ?></span>
         <div class="profil-texte">
             <strong><?= htmlspecialchars($nomAffiche) ?></strong>
             <small><?= htmlspecialchars($grade) ?></small>

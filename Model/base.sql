@@ -44,6 +44,14 @@ CREATE TABLE Personnel_Nom_Historique (
     date_changement DATE NOT NULL
 );
 
+-- Migration pour une base existante (exécuter cette instruction seule).
+CREATE TABLE IF NOT EXISTS Personnel_Nom_Historique (
+    id serial PRIMARY KEY,
+    id_personnel INT NOT NULL REFERENCES Personnel(id),
+    ancien_nom varchar(50) NOT NULL,
+    date_changement DATE NOT NULL
+);
+
 INSERT INTO Personnel_Nom_Historique (id_personnel, ancien_nom, date_changement) VALUES
 (2, 'Durieux', '2023-06-01');
 
