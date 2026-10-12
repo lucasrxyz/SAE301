@@ -1,5 +1,6 @@
 <?php
     require __DIR__ . '/../Model/verifierconnexion.php';
+    exigerDroit('voir_personnel');
     require __DIR__ . '/../Model/listepersonnel.php';
 ?>
 <!DOCTYPE html>
@@ -27,10 +28,13 @@
 
         <p>
             <a href="?tout=1"><button type="button">Voir tout le personnel</button></a>
+            <?php if (verifierDroit('gerer_personnel')): ?>
+                <a href="ajouterpersonnel.php"><button type="button">Ajouter un personnel</button></a>
+            <?php endif; ?>
         </p>
 
         <?php if ($aucunResultat): ?>
-            <p style="color: red;">Aucun utilisateur trouvé.</p>
+            <p class="message-erreur">Aucun utilisateur trouvé.</p>
         <?php endif; ?>
 
         <?php if ($resultats): ?>
