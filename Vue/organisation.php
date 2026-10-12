@@ -23,7 +23,7 @@
 
         <p>Veuillez selectionner la vue désirée</p>
 
-        <form action="" method="get">
+        <form action="" method="get" class="form">
             <label>Vues disponibles </label>
             <button type="submit" name="vue" value="departements">Départements</button>
             <button type="submit" name="vue" value="groupes">Groupes</button>

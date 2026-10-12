@@ -20,15 +20,19 @@
 
         <?php if ($message): ?><p><?= $message ?></p><?php endif; ?>
 
-        <form action="" method="post">
-            <label>Que souhaitez vous faire : </label>
-            <button type="submit" name="choix_orga" value="ajouterDepartement">Ajouter un Département</button>
-            <button type="submit" name="choix_orga" value="modifierDepartement">Modifier un Département</button>
-            <button type="submit" name="choix_orga" value="supprimerDepartement">Fermer un Département</button>
-            <p></p>
-            <button type="submit" name="choix_orga" value="ajouterGroupe">Ajouter un Groupe</button>
-            <button type="submit" name="choix_orga" value="modifierGroupe">Modifier un Groupe</button>
-            <button type="submit" name="choix_orga" value="supprimerGroupe">Fermer un Groupe</button>
+        <label>Que souhaitez vous faire : </label>
+        <form action="" method="post" class="form-choix">
+            <div class="filtres-boutons">
+                <button type="submit" name="choix_orga" value="ajouterDepartement">Ajouter un Département</button>
+                <button type="submit" name="choix_orga" value="modifierDepartement">Modifier un Département</button>
+                <button type="submit" name="choix_orga" value="supprimerDepartement">Fermer un Département</button>
+            </div>
+
+            <div class="filtres-boutons">
+                <button type="submit" name="choix_orga" value="ajouterGroupe">Ajouter un Groupe</button>
+                <button type="submit" name="choix_orga" value="modifierGroupe">Modifier un Groupe</button>
+                <button type="submit" name="choix_orga" value="supprimerGroupe">Fermer un Groupe</button>
+            </div>
         </form>
 
         <?php if($choix_orga !== null) : ?>
@@ -121,9 +125,9 @@
 
             </form>
         <?php endif; ?>
-
+        </div>
         <p><a href="organisation.php">Retour à l'affichage de l'organisation</a></p>
-    </div>
+
 
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> K.A.B.L Solution Hauts-de-France - Tous droits réservés</p>
