@@ -564,6 +564,52 @@ h2 {
     color: #8f1d14;
 }
 
+.role-pastille,
+.role-ajout {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: auto;
+    margin: 0.15rem 0.3rem 0.15rem 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    flex-wrap: nowrap;
+}
+
+.role-pastille {
+    padding: 0.2rem 0.3rem 0.2rem 0.7rem;
+    border-radius: 999px;
+    background: #e6f5f6;
+    color: #00727c;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.role-pastille button {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #c0392b;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.role-pastille button:hover {
+    background: #c0392b;
+    color: #ffffff;
+}
+
+.role-ajout select {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.85rem;
+}
+
+.role-ajout button {
+    padding: 0.45rem 0.8rem;
+}
 .badge-homonyme {
     display: inline-block;
     margin-left: 0.4rem;
