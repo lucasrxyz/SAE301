@@ -182,6 +182,14 @@ input[type="text"] {
     font-size: 0.95rem;
 }
 
+input[type="email"] {
+    padding: 0.55rem 0.8rem;
+    border: 1px solid #d5dbe2;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
 input[type="password"] {
     padding: 0.7rem 0.8rem;
     border: 1px solid #d5dbe2;
@@ -190,6 +198,7 @@ input[type="password"] {
 }
 
 input[type="text"]:focus,
+input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="date"]:focus,
 select:focus {
@@ -486,6 +495,7 @@ h2 {
 }
 
 .formulaire-vertical input[type="text"],
+.formulaire-vertical input[type="email"],
 .formulaire-vertical input[type="password"],
 .formulaire-vertical input[type="date"],
 .formulaire-vertical select {
@@ -826,6 +836,7 @@ h2 {
     }
 
     input[type="text"],
+    input[type="email"],
     input[type="password"],
     input[type="date"],
     select,
@@ -860,25 +871,8 @@ h2 {
         width: auto;
         flex: 1;
     }
-    input[type="email"] {
-    padding: 0.55rem 0.8rem;
-    border: 1px solid #d5dbe2;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    }
 
-    input[type="email"]:focus {
-        outline: none;
-        border-color: #0098a5;
-        box-shadow: 0 0 0 3px rgba(0, 152, 165, 0.12);
-    }
-
-    .formulaire-vertical input[type="email"] {
-        width: 100%;
-        padding: 0.7rem 0.8rem;
-    }
     .form-choix .filtres-boutons {
-    flex-wrap: wrap;
+        flex-wrap: wrap;
     }
 }
