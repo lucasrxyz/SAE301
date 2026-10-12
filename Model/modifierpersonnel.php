@@ -1,21 +1,7 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/verifierconnexion.php';
 
-if (empty($_SESSION['identifiant'])) {
-    header('Location: ../Vue/connexion.php');
-    exit;
-}
-
-$estAutorise = in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? []);
-
-if (!$estAutorise) {
-    header('Location: ../Vue/afficherListePersonnel.php');
-    exit;
-}
-
-require_once __DIR__ . '/config.php';
+exigerDroit('gerer_personnel');
 
 $idPersonnel = $_POST['id_personnel'] ?? $_GET['id'] ?? '';
 $personnel = null;

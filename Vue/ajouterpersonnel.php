@@ -41,7 +41,12 @@
                 <input type="date" name="date_arrivee" id="date_arrivee" value="<?= htmlspecialchars($dateArriveeSaisie) ?>" required>
 
                 <label for="statut">Statut</label>
-                <input type="text" name="statut" id="statut" maxlength="50" value="<?= htmlspecialchars($statutSaisi) ?>" required>
+                    <select name="statut" id="statut" required>
+                        <option value="">-- Choisir un statut --</option>
+                             <?php foreach ($statutsPossibles as $statut): ?>
+                                <option value="<?= htmlspecialchars($statut) ?>" <?= $statutSaisi === $statut ? 'selected' : '' ?>><?= htmlspecialchars($statut) ?></option>
+                            <?php endforeach; ?>
+                    </select>
 
                 <label for="quotite">Quotité recherche (%)</label>
                 <input type="number" name="quotite" id="quotite" min="0" max="100" step="0.01" value="<?= htmlspecialchars($quotiteSaisie) ?>" required>

@@ -1,6 +1,7 @@
 <?php
     require __DIR__ . '/../Model/verifierconnexion.php';
     require __DIR__ . '/../Model/creercompte.php';
+    exigerDroit('gerer_personnel');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
