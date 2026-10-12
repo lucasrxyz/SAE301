@@ -860,4 +860,22 @@ h2 {
         width: auto;
         flex: 1;
     }
+    input[type="email"] {
+    padding: 0.55rem 0.8rem;
+    border: 1px solid #d5dbe2;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    }
+
+    input[type="email"]:focus {
+        outline: none;
+        border-color: #0098a5;
+        box-shadow: 0 0 0 3px rgba(0, 152, 165, 0.12);
+    }
+
+    .formulaire-vertical input[type="email"] {
+        width: 100%;
+        padding: 0.7rem 0.8rem;
+    }
 }
