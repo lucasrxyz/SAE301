@@ -12,9 +12,9 @@
 <body>
 
     <nav class="navbar">
-        <div class="navbar-logo">
-            K.A.B.L Solution <span>Hauts-de-France</span>
-        </div>
+          <div class="navbar-logo">
+              <img src="images/logo-uphf.png" alt="Université Polytechnique Hauts-de-France">
+          </div>
     </nav>
 
     <main class="page-contenu connexion-page">

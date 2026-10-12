@@ -6,9 +6,9 @@ if ($nomAffiche === '') {
 $grade = $_SESSION['roles'][0] ?? 'Aucun rôle';
 ?>
 <nav class="navbar">
-    <div class="navbar-logo">
-        K.A.B.L Solution <span>Hauts-de-France</span>
-    </div>
+    <a href="index.php" class="navbar-logo">
+        <img src="images/logo-uphf.png" alt="Université Polytechnique Hauts-de-France">
+    </a>
     <ul class="navbar-liens">
         <?php if (verifierDroit('voir_tableau_bord')): ?>
             <li><a href="tableauDeBord.php">Accueil</a></li>

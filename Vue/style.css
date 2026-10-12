@@ -19,26 +19,25 @@ body {
 }
 
 .navbar {
-    flex-wrap: wrap;
-    gap: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 15px 30px;
     background-color: #ffffff;
     padding: 15px 40px;
     border-bottom: 3px solid #0098a5;
 }
 
 .navbar-logo {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #0098a5;
+    display: flex;
+    align-items: center;
 }
 
-.navbar-logo span {
-    color: #000000;
-    font-size: 0.9rem;
+.navbar-logo img {
     display: block;
+    height: 48px;
+    width: auto;
 }
 
 .navbar-liens {
@@ -62,6 +61,11 @@ body {
     color: #0098a5;
     border-bottom-color: #0098a5;
 }
+
+a {
+    color: #0098a5;
+}
+
 .navbar-profil {
     margin-left: auto;
     display: flex;
@@ -115,10 +119,6 @@ body {
     text-decoration: underline;
 }
 
-a {
-    color: #0098a5;
-}
-
 .page-contenu {
     width: min(100%, 1150px);
     margin: 0 auto;
@@ -148,6 +148,17 @@ form {
     width: fit-content;
     max-width: 100%;
     flex-wrap: wrap;
+}
+
+.page-contenu > form {
+    width: 100%;
+}
+
+.page-contenu > form select,
+.page-contenu > form input[type="date"],
+.page-contenu > form input[type="text"] {
+    flex: 1;
+    min-width: 120px;
 }
 
 label {
@@ -327,15 +338,6 @@ td a:hover {
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-.page-contenu > form {
-    width: 100%;
-}
-.page-contenu > form select,
-.page-contenu > form input[type="date"],
-.page-contenu > form input[type="text"] {
-    flex: 1;
-    min-width: 120px;
-}
 #detail-table th {
     width: 200px;
     background: #f8fafc;
@@ -610,6 +612,7 @@ h2 {
 .role-ajout button {
     padding: 0.45rem 0.8rem;
 }
+
 .badge-homonyme {
     display: inline-block;
     margin-left: 0.4rem;
@@ -781,6 +784,10 @@ h2 {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+    }
+
+    .navbar-logo img {
+        height: 38px;
     }
 
     .navbar-liens {
