@@ -7,23 +7,30 @@ $voirTout = isset($_GET['tout']);
 $resultats = [];
 $aucunResultat = false;
 
+$perimetreAutorise = perimetreUtilisateur($pdo);
+[$filtrePerimetre, $parametres] = conditionPerimetre($perimetreAutorise);
+
 $texteRequete = "SELECT DISTINCT Personnel.*
     FROM Personnel
     JOIN Rattachement ON Rattachement.id_personnel = Personnel.id
-    LEFT JOIN Personnel_Nom_Historique ON Personnel_Nom_Historique.id_personnel = Personnel.id";
+    LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
+    LEFT JOIN Personnel_Nom_Historique ON Personnel_Nom_Historique.id_personnel = Personnel.id
+    WHERE TRUE" . $filtrePerimetre;
 
 if ($voirTout) {
     $requete = $pdo->prepare($texteRequete . " ORDER BY Personnel.nom, Personnel.prenom");
-    $requete->execute();
+    $requete->execute($parametres);
     $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
 } elseif ($nomUtilisateur !== '') {
     $requete = $pdo->prepare($texteRequete . "
-        WHERE (Personnel.nom ILIKE :nom
+        AND (Personnel.nom ILIKE :nom
         OR Personnel_Nom_Historique.ancien_nom ILIKE :nom
         OR Personnel.id_orcid = :exact
         OR Personnel.id_idhal = :exact)
         ORDER BY Personnel.nom, Personnel.prenom");
-    $requete->execute(['nom' => '%' . $nomUtilisateur . '%', 'exact' => $nomUtilisateur]);
+    $parametres['nom'] = '%' . $nomUtilisateur . '%';
+    $parametres['exact'] = $nomUtilisateur;
+    $requete->execute($parametres);
     $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($resultats) === 0) {

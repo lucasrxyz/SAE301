@@ -4,6 +4,7 @@
     require __DIR__ . '/../Model/modifieridentite.php';
     require __DIR__ . '/../Model/cloturerrattachement.php';
     require __DIR__ . '/../Model/fichepersonnel.php';
+    exigerDroit('voir_personnel');    
 ?>
 <!doctype html>
 <html lang="fr">
