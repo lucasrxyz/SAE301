@@ -2,6 +2,7 @@
     require __DIR__ . '/../Model/verifierconnexion.php';
     require __DIR__ . '/../Model/desactiverpersonnel.php';
     require __DIR__ . '/../Model/modifieridentite.php';
+    require __DIR__ . '/../Model/cloturerrattachement.php';
     require __DIR__ . '/../Model/fichepersonnel.php';
 ?>
 <!doctype html>
@@ -36,6 +37,14 @@
 
         <?php if ($erreurIdentite): ?>
             <p class="message-erreur"><?= htmlspecialchars($erreurIdentite) ?></p>
+        <?php endif; ?>
+
+        <?php if ($rattachementCloture): ?>
+            <p style="color: green">Le rattachement a été clôturé.</p>
+        <?php endif; ?>
+
+        <?php if ($erreurClotureRattachement !== ''): ?>
+            <p style="color: red"><?= htmlspecialchars($erreurClotureRattachement) ?></p>
         <?php endif; ?>
 
         <?php if ($personnel): ?>
@@ -142,6 +151,61 @@
 
                     <button type="submit" name="changer_nom">Changer le nom</button>
                 </form>
+            <?php endif; ?>
+
+            <h2>Historique des rattachements</h2>
+
+            <?php if ($historiqueRattachements): ?>
+                <div class="tableau-defilant">
+                    <table>
+                        <tr>
+                            <th>Groupe / département</th>
+                            <th>Type de rattachement</th>
+                            <th>Du</th>
+                            <th>Au</th>
+                            <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? [], true) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [], true)): ?>
+                                <th>Action</th>
+                            <?php endif; ?>
+                        </tr>
+                        <?php foreach ($historiqueRattachements as $rattachement): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($rattachement['type_affectation'] . ' - ' . $rattachement['affectation']) ?></td>
+                                <td><?= htmlspecialchars(ucfirst($rattachement['type_rattachement'])) ?></td>
+                                <td><?= date('d/m/Y', strtotime($rattachement['date_debut'])) ?></td>
+                                <td><?= $rattachement['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($rattachement['date_fin'])) ?></td>
+                                <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? [], true) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [], true)): ?>
+                                    <td>
+                                        <?php if ($rattachement['date_fin'] === null): ?>
+                                            <?php
+                                                $dateFinAffichee = (string) $idRattachementCloture === (string) $rattachement['id'] && is_string($dateFinClotureSaisie)
+                                                    ? $dateFinClotureSaisie
+                                                    : max(date('Y-m-d'), $rattachement['date_debut']);
+                                            ?>
+                                            <form method="post" action="ficheDetailleePersonnel.php?id=<?= urlencode((string) $personnel['id']) ?>">
+                                                <input type="hidden" name="id_personnel" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
+                                                <input type="hidden" name="id_rattachement" value="<?= htmlspecialchars((string) $rattachement['id']) ?>">
+                                                <label for="date_fin_rattachement_<?= htmlspecialchars((string) $rattachement['id']) ?>">Date de fin</label>
+                                                <input
+                                                    type="date"
+                                                    name="date_fin_rattachement"
+                                                    id="date_fin_rattachement_<?= htmlspecialchars((string) $rattachement['id']) ?>"
+                                                    value="<?= htmlspecialchars($dateFinAffichee) ?>"
+                                                    min="<?= htmlspecialchars($rattachement['date_debut']) ?>"
+                                                    required
+                                                >
+                                                <button type="submit" name="cloturer_rattachement" value="true">Clôturer</button>
+                                            </form>
+                                        <?php else: ?>
+                                            —
+                                        <?php endif; ?>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p>Aucun rattachement enregistré.</p>
             <?php endif; ?>
 
             <?php if ($personnel['date_depart'] === null): ?>
