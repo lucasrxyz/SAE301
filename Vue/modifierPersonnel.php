@@ -48,7 +48,12 @@
     </div>
 
     <footer class="footer">
-        <p>&copy; <?= date('Y') ?> K.A.B.L Solution Hauts-de-France - Tous droits réservés</p>
+        <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
+        <ul class="footer-liens">
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Accessibilité</a></li>
+        </ul>
     </footer>
 
 </body>
