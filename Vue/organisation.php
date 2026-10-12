@@ -17,6 +17,10 @@
     <div class="page-contenu">
         <h1>Bienvenue sur la page Organisation</h1>
 
+        <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [])): ?>
+            <p><a href="modifierOrganisationFormulaire.php"><button type="button">Modifier organisation</button></a></p>
+        <?php endif; ?>
+
         <p>Veuillez selectionner la vue désirée</p>
 
         <form action="" method="get">
