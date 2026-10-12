@@ -1,8 +1,8 @@
 <?php
-$host = 'aws-0-eu-west-1.pooler.supabase.com';
+$host = 'aws-1-eu-west-3.pooler.supabase.com';
 $port = '5432';
 $dbname = 'postgres';
-$user = 'postgres.mhppkfbxenttmqfutfay';
+$user = 'postgres.juleatlpngxjdveccilz';
 $password = 'Aqwzsxed59330';
 
 $pdo = new PDO(
