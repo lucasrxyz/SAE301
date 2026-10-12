@@ -3,6 +3,7 @@ require_once __DIR__ . '/config.php';
 
 $nomUtilisateur = trim($_GET['nom'] ?? '');
 $voirTout = isset($_GET['tout']);
+$voirRattaches = isset($_GET['rattaches']);
 
 $resultats = [];
 $aucunResultat = false;
@@ -10,15 +11,19 @@ $aucunResultat = false;
 $perimetreAutorise = perimetreUtilisateur($pdo);
 [$filtrePerimetre, $parametres] = conditionPerimetre($perimetreAutorise);
 
-$texteRequete = "SELECT DISTINCT Personnel.*
+$texteRequete = "SELECT DISTINCT Personnel.*, Rattachement.id IS NULL AS sans_rattachement
     FROM Personnel
-    JOIN Rattachement ON Rattachement.id_personnel = Personnel.id
+    LEFT JOIN Rattachement ON Rattachement.id_personnel = Personnel.id
     LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
     LEFT JOIN Personnel_Nom_Historique ON Personnel_Nom_Historique.id_personnel = Personnel.id
     WHERE TRUE" . $filtrePerimetre;
 
 if ($voirTout) {
     $requete = $pdo->prepare($texteRequete . " ORDER BY Personnel.nom, Personnel.prenom");
+    $requete->execute($parametres);
+    $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
+} elseif ($voirRattaches) {
+    $requete = $pdo->prepare($texteRequete . " AND Rattachement.id IS NOT NULL ORDER BY Personnel.nom, Personnel.prenom");
     $requete->execute($parametres);
     $resultats = $requete->fetchAll(PDO::FETCH_ASSOC);
 } elseif ($nomUtilisateur !== '') {

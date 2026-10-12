@@ -28,6 +28,7 @@
 
         <p>
             <a href="?tout=1"><button type="button">Voir tout le personnel</button></a>
+            <a href="?rattaches=1"><button type="button">Voir le personnel rattaché</button></a>
             <?php if (verifierDroit('gerer_personnel')): ?>
                 <a href="ajouterpersonnel.php"><button type="button">Ajouter un personnel</button></a>
             <?php endif; ?>
@@ -60,9 +61,20 @@
                             <td><?= htmlspecialchars($ligne['prenom']) ?></td>
                             <td><?= htmlspecialchars($ligne['mail']) ?></td>
                             <td><?= date('d/m/Y', strtotime($ligne['date_arrivee'])) ?></td>
-                            <td><?= $ligne['date_depart'] === null ? 'Actif' : 'Parti le ' . date('d/m/Y', strtotime($ligne['date_depart'])) ?></td>
+                            <td>
+                                <?php if ($ligne['sans_rattachement']): ?>
+                                    <span class="badge-homonyme">Non rattaché</span>
+                                <?php elseif ($ligne['date_depart'] === null): ?>
+                                    Actif
+                                <?php else: ?>
+                                    Parti le <?= date('d/m/Y', strtotime($ligne['date_depart'])) ?>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <a href="ficheDetailleePersonnel.php?id=<?= $ligne['id'] ?>" target="_blank">Choisir</a>
+                                <?php if ($ligne['sans_rattachement'] && verifierDroit('gerer_personnel')): ?>
+                                    · <a href="ajouterRattachement.php?id=<?= $ligne['id'] ?>">Rattacher</a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
