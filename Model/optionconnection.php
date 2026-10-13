@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['niveau'] = $roles ? $roles[0]['niveau_pyramidal'] : null;
                 $_SESSION['prenom'] = $personne['prenom'] ?? '';
                 $_SESSION['nom'] = $personne['nom'] ?? '';
-                header('Location: tableauDeBord.php');
+                header('Location: ' . pageAccueil());
                 exit;
             }
 
