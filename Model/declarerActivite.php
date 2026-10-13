@@ -1,6 +1,7 @@
 <?php
     require_once __DIR__ . '/config.php';
-
+    exigerDroit('declarer_activite');
+    
     $erreurActivite = '';
     $activiteEnregistree = isset($_GET['enregistree']);
     $idPersonnel = $_SESSION['id_personnel'];

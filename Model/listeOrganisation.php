@@ -1,6 +1,6 @@
 <?php
     require_once __DIR__ . '/config.php';
-
+    exigerDroit('voir_organisation');
     $vue = $_GET['vue'] ?? null;
     $dateConsultee = $_GET['date'] ?? date('Y-m-d');
     $requete = null;
