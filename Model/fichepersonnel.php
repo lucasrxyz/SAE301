@@ -8,6 +8,7 @@ $historiqueStatuts = [];
 $anciensNoms = [];
 $historiqueRattachements = [];
 $activites = [];
+$detailsActivites = [];
 $voirContenu = verifierDroit('voir_contenu_scientifique');
 
 if ($idPersonnel !== null) {
@@ -34,7 +35,8 @@ if ($idPersonnel !== null) {
         $anciensNoms = $requete->fetchAll(PDO::FETCH_ASSOC);
 
         $requete = $pdo->prepare(
-            "SELECT r.id, r.type_rattachement, r.responsable_groupe, r.date_debut, r.date_fin,                COALESCE(g.nom, d.nom, 'Affectation inconnue') AS affectation,
+            "SELECT r.id, r.type_rattachement, r.responsable_groupe, r.date_debut, r.date_fin,
+                COALESCE(g.nom, d.nom, 'Affectation inconnue') AS affectation,
                 CASE WHEN r.id_groupe IS NOT NULL THEN 'Groupe' ELSE 'Département' END AS type_affectation
             FROM Rattachement r
             LEFT JOIN Groupe g ON g.id_groupe = r.id_groupe
@@ -44,13 +46,23 @@ if ($idPersonnel !== null) {
         );
         $requete->execute(['id' => $idPersonnel]);
         $historiqueRattachements = $requete->fetchAll(PDO::FETCH_ASSOC);
-        $requete = $pdo->prepare("SELECT Activite.titre, Activite.date_debut, Activite.date_fin, TypeActivite.categorie, TypeActivite.nom_type
+
+        $requete = $pdo->prepare("SELECT Activite.id_activite, Activite.titre, Activite.date_debut, Activite.date_fin, TypeActivite.categorie, TypeActivite.nom_type
             FROM Activite
             JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
             WHERE Activite.id_personnel = :id
             ORDER BY Activite.date_debut DESC");
         $requete->execute(['id' => $idPersonnel]);
         $activites = $requete->fetchAll(PDO::FETCH_ASSOC);
-        
+
+        $requete = $pdo->prepare('SELECT Activite_Champ.id_activite, Activite_Champ.nom_champ, Activite_Champ.valeur
+            FROM Activite_Champ
+            JOIN Activite ON Activite.id_activite = Activite_Champ.id_activite
+            WHERE Activite.id_personnel = ?
+            ORDER BY Activite_Champ.id');
+        $requete->execute([$idPersonnel]);
+        foreach ($requete->fetchAll() as $ligne) {
+            $detailsActivites[$ligne['id_activite']][] = $ligne['nom_champ'] . ' : ' . $ligne['valeur'];
+        }
     }
 }

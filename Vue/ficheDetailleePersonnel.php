@@ -237,7 +237,8 @@
             <?php else: ?>
                 <p>Aucun rattachement enregistré.</p>
             <?php endif; ?>
-                        <h2>Activités</h2>
+
+            <h2>Activités</h2>
             <?php if ($activites): ?>
                 <div class="tableau-defilant">
                     <table>
@@ -246,6 +247,7 @@
                             <th>Type</th>
                             <?php if ($voirContenu): ?>
                                 <th>Titre</th>
+                                <th>Détails</th>
                             <?php endif; ?>
                             <th>Du</th>
                             <th>Au</th>
@@ -256,6 +258,7 @@
                                 <td><?= htmlspecialchars($activite['nom_type']) ?></td>
                                 <?php if ($voirContenu): ?>
                                     <td><?= htmlspecialchars($activite['titre']) ?></td>
+                                    <td><?= htmlspecialchars(implode(' · ', $detailsActivites[$activite['id_activite']] ?? [])) ?></td>
                                 <?php endif; ?>
                                 <td><?= date('d/m/Y', strtotime($activite['date_debut'])) ?></td>
                                 <td><?= $activite['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($activite['date_fin'])) ?></td>
@@ -269,6 +272,7 @@
             <?php else: ?>
                 <p>Aucune activité déclarée.</p>
             <?php endif; ?>
+
             <?php if ($estRH): ?>
                 <h2>Identifiants ORCID et IdHAL</h2>
                 <form method="post" action="">

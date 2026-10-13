@@ -778,6 +778,19 @@ h2 {
 .formulaire-vertical .case-a-cocher input {
     width: auto;
 }
+.bouton-secondaire {
+    background: #e2e8f0;
+    color: #33475b;
+}
+
+.formulaire-vertical .bouton-secondaire {
+    margin-top: 0.3rem;
+    background: #e2e8f0;
+}
+
+.formulaire-vertical .bouton-secondaire:hover {
+    background: #d0d7e0;
+}
 
 @media (max-width: 900px) {
     .navbar {

@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS Activite_Champ CASCADE;
+DROP TABLE IF EXISTS TypeActivite_Champ CASCADE;
 DROP TABLE IF EXISTS Activite CASCADE;
 DROP TABLE IF EXISTS TypeActivite CASCADE;
 DROP TABLE IF EXISTS Rattachement CASCADE;
@@ -125,6 +127,16 @@ CREATE TABLE TypeActivite (
 );
 
 -- ===============================
+-- TABLE "TypeActivite_Champ"
+-- ===============================
+CREATE TABLE TypeActivite_Champ (
+    id serial PRIMARY KEY,
+    id_type INT NOT NULL REFERENCES TypeActivite(id_type),
+    nom_champ varchar(50) NOT NULL,
+    type_champ varchar(10) NOT NULL DEFAULT 'text'
+);
+
+-- ===============================
 -- TABLE "Activite"
 -- ===============================
 CREATE TABLE Activite (
@@ -135,6 +147,16 @@ CREATE TABLE Activite (
     date_debut DATE NOT NULL,
     date_fin DATE,
     donnees JSON
+);
+
+-- ===============================
+-- TABLE "Activite_Champ"
+-- ===============================
+CREATE TABLE Activite_Champ (
+    id serial PRIMARY KEY,
+    id_activite INT NOT NULL REFERENCES Activite(id_activite),
+    nom_champ varchar(50) NOT NULL,
+    valeur varchar(255) NOT NULL
 );
 
 -- ===============================
@@ -200,6 +222,7 @@ INSERT INTO Compte_Role (id_compte, id_role) VALUES
 (5, 4), (5, 6),
 (6, 6),
 (7, 6);
+
 INSERT INTO Departement (nom, date_debut, date_fin) VALUES
 ('Informatique', '2010-01-01', NULL),
 ('Mathématiques', '2010-01-01', NULL),
@@ -248,6 +271,21 @@ INSERT INTO TypeActivite (categorie, nom_type, est_collective) VALUES
 ('Rayonnement', 'Comité de sélection', FALSE),
 ('Responsabilité', 'Administration et animation de structures', FALSE);
 
+INSERT INTO TypeActivite_Champ (id_type, nom_champ, type_champ) VALUES
+(9, 'Revue', 'text'),
+(9, 'Nombre d''articles relus', 'number'),
+(10, 'Organisme', 'text'),
+(10, 'Nombre de dossiers', 'number'),
+(11, 'Nom de la conférence', 'text'),
+(11, 'Lieu', 'text'),
+(12, 'Université', 'text'),
+(12, 'Rôle dans le jury', 'text'),
+(13, 'Nom de la conférence', 'text'),
+(14, 'Établissement', 'text'),
+(14, 'Poste concerné', 'text'),
+(15, 'Structure', 'text'),
+(15, 'Fonction occupée', 'text');
+
 INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin, donnees) VALUES
 (1, 1, 'Interfaces adaptatives pour la gestion de crise', '2024-03-10', '2024-03-10', '{"revue": "IJHCS", "hal_id": "hal-04512345"}'),
 (2, 2, 'Détection d''intrusion par apprentissage', '2024-04-20', '2024-04-25', '{"conference": "ACM CCS", "lieu": "Salt Lake City"}'),
@@ -259,3 +297,12 @@ INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin, donnee
 (12, 4, 'Jury de thèse Université de Lille', '2024-06-14', '2024-06-14', '{"universite": "Lille"}'),
 (13, 2, 'Comité de programme ESORICS 2024', '2024-01-15', '2024-05-30', '{"conference": "ESORICS"}'),
 (1, 12, 'Commande robuste de bras manipulateurs', '2021-05-12', '2021-05-12', '{"revue": "Automatica"}');
+
+INSERT INTO Activite_Champ (id_activite, nom_champ, valeur) VALUES
+(6, 'Revue', 'IEEE TSE'),
+(6, 'Nombre d''articles relus', '1'),
+(7, 'Nom de la conférence', 'EICS 2023'),
+(7, 'Lieu', 'Swansea'),
+(8, 'Université', 'Université de Lille'),
+(8, 'Rôle dans le jury', 'Examinateur'),
+(9, 'Nom de la conférence', 'ESORICS 2024');

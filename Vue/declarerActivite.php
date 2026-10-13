@@ -37,6 +37,14 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
+                <button type="submit" name="choisir_type" formnovalidate class="bouton-secondaire">Afficher les champs de ce type</button>
+
+                <?php $numero = 0; ?>
+                <?php foreach ($champsDuType as $nomChamp => $typeChamp): ?>
+                    <?php $numero++; ?>
+                    <label for="champ_<?= $numero ?>"><?= htmlspecialchars($nomChamp) ?></label>
+                    <input type="<?= $typeChamp ?>" name="champs[<?= htmlspecialchars($nomChamp) ?>]" id="champ_<?= $numero ?>" value="<?= htmlspecialchars($valeursChamps[$nomChamp] ?? '') ?>" <?= $typeChamp === 'number' ? 'min="1"' : '' ?> required>
+                <?php endforeach; ?>
 
                 <label for="titre">Titre de l'activité</label>
                 <input type="text" name="titre" id="titre" value="<?= htmlspecialchars($titre) ?>" required>
@@ -130,6 +138,7 @@
                                 </a>
                             </th>
                             <th>Au</th>
+                            <th>Détails</th>
                             <th>
                                 <a class="lien-tri" href="?<?= $filtresUrl ?>&tri=etat&ordre=<?= $tri === 'etat' ? $ordreInverse : 'desc' ?>">
                                     Statut <?= $tri === 'etat' ? ($ordre === 'asc' ? '▲' : '▼') : '' ?>
@@ -143,6 +152,7 @@
                                 <td><?= htmlspecialchars($activite['titre']) ?></td>
                                 <td><?= date('d/m/Y', strtotime($activite['date_debut'])) ?></td>
                                 <td><?= $activite['date_fin'] === null ? '—' : date('d/m/Y', strtotime($activite['date_fin'])) ?></td>
+                                <td><?= htmlspecialchars(implode(' · ', $detailsActivites[$activite['id_activite']] ?? [])) ?></td>
                                 <td>
                                     <?php if ($activite['date_fin'] === null || $activite['date_fin'] >= date('Y-m-d')): ?>
                                         <span class="bord-etat">En cours</span>
