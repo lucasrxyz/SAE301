@@ -1,7 +1,8 @@
 <?php
     require_once __DIR__ . '/config.php';
+
     exigerDroit('declarer_activite');
-    
+
     $erreurActivite = '';
     $activiteEnregistree = isset($_GET['enregistree']);
     $idPersonnel = $_SESSION['id_personnel'];
@@ -33,11 +34,11 @@
             $erreurActivite = 'Veuillez choisir un type d\'activité individuelle.';
         } elseif ($titre === '' || $datedebut === '') {
             $erreurActivite = 'Le titre et la date de début sont obligatoires.';
-        } elseif ($datefin !== '' && $datefin < $datedebut) {
+        } elseif (!$enCours && $datefin !== '' && $datefin < $datedebut) {
             $erreurActivite = 'La date de fin doit être après la date de début.';
         } else {
             $stmt = $pdo->prepare('INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)');
-            $stmt->execute([$typeactivite, $idPersonnel, $titre, $datedebut, $datefin === '' ? null : $datefin]);
+            $stmt->execute([$typeactivite, $idPersonnel, $titre, $datedebut, $dateFinEnregistree]);
 
             header('Location: declarerActivite.php?enregistree=1');
             exit;
