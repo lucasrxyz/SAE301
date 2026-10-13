@@ -7,6 +7,8 @@ $personnelIntrouvable = false;
 $historiqueStatuts = [];
 $anciensNoms = [];
 $historiqueRattachements = [];
+$activites = [];
+$voirContenu = verifierDroit('voir_contenu_scientifique');
 
 if ($idPersonnel !== null) {
     [$filtrePerimetre, $parametres] = conditionPerimetre(perimetreUtilisateur($pdo));
@@ -42,5 +44,13 @@ if ($idPersonnel !== null) {
         );
         $requete->execute(['id' => $idPersonnel]);
         $historiqueRattachements = $requete->fetchAll(PDO::FETCH_ASSOC);
+        $requete = $pdo->prepare("SELECT Activite.titre, Activite.date_debut, Activite.date_fin, TypeActivite.categorie, TypeActivite.nom_type
+            FROM Activite
+            JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
+            WHERE Activite.id_personnel = :id
+            ORDER BY Activite.date_debut DESC");
+        $requete->execute(['id' => $idPersonnel]);
+        $activites = $requete->fetchAll(PDO::FETCH_ASSOC);
+        
     }
 }

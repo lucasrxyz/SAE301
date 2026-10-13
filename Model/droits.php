@@ -19,6 +19,10 @@ function verifierDroit($action)
     if ($action === 'voir_personnel') {
         return $niveau <= 3;
     }
+    
+    if ($action === 'voir_contenu_scientifique') {
+        return $niveau <= 1 || ($niveau <= 3 && !in_array('Gestionnaire RH', $roles));
+    }
 
     if ($action === 'gerer_personnel') {
         return in_array('Gestionnaire RH', $roles) || $niveau == 0;
