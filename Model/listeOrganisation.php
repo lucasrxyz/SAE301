@@ -1,11 +1,19 @@
 <?php
     require_once __DIR__ . '/config.php';
 
-
     $vue = $_GET['vue'] ?? null;
+    $dateConsultee = $_GET['date'] ?? date('Y-m-d');
+    $requete = null;
+    $stmt = [];
 
-    if($vue === 'departements') {
-        
+    $date = DateTime::createFromFormat('!Y-m-d', $dateConsultee);
+    if (!$date || $date->format('Y-m-d') !== $dateConsultee) {
+        $dateConsultee = date('Y-m-d');
+    }
+
+    $actifALaDate = "Rattachement.date_debut <= :date AND (Rattachement.date_fin IS NULL OR Rattachement.date_fin >= :date)";
+
+    if ($vue === 'departements') {
         $requete = $pdo->prepare(
             "SELECT
             COALESCE(Departement.nom, 'Non rattaché dans un département') AS dept_nom,
@@ -13,11 +21,10 @@
             FROM Rattachement
             JOIN Personnel ON Personnel.id = Rattachement.id_personnel
             LEFT JOIN Departement ON Departement.id_departement = Rattachement.id_departement
-            WHERE Rattachement.date_fin IS NULL
-            ORDER BY dept_nom, person_nom;");
-    
-    } elseif($vue ==='groupes') {
+            WHERE " . $actifALaDate . "
+            ORDER BY dept_nom, person_nom");
 
+    } elseif ($vue === 'groupes') {
         $requete = $pdo->prepare(
             "SELECT
             COALESCE(d_groupe.nom, d_direct.nom) AS dept_nom,
@@ -29,11 +36,10 @@
             LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
             LEFT JOIN Departement d_groupe ON d_groupe.id_departement = Groupe.id_departement
             LEFT JOIN Departement d_direct ON d_direct.id_departement = Rattachement.id_departement
-            WHERE Rattachement.date_fin IS NULL
-            ORDER BY dept_nom, groupe_nom, person_nom;");
+            WHERE " . $actifALaDate . "
+            ORDER BY dept_nom, groupe_nom, person_nom");
 
-    } elseif($vue ==='hierarchie') {
-
+    } elseif ($vue === 'hierarchie') {
         $requete = $pdo->prepare(
             "SELECT
             Role.nom_role AS nom_role,
@@ -43,16 +49,14 @@
             JOIN Compte_Role ON Compte_Role.id_role = Role.id_role
             JOIN Compte ON Compte.id_compte = Compte_Role.id_compte
             JOIN Personnel ON Personnel.id = Compte.id_personnel
-            LEFT JOIN Rattachement ON (Rattachement.id_personnel = Personnel.id AND Rattachement.date_fin IS NULL)
+            LEFT JOIN Rattachement ON Rattachement.id_personnel = Personnel.id AND " . $actifALaDate . "
             LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
             LEFT JOIN Departement ON Departement.id_departement = Rattachement.id_departement
             WHERE NOT Role.nom_role = 'Administrateur fonctionnel'
-            ORDER BY Role.niveau_pyramidal ASC, Personnel.nom ASC;");
-    } else {
+            ORDER BY Role.niveau_pyramidal ASC, Personnel.nom ASC");
+    }
 
+    if ($requete) {
+        $requete->execute(['date' => $dateConsultee]);
+        $stmt = $requete->fetchAll(PDO::FETCH_ASSOC);
     }
-    if (isset($requete)) {
-    $requete->execute();
-    $stmt = $requete->fetchAll(PDO::FETCH_ASSOC);
-    }
-?>

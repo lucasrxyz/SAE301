@@ -134,8 +134,8 @@
         <?php endif; ?>
                 <p><a href="organisation.php">Retour à l'affichage de l'organisation</a></p>
     </div>
-
-
+    
+    <footer class="footer">
     <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">
             <li><a href="#">Mentions légales</a></li>
