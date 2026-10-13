@@ -59,6 +59,10 @@ function perimetreUtilisateur($pdo)
         return ['type' => 'laboratoire', 'id' => ''];
     }
 
+    if ($niveau == 4) {
+        return ['type' => 'personnel', 'id' => $_SESSION['id_personnel']];
+    }
+
     $requete = $pdo->prepare('SELECT id_departement, id_groupe FROM Rattachement
         WHERE id_personnel = ? AND responsable_groupe = TRUE
         AND date_debut <= CURRENT_DATE AND (date_fin IS NULL OR date_fin >= CURRENT_DATE)
