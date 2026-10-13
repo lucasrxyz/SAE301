@@ -13,12 +13,19 @@
     $titre = '';
     $datedebut = '';
     $datefin = '';
+    $enCours = false;
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $typeactivite = $_POST['id_type'] ?? '';
         $titre = trim($_POST['titre'] ?? '');
         $datedebut = $_POST['date_debut'] ?? '';
         $datefin = $_POST['date_fin'] ?? '';
+        $enCours = isset($_POST['en_cours']);
+
+        $dateFinEnregistree = $datefin === '' ? $datedebut : $datefin;
+        if ($enCours) {
+            $dateFinEnregistree = null;
+        }
 
         $typeValide = in_array($typeactivite, array_column($typesIndividuels, 'id_type'));
 

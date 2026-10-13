@@ -768,6 +768,16 @@ h2 {
 .lien-tri:hover {
     color: #0098a5;
 }
+.case-a-cocher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.formulaire-vertical .case-a-cocher input {
+    width: auto;
+}
 
 @media (max-width: 900px) {
     .navbar {

@@ -44,8 +44,14 @@
                 <label for="date_debut">Date de début</label>
                 <input type="date" name="date_debut" id="date_debut" value="<?= htmlspecialchars($datedebut) ?>" required>
 
-                <label for="date_fin">Date de fin (facultative)</label>
+                <label for="date_fin">Date de fin</label>
                 <input type="date" name="date_fin" id="date_fin" value="<?= htmlspecialchars($datefin) ?>">
+                <p class="aide">Laisser vide pour une activité d'une seule journée (relecture, jury…).</p>
+
+                <label class="case-a-cocher">
+                    <input type="checkbox" name="en_cours" <?= $enCours ? 'checked' : '' ?>>
+                    Activité toujours en cours
+                </label>
 
                 <button type="submit" name="enregistrer">Enregistrer l'activité</button>
             </form>
