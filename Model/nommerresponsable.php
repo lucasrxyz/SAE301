@@ -30,6 +30,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nommer_responsable'])
         $requete = $pdo->prepare('INSERT INTO Rattachement (id_personnel, id_departement, id_groupe, type_rattachement, responsable_groupe, date_debut) VALUES (?, ?, ?, ?, TRUE, ?)');
         $requete->execute([$idPersonnel, $rattachement['id_departement'], $rattachement['id_groupe'], $rattachement['type_rattachement'], $dateEffet]);
 
+        $nomRole = $rattachement['id_groupe'] ? 'Responsable de groupe' : 'Responsable de département';
+
+        $requete = $pdo->prepare('SELECT id_compte FROM Compte WHERE id_personnel = ?');
+        $requete->execute([$idPersonnel]);
+        $idCompte = $requete->fetchColumn();
+
+        $requete = $pdo->prepare('SELECT id_role FROM Role WHERE nom_role = ?');
+        $requete->execute([$nomRole]);
+        $idRole = $requete->fetchColumn();
+
+        if ($idCompte && $idRole) {
+            $requete = $pdo->prepare('INSERT INTO Compte_Role (id_compte, id_role) VALUES (?, ?) ON CONFLICT DO NOTHING');
+            $requete->execute([$idCompte, $idRole]);
+        }
+
         $pdo->commit();
 
         header('Location: ficheDetailleePersonnel.php?id=' . $idPersonnel . '&responsable_nomme=1');
