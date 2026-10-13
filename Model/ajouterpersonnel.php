@@ -3,16 +3,7 @@ require_once __DIR__ . '/config.php';
 
 exigerDroit('gerer_personnel');
 
-$statutsPossibles = [
-    'Doctorant',
-    'Post-doctorant',
-    'Maître de conférences',
-    'Professeur des universités',
-    'Chargé de recherche',
-    'Directeur de recherche',
-    'Ingénieur d\'études',
-    'Ingénieur de recherche'
-];
+require_once __DIR__ . '/statuts.php';
 
 $erreurPersonnel = '';
 $personnelCree = isset($_GET['cree']);

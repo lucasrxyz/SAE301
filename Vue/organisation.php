@@ -17,20 +17,22 @@
     <div class="page-contenu">
         <h1>Bienvenue sur la page Organisation</h1>
 
-        <?php if (in_array('Gestionnaire RH', $_SESSION['roles'] ?? []) || in_array('Administrateur fonctionnel', $_SESSION['roles'] ?? [])): ?>
-            <p><a href="modifierOrganisationFormulaire.php"><button type="button">Modifier organisation</button></a></p>
+        <?php if (verifierDroit('gerer_personnel')): ?>            <p><a href="modifierOrganisationFormulaire.php"><button type="button">Modifier organisation</button></a></p>
         <?php endif; ?>
 
         <p>Veuillez selectionner la vue désirée</p>
 
         <form action="" method="get" class="form">
-            <label>Vues disponibles </label>
-            <button type="submit" name="vue" value="departements">Départements</button>
+            <label for="date">Situation au</label>
+            <input type="date" name="date" id="date" value="<?= htmlspecialchars($dateConsultee) ?>" required>
+
+            <label>Vues disponibles </label>            <button type="submit" name="vue" value="departements">Départements</button>
             <button type="submit" name="vue" value="groupes">Groupes</button>
             <button type="submit" name="vue" value="hierarchie">Hiérarchie</button>
         </form>
 
         <?php if ($vue !== null): ?>
+        <h2>Situation au <?= date('d/m/Y', strtotime($dateConsultee)) ?></h2>
         <div class="tableau-defilant">
             <table>
                 <thead>

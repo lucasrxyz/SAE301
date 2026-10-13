@@ -4,6 +4,8 @@
     require __DIR__ . '/../Model/desactiverpersonnel.php';
     require __DIR__ . '/../Model/modifieridentite.php';
     require __DIR__ . '/../Model/cloturerrattachement.php';
+    require __DIR__ . '/../Model/changerstatut.php';
+    require __DIR__ . '/../Model/nommerresponsable.php';
     require __DIR__ . '/../Model/fichepersonnel.php';
 ?>
 <!doctype html>
@@ -46,6 +48,22 @@
 
         <?php if ($erreurClotureRattachement !== ''): ?>
             <p class="message-erreur"><?= htmlspecialchars($erreurClotureRattachement) ?></p>
+        <?php endif; ?>
+
+        <?php if ($statutChange): ?>
+            <p class="message-succes">Le nouveau statut a été enregistré.</p>
+        <?php endif; ?>
+
+        <?php if ($erreurStatut !== ''): ?>
+            <p class="message-erreur"><?= htmlspecialchars($erreurStatut) ?></p>
+        <?php endif; ?>
+
+        <?php if ($responsableNomme): ?>
+            <p class="message-succes">La nomination du responsable a été enregistrée.</p>
+        <?php endif; ?>
+
+        <?php if ($erreurResponsable !== ''): ?>
+            <p class="message-erreur"><?= htmlspecialchars($erreurResponsable) ?></p>
         <?php endif; ?>
 
         <?php if ($personnel): ?>
@@ -134,6 +152,27 @@
                 <p>Aucun statut enregistré.</p>
             <?php endif; ?>
 
+            <?php if ($estRH && $personnel['date_depart'] === null): ?>
+                <form method="post" action="">
+                    <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
+
+                    <label for="nouveau_statut">Nouveau statut</label>
+                    <select name="nouveau_statut" id="nouveau_statut" required>
+                        <?php foreach ($statutsPossibles as $statutPossible): ?>
+                            <option value="<?= htmlspecialchars($statutPossible) ?>"><?= htmlspecialchars($statutPossible) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <label for="nouvelle_quotite">Quotité (%)</label>
+                    <input type="number" name="nouvelle_quotite" id="nouvelle_quotite" min="0" max="100" required>
+
+                    <label for="date_effet">À partir du</label>
+                    <input type="date" name="date_effet" id="date_effet" value="<?= date('Y-m-d') ?>" required>
+
+                    <button type="submit" name="changer_statut">Changer le statut</button>
+                </form>
+            <?php endif; ?>
+
             <h2>Historique des rattachements</h2>
             <?php if ($historiqueRattachements): ?>
                 <div class="tableau-defilant">
@@ -141,6 +180,7 @@
                         <tr>
                             <th>Groupe / département</th>
                             <th>Type de rattachement</th>
+                            <th>Responsable</th>
                             <th>Du</th>
                             <th>Au</th>
                             <?php if ($estRH): ?>
@@ -151,6 +191,7 @@
                             <tr>
                                 <td><?= htmlspecialchars($rattachement['type_affectation'] . ' - ' . $rattachement['affectation']) ?></td>
                                 <td><?= htmlspecialchars(ucfirst($rattachement['type_rattachement'])) ?></td>
+                                <td><?= $rattachement['responsable_groupe'] ? 'Oui' : 'Non' ?></td>
                                 <td><?= date('d/m/Y', strtotime($rattachement['date_debut'])) ?></td>
                                 <td><?= $rattachement['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($rattachement['date_fin'])) ?></td>
                                 <?php if ($estRH): ?>
@@ -175,6 +216,15 @@
                                                 >
                                                 <button type="submit" name="cloturer_rattachement" value="true">Clôturer</button>
                                             </form>
+                                            <?php if (!$rattachement['responsable_groupe']): ?>
+                                                <form method="post" action="ficheDetailleePersonnel.php?id=<?= $personnel['id'] ?>">
+                                                    <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
+                                                    <input type="hidden" name="id_rattachement" value="<?= $rattachement['id'] ?>">
+                                                    <label for="date_nomination_<?= $rattachement['id'] ?>">Responsable à partir du</label>
+                                                    <input type="date" name="date_nomination" id="date_nomination_<?= $rattachement['id'] ?>" value="<?= date('Y-m-d') ?>" required>
+                                                    <button type="submit" name="nommer_responsable">Nommer responsable</button>
+                                                </form>
+                                            <?php endif; ?>
                                         <?php else: ?>
                                             —
                                         <?php endif; ?>
@@ -239,6 +289,15 @@
         </p>
 
     </div>
+
+    <footer class="footer">
+        <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
+        <ul class="footer-liens">
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Accessibilité</a></li>
+        </ul>
+    </footer>
 
 </body>
 </html>

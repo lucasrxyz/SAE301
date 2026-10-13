@@ -32,8 +32,7 @@ if ($idPersonnel !== null) {
         $anciensNoms = $requete->fetchAll(PDO::FETCH_ASSOC);
 
         $requete = $pdo->prepare(
-            "SELECT r.id, r.type_rattachement, r.date_debut, r.date_fin,
-                COALESCE(g.nom, d.nom, 'Affectation inconnue') AS affectation,
+            "SELECT r.id, r.type_rattachement, r.responsable_groupe, r.date_debut, r.date_fin,                COALESCE(g.nom, d.nom, 'Affectation inconnue') AS affectation,
                 CASE WHEN r.id_groupe IS NOT NULL THEN 'Groupe' ELSE 'Département' END AS type_affectation
             FROM Rattachement r
             LEFT JOIN Groupe g ON g.id_groupe = r.id_groupe

@@ -55,15 +55,17 @@
         }
     }
 
-    $requete = $pdo->prepare("SELECT Personnel_Statut_Historique.statut, COUNT(DISTINCT Personnel_Statut_Historique.id_personnel) AS nombre
+    $requete = $pdo->prepare("SELECT DISTINCT Personnel_Statut_Historique.id_personnel, Personnel_Statut_Historique.statut, Personnel_Statut_Historique.quotite_recherche
         FROM Personnel_Statut_Historique
         JOIN Rattachement ON Rattachement.id_personnel = Personnel_Statut_Historique.id_personnel
         LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
         WHERE Personnel_Statut_Historique.date_debut <= :fin
-        AND (Personnel_Statut_Historique.date_fin >= :debut OR Personnel_Statut_Historique.date_fin IS NULL)" . $filtre . "
-        GROUP BY Personnel_Statut_Historique.statut");
+        AND (Personnel_Statut_Historique.date_fin >= :debut OR Personnel_Statut_Historique.date_fin IS NULL)" . $filtre);
     $requete->execute($parametres);
-    $effectifsParStatut = $requete->fetchAll();
+    $effectifsParStatut = [];
+    foreach ($requete->fetchAll() as $ligne) {
+        $effectifsParStatut[$ligne['statut']][] = $ligne['quotite_recherche'];
+    }
 
     $requete = $pdo->prepare("SELECT TypeActivite.categorie, COUNT(DISTINCT Activite.id_activite) AS nombre
         FROM Activite

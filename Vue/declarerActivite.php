@@ -164,6 +164,5 @@
             <li><a href="#">Accessibilité</a></li>
         </ul>
     </footer>
-
 </body>
 </html>

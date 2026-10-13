@@ -33,12 +33,14 @@ require __DIR__ . '/../Model/ajouterrattachement.php';
                     <input type="hidden" name="id_personnel" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
 
                     <label for="choix">Groupe ou département</label>
-                    <select name="choix" id="choix" required>
+                     <select name="choix" id="choix" required>
                         <option value="">-- Choisir --</option>
                         <optgroup label="Groupes">
                             <?php foreach ($groupes as $groupe): ?>
                                 <option value="groupe-<?= $groupe['id_groupe'] ?>" <?= $choix === 'groupe-' . $groupe['id_groupe'] ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($groupe['nom_departement'] . ' - ' . $groupe['nom_groupe']) ?><?= $groupe['date_fin'] ? ' (clôturé le ' . date('d/m/Y', strtotime($groupe['date_fin'])) . ')' : '' ?>
+                                    <?= htmlspecialchars($groupe['nom_departement'] . ' - ' . $groupe['nom_groupe']) ?>
+                                    <?php if ($groupe['date_fin']): ?>(clôturé le <?= date('d/m/Y', strtotime($groupe['date_fin'])) ?>)<?php endif; ?>
+                                    <?php if ($groupe['date_debut'] > date('Y-m-d')): ?>(à partir du <?= date('d/m/Y', strtotime($groupe['date_debut'])) ?>)<?php endif; ?>
                                 </option>
                             <?php endforeach; ?>
                         </optgroup>
@@ -46,6 +48,8 @@ require __DIR__ . '/../Model/ajouterrattachement.php';
                             <?php foreach ($departements as $departement): ?>
                                 <option value="departement-<?= $departement['id_departement'] ?>" <?= $choix === 'departement-' . $departement['id_departement'] ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($departement['nom']) ?>
+                                    <?php if ($departement['date_fin']): ?>(clôturé le <?= date('d/m/Y', strtotime($departement['date_fin'])) ?>)<?php endif; ?>
+                                    <?php if ($departement['date_debut'] > date('Y-m-d')): ?>(à partir du <?= date('d/m/Y', strtotime($departement['date_debut'])) ?>)<?php endif; ?>
                                 </option>
                             <?php endforeach; ?>
                         </optgroup>

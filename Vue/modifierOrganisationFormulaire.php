@@ -18,8 +18,13 @@
     <div class="page-contenu">
         <h1>Bienvenue sur la page de modification de l'organisation.</h1>
 
-        <?php if ($message): ?><p><?= $message ?></p><?php endif; ?>
+        <?php if ($message): ?>
+            <p class="message-succes"><?= htmlspecialchars($message) ?></p>
+        <?php endif; ?>
 
+        <?php if ($erreurOrganisation !== ''): ?>
+            <p class="message-erreur"><?= htmlspecialchars($erreurOrganisation) ?></p>
+        <?php endif; ?>
         <label>Selectionnez l'action souhaitée : </label>
         <form action="" method="post" class="form-choix">
             <div class="filtres-boutons">
@@ -127,12 +132,16 @@
 
             </form>
         <?php endif; ?>
-        </div>
-        <p><a href="organisation.php">Retour à l'affichage de l'organisation</a></p>
+                <p><a href="organisation.php">Retour à l'affichage de l'organisation</a></p>
+    </div>
 
 
-    <footer class="footer">
-        <p>&copy; <?= date('Y') ?> K.A.B.L Solution Hauts-de-France - Tous droits réservés</p>
+    <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
+        <ul class="footer-liens">
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Accessibilité</a></li>
+        </ul>
     </footer>
 
 </body>

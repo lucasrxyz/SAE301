@@ -198,7 +198,12 @@ INSERT INTO Compte_Role (id_compte, id_role) VALUES
 (3, 2), (3, 6),
 (4, 3), (4, 6),
 (5, 4), (5, 6),
-(6, 6),
+(6, 6),Sur la branche main
+Votre branche est à jour avec 'origin/main'.
+
+Modifications qui seront validées :
+  (utilisez "git restore --staged <fichier>..." pour désindexer)
+        renommé :         Model/index.php -> index.php
 (7, 6);
 
 INSERT INTO Departement (nom, date_debut, date_fin) VALUES

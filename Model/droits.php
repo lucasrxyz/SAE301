@@ -60,7 +60,8 @@ function perimetreUtilisateur($pdo)
     }
 
     $requete = $pdo->prepare('SELECT id_departement, id_groupe FROM Rattachement
-        WHERE id_personnel = ? AND responsable_groupe = TRUE AND date_fin IS NULL
+        WHERE id_personnel = ? AND responsable_groupe = TRUE
+        AND date_debut <= CURRENT_DATE AND (date_fin IS NULL OR date_fin >= CURRENT_DATE)
         ORDER BY id_departement');
     $requete->execute([$_SESSION['id_personnel']]);
     $responsabilite = $requete->fetch(PDO::FETCH_ASSOC);

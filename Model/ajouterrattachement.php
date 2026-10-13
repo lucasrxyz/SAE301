@@ -21,10 +21,10 @@
         $erreurRattachement = 'Personnel introuvable.';
     }
 
-    $requete = $pdo->query('SELECT id_departement, nom FROM Departement ORDER BY nom');
+    $requete = $pdo->query('SELECT id_departement, nom, date_debut, date_fin FROM Departement ORDER BY nom');
     $departements = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-    $requete = $pdo->query('SELECT Groupe.id_groupe, Groupe.nom AS nom_groupe, Groupe.date_fin, Departement.nom AS nom_departement
+    $requete = $pdo->query('SELECT Groupe.id_groupe, Groupe.nom AS nom_groupe, Groupe.date_debut, Groupe.date_fin, Departement.nom AS nom_departement
         FROM Groupe
         JOIN Departement ON Departement.id_departement = Groupe.id_departement
         ORDER BY Departement.nom, Groupe.nom');
@@ -39,15 +39,18 @@
         $idGroupe = $idGroupeChoisi !== '' ? (int) $idGroupeChoisi : null;
         $idDepartement = $idDepartementChoisi !== '' ? (int) $idDepartementChoisi : null;
 
-        $requete = $pdo->prepare('SELECT date_fin FROM Groupe WHERE id_groupe = ?');
-        $requete->execute([$idGroupe ?? 0]);
-        $groupeChoisi = $requete->fetch(PDO::FETCH_ASSOC);
-        $groupeExiste = $groupeChoisi !== false;
-        $groupeCloture = $groupeExiste && $groupeChoisi['date_fin'] !== null && $groupeChoisi['date_fin'] < $dateDebutSaisie;
-
-        $requete = $pdo->prepare('SELECT COUNT(*) FROM Departement WHERE id_departement = ?');
-        $requete->execute([$idDepartement ?? 0]);
-        $departementExiste = $requete->fetchColumn() > 0;
+        if ($idGroupe !== null) {
+            $requete = $pdo->prepare('SELECT date_debut, date_fin FROM Groupe WHERE id_groupe = ?');
+            $requete->execute([$idGroupe]);
+            $nomStructure = 'Ce groupe';
+        } else {
+            $requete = $pdo->prepare('SELECT date_debut, date_fin FROM Departement WHERE id_departement = ?');
+            $requete->execute([$idDepartement ?? 0]);
+            $nomStructure = 'Ce département';
+        }
+        $structure = $requete->fetch(PDO::FETCH_ASSOC);
+        $structureCloturee = $structure && $structure['date_fin'] !== null && $structure['date_fin'] < $dateDebutSaisie;
+        $structurePasCommencee = $structure && $structure['date_debut'] > $dateDebutSaisie;
 
         $texteChevauchement = 'SELECT COUNT(*) FROM Rattachement
             WHERE id_personnel = ? AND id_groupe = ?
@@ -69,10 +72,12 @@
             $erreurRattachement = 'Choisissez soit un groupe, soit un département.';
         } elseif (!in_array($typeRattachementChoisi, ['principal', 'secondaire'])) {
             $erreurRattachement = 'Choisissez un type de rattachement valide.';
-        } elseif (($idGroupe !== null && !$groupeExiste) || ($idDepartement !== null && !$departementExiste)) {
+        } elseif (!$structure) {
             $erreurRattachement = 'Le groupe ou le département sélectionné est invalide.';
-        } elseif ($idGroupe !== null && $groupeCloture) {
-            $erreurRattachement = 'Ce groupe est clôturé depuis le ' . date('d/m/Y', strtotime($groupeChoisi['date_fin'])) . ', impossible d\'y rattacher quelqu\'un à cette date.';
+        } elseif ($structureCloturee) {
+            $erreurRattachement = $nomStructure . ' est clôturé depuis le ' . date('d/m/Y', strtotime($structure['date_fin'])) . ', impossible d\'y rattacher quelqu\'un à cette date.';
+        } elseif ($structurePasCommencee) {
+            $erreurRattachement = $nomStructure . ' n\'existe qu\'à partir du ' . date('d/m/Y', strtotime($structure['date_debut'])) . ', impossible d\'y rattacher quelqu\'un avant cette date.';
         } elseif ($idGroupe !== null && $dejaRattache) {
             $erreurRattachement = 'Ce personnel possède déjà un rattachement à ce groupe sur une période qui chevauche les dates saisies.';
         } else {

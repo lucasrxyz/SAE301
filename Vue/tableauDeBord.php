@@ -69,15 +69,17 @@ require __DIR__ . '/../Model/tableaudebord.php';
                         <div class="tableau-defilant">
                             <table>
                                 <tr>
-                                    <th>Statut</th>
+                                                                        <th>Statut</th>
                                     <th>Nombre</th>
+                                    <th>Quotité recherche moyenne</th>
                                     <th class="colonne-barre"></th>
                                 </tr>
-                                <?php foreach ($effectifsParStatut as $ligne): ?>
+                                <?php foreach ($effectifsParStatut as $statut => $quotites): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($ligne['statut']) ?></td>
-                                        <td><?= $ligne['nombre'] ?></td>
-                                        <td><div class="fond-barre"><div class="barre" style="width: <?= round($ligne['nombre'] / $effectifTotal * 100) ?>%"></div></div></td>
+                                        <td><?= htmlspecialchars($statut) ?></td>
+                                        <td><?= count($quotites) ?></td>
+                                        <td><?= round(array_sum($quotites) / count($quotites) * 100) ?> %</td>
+                                        <td><div class="fond-barre"><div class="barre" style="width: <?= round(count($quotites) / $effectifTotal * 100) ?>%"></div></div></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </table>
