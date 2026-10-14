@@ -1,51 +1,96 @@
+% =====================================================================
+%  RAPPORT PROVISOIRE - SAÉ 3.01 - FIN DU SPRINT 1
+%  Compiler avec pdfLaTeX (le compilateur par défaut d'Overleaf)
+%  Les images sont dans le dossier img/
+% =====================================================================
+
 \documentclass[11pt,a4paper]{article}
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[french]{babel}
-\usepackage[margin=2.2cm]{geometry}
-\usepackage{graphicx}
-\usepackage{float}
-\usepackage{xcolor}
+% ---------- Langue et accents ----------
+\usepackage[utf8]{inputenc}      % permet d'écrire les accents directement
+\usepackage[T1]{fontenc}         % bon affichage des caractères accentués
+\usepackage[french]{babel}       % titres en français (Table des matières, Figure...)
+
+% ---------- Police ----------
+\usepackage[scaled]{helvet}      % police Helvetica (style moderne)
+\renewcommand{\familydefault}{\sfdefault} % on l'utilise pour tout le texte
+
+% ---------- Mise en page ----------
+\usepackage[margin=2.2cm]{geometry} % marges de la page
+\setlength{\parindent}{0pt}         % pas de retrait en début de paragraphe
+\setlength{\parskip}{6pt}           % petit espace entre les paragraphes
+
+% ---------- Images et tableaux ----------
+\usepackage{graphicx}            % pour insérer des images
+\usepackage{float}               % pour bloquer une image à sa place avec [H]
+\usepackage[table]{xcolor}       % couleurs (et couleurs dans les tableaux)
+\renewcommand{\arraystretch}{1.4} % lignes de tableau un peu plus hautes
+
+% ---------- Couleurs du rapport ----------
+\definecolor{bleu}{HTML}{1F4E78}   % bleu principal (titres, en-têtes de tableaux)
+\definecolor{grisclair}{HTML}{F0F3F7} % gris pour une ligne sur deux
+
+% ---------- Titres des sections en bleu ----------
+\usepackage{titlesec}
+\titleformat{\section}{\Large\bfseries\color{bleu}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection.}{0.5em}{}
+
+% ---------- En-tête et pied de page ----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}                                    % on vide l'en-tête par défaut
+\lhead{\small SAÉ 3.01 -- Gestion scientifiques} % texte en haut à gauche
+\rhead{\small Rapport provisoire -- Sprint 1}   % texte en haut à droite
+\cfoot{\thepage}                              % numéro de page en bas au centre
+
+% ---------- Liens cliquables sans cadre rouge ----------
 \usepackage[hidelinks]{hyperref}
 
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt}
+% ---------- Raccourci pour l'en-tête des tableaux ----------
+% \entete{Texte} écrit en blanc et en gras (à mettre dans une ligne \rowcolor{bleu})
+\newcommand{\entete}[1]{\textcolor{white}{\textbf{#1}}}
 
 \begin{document}
 
-% ===================== PAGE DE GARDE =====================
+% =====================================================================
+%  PAGE DE GARDE
+% =====================================================================
 \begin{titlepage}
 \centering
-BUT Informatique -- 2e année\\
+
+{\large BUT Informatique -- 2\textsuperscript{e} année}\\[0.2cm]
 IUT de Maubeuge -- Université Polytechnique Hauts-de-France
 
-\vspace{4cm}
+\vspace{3.5cm}
 
-{\Huge \textbf{SAÉ 3.01}}
+{\color{bleu}\rule{\textwidth}{1.5pt}}          % trait bleu
+\vspace{0.6cm}
 
-\vspace{0.5cm}
+{\Huge\bfseries\color{bleu} SAÉ 3.01}\\[0.5cm]
+{\LARGE Système de gestion scientifique\\[0.2cm] d'un laboratoire de recherche}
 
-{\LARGE Système de gestion scientifique\\d'un laboratoire de recherche}
+\vspace{0.6cm}
+{\color{bleu}\rule{\textwidth}{1.5pt}}          % trait bleu
 
 \vspace{1cm}
-
 {\Large Rapport provisoire -- fin du Sprint 1}
 
-\vfill
+\vfill                                           % pousse la suite en bas de page
 
-\textbf{Équipe K.A.B.L}\\
-Aïssa Ouameur -- Kieran Lelong -- Lucas Deudon -- Brahim Haddadi
+{\large\bfseries Équipe K.A.B.L}\\[0.3cm]
+Aïssa Ouameur \quad Kieran Lelong \quad Lucas Deudon \quad Brahim Haddadi
 
 \vspace{1cm}
-
 14 octobre 2026
 \end{titlepage}
 
+% ---------- Sommaire ----------
 \tableofcontents
 \newpage
 
-% ===================== 1. PLANIFICATION =====================
+% =====================================================================
+%  1. PLANIFICATION DU PROJET
+% =====================================================================
 \section{Planification du projet}
 
 \subsection{Contexte}
@@ -63,29 +108,32 @@ Ce que le client nous a demandé lors de l'entretien du 2 septembre 2026 :
 
 \subsection{Outils}
 
-\begin{tabular}{|l|p{11cm}|}
-\hline
-\textbf{Outil} & \textbf{Utilisation} \\ \hline
-Trello & Suivi du backlog et des sprints \\ \hline
-GitHub & Partage du code, une branche par personne puis fusion dans main \\ \hline
-PHP / PostgreSQL & Langage et base de données du site (sans JavaScript) \\ \hline
-Supabase & Hébergement de la base de données \\ \hline
-Alwaysdata & Hébergement du site \\ \hline
-Moqups & Maquettes des pages \\ \hline
+% Tableau à 2 colonnes : l = colonne à gauche, p{11cm} = colonne de 11 cm avec retour à la ligne
+\begin{center}
+\begin{tabular}{l p{11cm}}
+\rowcolor{bleu} \entete{Outil} & \entete{Utilisation} \\
+Trello & Suivi du backlog et des sprints \\
+\rowcolor{grisclair} GitHub & Partage du code : une branche par personne, puis fusion dans main \\
+PHP / PostgreSQL & Langage et base de données du site (sans JavaScript) \\
+\rowcolor{grisclair} Supabase & Hébergement de la base de données \\
+Alwaysdata & Hébergement du site \\
+\rowcolor{grisclair} Moqups & Maquettes des pages \\
 \end{tabular}
+\end{center}
 
 \subsection{Calendrier}
 
 Nous sommes en alternance (FA), le projet se fait donc en 3 sprints.
 
-\begin{tabular}{|l|l|l|l|}
-\hline
-\textbf{Sprint} & \textbf{Début} & \textbf{Revue} & \textbf{Temps en autonomie} \\ \hline
-Sprint 0 & 02/09/2026 & 15/09/2026 & 9 h \\ \hline
-Sprint 1 & 16/09/2026 & 13/10/2026 & 15 h \\ \hline
-Sprint 2 & 14/10/2026 & 06/11/2026 & 18 h \\ \hline
-Sprint 3 & 20/11/2026 & 06/01/2027 & 12 h \\ \hline
+\begin{center}
+\begin{tabular}{l c c c}
+\rowcolor{bleu} \entete{Sprint} & \entete{Début} & \entete{Revue} & \entete{Temps en autonomie} \\
+Sprint 0 & 02/09/2026 & 15/09/2026 & 9 h \\
+\rowcolor{grisclair} Sprint 1 & 16/09/2026 & 13/10/2026 & 15 h \\
+Sprint 2 & 14/10/2026 & 06/11/2026 & 18 h \\
+\rowcolor{grisclair} Sprint 3 & 20/11/2026 & 06/01/2027 & 12 h \\
 \end{tabular}
+\end{center}
 
 Le Sprint 0 a servi à comprendre le sujet, préparer l'entretien avec le client et écrire le backlog.
 
@@ -93,40 +141,42 @@ Le Sprint 0 a servi à comprendre le sujet, préparer l'entretien avec le client
 
 Le projet est découpé en 16 user stories (US). Chaque US a une taille, convertie en story points (SP) :
 
-\begin{tabular}{|c|c|c|c|}
-\hline
-\textbf{XS} & \textbf{S} & \textbf{M} & \textbf{L} \\ \hline
-2 SP & 3 SP & 5 SP & 13 SP \\ \hline
+\begin{center}
+\begin{tabular}{c c c c}
+\rowcolor{bleu} \entete{XS} & \entete{S} & \entete{M} & \entete{L} \\
+2 SP & 3 SP & 5 SP & 13 SP \\
 \end{tabular}
+\end{center}
 
-\vspace{0.3cm}
-
-\begin{tabular}{|c|p{9cm}|c|c|c|}
-\hline
-\textbf{US} & \textbf{Intitulé} & \textbf{Priorité} & \textbf{Taille} & \textbf{SP} \\ \hline
-US-01 & Socle de données historisé & Must & L & 13 \\ \hline
-US-02 & Identifier les personnels & Must & M & 5 \\ \hline
-US-03 & Se connecter & Must & M & 5 \\ \hline
-US-04 & Droits pyramidaux & Must & M & 5 \\ \hline
-US-05 & Déléguer ses droits & Should & XS & 2 \\ \hline
-US-06 & Déclarer une activité individuelle & Must & S & 3 \\ \hline
-US-07 & Déclarer une activité collective & Must & M & 5 \\ \hline
-US-08 & Confirmer sa participation & Must & S & 3 \\ \hline
-US-09 & Rechercher, filtrer et trier ses activités & Must & XS & 2 \\ \hline
-US-10 & Tableau de bord & Must & M & 5 \\ \hline
-US-11 & Générer son rapport d'activités & Must & M & 5 \\ \hline
-US-12 & Importer les enseignements (ICS) & Must & M & 5 \\ \hline
-US-13 & Importer les publications (HAL) & Must & M & 5 \\ \hline
-US-14 & Ouvrir une campagne de saisie & Must & S & 3 \\ \hline
-US-15 & Geler les données d'une campagne & Should & S & 3 \\ \hline
-US-16 & Rouvrir une campagne & Should & XS & 2 \\ \hline
-\multicolumn{4}{|r|}{\textbf{Total}} & \textbf{71} \\ \hline
+\begin{center}
+\begin{tabular}{c p{8.5cm} c c c}
+\rowcolor{bleu} \entete{US} & \entete{Intitulé} & \entete{Priorité} & \entete{Taille} & \entete{SP} \\
+US-01 & Socle de données historisé & Must & L & 13 \\
+\rowcolor{grisclair} US-02 & Identifier les personnels & Must & M & 5 \\
+US-03 & Se connecter & Must & M & 5 \\
+\rowcolor{grisclair} US-04 & Droits pyramidaux & Must & M & 5 \\
+US-05 & Déléguer ses droits & Should & XS & 2 \\
+\rowcolor{grisclair} US-06 & Déclarer une activité individuelle & Must & S & 3 \\
+US-07 & Déclarer une activité collective & Must & M & 5 \\
+\rowcolor{grisclair} US-08 & Confirmer sa participation & Must & S & 3 \\
+US-09 & Rechercher, filtrer et trier ses activités & Must & XS & 2 \\
+\rowcolor{grisclair} US-10 & Tableau de bord & Must & M & 5 \\
+US-11 & Générer son rapport d'activités & Must & M & 5 \\
+\rowcolor{grisclair} US-12 & Importer les enseignements (ICS) & Must & M & 5 \\
+US-13 & Importer les publications (HAL) & Must & M & 5 \\
+\rowcolor{grisclair} US-14 & Ouvrir une campagne de saisie & Must & S & 3 \\
+US-15 & Geler les données d'une campagne & Should & S & 3 \\
+\rowcolor{grisclair} US-16 & Rouvrir une campagne & Should & XS & 2 \\
+% \multicolumn{4}{r}{...} = une cellule qui prend 4 colonnes, texte aligné à droite
+\multicolumn{4}{r}{\textbf{Total}} & \textbf{71} \\
 \end{tabular}
+\end{center}
 
 \subsection{Trello}
 
-Chaque US est une carte Trello. Elle passe de la colonne \og Backlog \fg{} à \og Sprint \fg{}, puis \og En revue \fg{} et enfin \og Validé par le client \fg{}.
+Chaque US est une carte Trello. Elle passe de la colonne « Backlog » à « Sprint », puis « En revue » et enfin « Validé par le client ».
 
+% [H] = l'image reste exactement à cet endroit
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{img/trello.png}
@@ -135,7 +185,9 @@ Chaque US est une carte Trello. Elle passe de la colonne \og Backlog \fg{} à \o
 
 \newpage
 
-% ===================== 2. UML ET NAVIGATION =====================
+% =====================================================================
+%  2. UML ET NAVIGATION
+% =====================================================================
 \section{UML et navigation}
 
 \subsection{Diagramme de classes}
@@ -148,7 +200,9 @@ Chaque information qui change dans le temps a une date de début et une date de 
 \caption{Diagramme de classes}
 \end{figure}
 
-\colorbox{yellow}{\parbox{\dimexpr\textwidth-2\fboxsep}{
+% Encadré jaune : \fcolorbox{couleur du bord}{couleur du fond}{contenu}
+% \parbox{\linewidth} permet d'écrire plusieurs lignes dans l'encadré
+\fcolorbox{orange}{yellow}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{
 \textbf{Le diagramme va être modifié au Sprint 2}, car la base a évolué pendant le Sprint 1 :
 \begin{itemize}
   \item le statut est déplacé dans une table d'historique ;
@@ -163,16 +217,17 @@ Chaque information qui change dans le temps a une date de début et une date de 
 
 Plus le niveau est petit, plus le rôle a de droits.
 
-\begin{tabular}{|l|c|p{9cm}|}
-\hline
-\textbf{Rôle} & \textbf{Niveau} & \textbf{Ce qu'il voit} \\ \hline
-Administrateur & 0 & Tout, et il gère les rôles \\ \hline
-Directeur de laboratoire & 1 & Tout le laboratoire \\ \hline
-Responsable de département & 2 & Son département \\ \hline
-Responsable de groupe & 3 & Son groupe \\ \hline
-Gestionnaire RH & 3 & Tout le laboratoire, sauf le contenu scientifique \\ \hline
-Personnel & 4 & Seulement ses activités \\ \hline
+\begin{center}
+\begin{tabular}{l c p{8.5cm}}
+\rowcolor{bleu} \entete{Rôle} & \entete{Niveau} & \entete{Ce qu'il voit} \\
+Administrateur & 0 & Tout, et il gère les rôles \\
+\rowcolor{grisclair} Directeur de laboratoire & 1 & Tout le laboratoire \\
+Responsable de département & 2 & Son département \\
+\rowcolor{grisclair} Responsable de groupe & 3 & Son groupe \\
+Gestionnaire RH & 3 & Tout le laboratoire, sauf le contenu scientifique \\
+\rowcolor{grisclair} Personnel & 4 & Seulement ses activités \\
 \end{tabular}
+\end{center}
 
 \subsection{Navigation}
 
@@ -186,7 +241,9 @@ Ce schéma montre comment on passe d'une page à l'autre. Le menu change selon l
 
 \newpage
 
-% ===================== 3. MAQUETTES =====================
+% =====================================================================
+%  3. MAQUETTES
+% =====================================================================
 \section{Maquettes}
 
 \subsection{Maquettes Moqups}
@@ -194,9 +251,16 @@ Ce schéma montre comment on passe d'une page à l'autre. Le menu change selon l
 Les pages ont été dessinées sur Moqups avant de coder :\\
 \url{https://app.moqups.com/FCmUROPXbEEDy2K8OQC7VEABEoHTtDMf/view/page/a982d3ae6}
 
-\colorbox{yellow}{\parbox{\dimexpr\textwidth-2\fboxsep}{
+\fcolorbox{orange}{yellow}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{
 \textbf{À compléter :} ajouter les captures des maquettes Moqups.
 }}
+
+% Pour ajouter une maquette, copier ce bloc et changer le nom de l'image :
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.8\textwidth]{img/maquette_connexion.png}
+% \caption{Maquette de la page de connexion}
+% \end{figure}
 
 \subsection{Résultat}
 
@@ -208,6 +272,7 @@ Le site marche sur ordinateur, tablette et téléphone.
 \caption{Page de connexion}
 \end{figure}
 
+% keepaspectratio = l'image garde ses proportions même si on limite la hauteur
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth,height=0.4\textheight,keepaspectratio]{img/tableau.png}
@@ -226,6 +291,7 @@ Le site marche sur ordinateur, tablette et téléphone.
 \caption{Fiche d'un personnel}
 \end{figure}
 
+% Deux images côte à côte : on les met dans la même figure avec un espace entre
 \begin{figure}[H]
 \centering
 \includegraphics[height=7cm]{img/declarer_tel.png}
@@ -236,7 +302,9 @@ Le site marche sur ordinateur, tablette et téléphone.
 
 \newpage
 
-% ===================== 4. SPRINT 1 =====================
+% =====================================================================
+%  4. SPRINT 1
+% =====================================================================
 \section{Sprint 1}
 
 \subsection{Objectif}
@@ -245,18 +313,19 @@ Permettre à un personnel de déclarer et de voir ses activités, avec l'histori
 
 \subsection{US du sprint}
 
-\begin{tabular}{|c|p{6.5cm}|c|c|p{3.5cm}|}
-\hline
-\textbf{US} & \textbf{Intitulé} & \textbf{Taille} & \textbf{SP} & \textbf{Qui} \\ \hline
-US-01 & Socle de données historisé & L & 13 & Lucas, Brahim, Aïssa \\ \hline
-US-02 & Identifier les personnels & M & 5 & Kieran \\ \hline
-US-03 & Se connecter & M & 5 & Brahim \\ \hline
-US-04 & Droits pyramidaux & M & 5 & Aïssa \\ \hline
-US-06 & Déclarer une activité & S & 3 & Aïssa \\ \hline
-US-09 & Rechercher ses activités & XS & 2 & Aïssa \\ \hline
-US-10 & Tableau de bord & M & 5 & Brahim, Aïssa \\ \hline
-\multicolumn{3}{|r|}{\textbf{Total}} & \textbf{38} & \\ \hline
+\begin{center}
+\begin{tabular}{c p{6cm} c c p{3.6cm}}
+\rowcolor{bleu} \entete{US} & \entete{Intitulé} & \entete{Taille} & \entete{SP} & \entete{Qui} \\
+US-01 & Socle de données historisé & L & 13 & Lucas, Brahim, Aïssa \\
+\rowcolor{grisclair} US-02 & Identifier les personnels & M & 5 & Kieran \\
+US-03 & Se connecter & M & 5 & Brahim \\
+\rowcolor{grisclair} US-04 & Droits pyramidaux & M & 5 & Aïssa \\
+US-06 & Déclarer une activité & S & 3 & Aïssa \\
+\rowcolor{grisclair} US-09 & Rechercher ses activités & XS & 2 & Aïssa \\
+US-10 & Tableau de bord & M & 5 & Brahim, Aïssa \\
+\multicolumn{3}{r}{\textbf{Total}} & \textbf{38} & \\
 \end{tabular}
+\end{center}
 
 \subsection{Ce qu'on a fait}
 
@@ -268,7 +337,7 @@ US-10 & Tableau de bord & M & 5 & Brahim, Aïssa \\ \hline
 
 \textbf{US-04 :} chacun ne voit que son périmètre. Le RH ne voit pas le contenu scientifique.
 
-\textbf{US-06 :} on choisit un type d'activité et les bons champs s'affichent (par exemple \og Revue \fg{} pour une relecture).
+\textbf{US-06 :} on choisit un type d'activité et les bons champs s'affichent (par exemple « Revue » pour une relecture).
 
 \textbf{US-09 :} recherche, filtres et tri sur ses activités.
 
@@ -276,33 +345,37 @@ US-10 & Tableau de bord & M & 5 & Brahim, Aïssa \\ \hline
 
 \newpage
 
-% ===================== 5. REVIEW =====================
+% =====================================================================
+%  5. REVIEW DU SPRINT 1
+% =====================================================================
 \section{Review du Sprint 1}
 
 \subsection{Résultats}
 
-\begin{tabular}{|c|p{7cm}|c|l|}
-\hline
-\textbf{US} & \textbf{Intitulé} & \textbf{SP} & \textbf{Résultat} \\ \hline
-US-01 & Socle de données historisé & 13 & \colorbox{yellow}{\textbf{Partielle (bug)}} \\ \hline
-US-02 & Identifier les personnels & 5 & Validée \\ \hline
-US-03 & Se connecter & 5 & Validée \\ \hline
-US-04 & Droits pyramidaux & 5 & Validée \\ \hline
-US-06 & Déclarer une activité & 3 & Validée \\ \hline
-US-09 & Rechercher ses activités & 2 & Validée \\ \hline
-US-10 & Tableau de bord & 5 & Validée \\ \hline
+% \colorbox{yellow}{...} = surligne le texte en jaune
+\begin{center}
+\begin{tabular}{c p{7cm} c l}
+\rowcolor{bleu} \entete{US} & \entete{Intitulé} & \entete{SP} & \entete{Résultat} \\
+US-01 & Socle de données historisé & 13 & \colorbox{yellow}{\textbf{Partielle (bug)}} \\
+\rowcolor{grisclair} US-02 & Identifier les personnels & 5 & Validée \\
+US-03 & Se connecter & 5 & Validée \\
+\rowcolor{grisclair} US-04 & Droits pyramidaux & 5 & Validée \\
+US-06 & Déclarer une activité & 3 & Validée \\
+\rowcolor{grisclair} US-09 & Rechercher ses activités & 2 & Validée \\
+US-10 & Tableau de bord & 5 & Validée \\
 \end{tabular}
+\end{center}
 
 \subsection{Le bug de l'US-01}
 
-\colorbox{yellow}{\parbox{\dimexpr\textwidth-2\fboxsep}{
+\fcolorbox{orange}{yellow}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{
 \textbf{Bug :} sur la page Organisation, une personne apparaît \textbf{responsable de groupe alors qu'elle n'est dans aucun groupe}. C'est impossible : un responsable de groupe est forcément dans son groupe.
 }}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\textwidth]{img/bug_us01.png}
-\caption{Hugo Moreau est \og Responsable \fg{} sur la ligne \og Sans groupe \fg{}}
+\caption{Hugo Moreau est « Responsable » sur la ligne « Sans groupe »}
 \end{figure}
 
 L'US-01 n'est pas comptée car elle n'est pas entièrement validée. Elle passe au Sprint 2.
@@ -316,13 +389,15 @@ L'US-01 n'est pas comptée car elle n'est pas entièrement validée. Elle passe 
 
 \subsection{Vélocité et burndown}
 
-\begin{tabular}{|l|c|}
-\hline
-SP engagés & 38 \\ \hline
-SP validés & 25 \\ \hline
-Vélocité & 25 \\ \hline
-SP restants & 46 \\ \hline
+\begin{center}
+\begin{tabular}{l c}
+\rowcolor{bleu} \entete{Indicateur} & \entete{Valeur} \\
+SP engagés & 38 \\
+\rowcolor{grisclair} SP validés & 25 \\
+Vélocité & 25 \\
+\rowcolor{grisclair} SP restants & 46 \\
 \end{tabular}
+\end{center}
 
 \begin{figure}[H]
 \centering
@@ -355,7 +430,9 @@ On a 13 SP de retard sur le prévu, c'est l'US-01.
 
 \newpage
 
-% ===================== 6. SPRINT 2 =====================
+% =====================================================================
+%  6. PLANIFICATION DU SPRINT 2
+% =====================================================================
 \section{Planification du Sprint 2}
 
 \subsection{Objectif}
@@ -364,17 +441,18 @@ Finir l'US-01, gérer les activités collectives, et faire les imports et l'expo
 
 \subsection{US du sprint}
 
-\begin{tabular}{|c|p{7.5cm}|c|c|p{2.8cm}|}
-\hline
-\textbf{US} & \textbf{Ce que c'est} & \textbf{Taille} & \textbf{SP} & \textbf{Qui} \\ \hline
-US-01 & Corriger le bug et faire valider & L & 13 & Lucas, Brahim, Aïssa \\ \hline
-US-07 & Activité faite à plusieurs, avec un seul porteur & M & 5 & Kieran \\ \hline
-US-08 & Les participants confirment leur participation & S & 3 & Brahim \\ \hline
-US-11 & Télécharger son rapport (Word ou CSV) & M & 5 & Kieran \\ \hline
-US-12 & Importer les enseignements (.ics) & M & 5 & Aïssa \\ \hline
-US-13 & Importer les publications depuis HAL & M & 5 & Aïssa \\ \hline
-\multicolumn{3}{|r|}{\textbf{Total}} & \textbf{36} & \\ \hline
+\begin{center}
+\begin{tabular}{c p{6.4cm} c c p{3.6cm}}
+\rowcolor{bleu} \entete{US} & \entete{Ce que c'est} & \entete{Taille} & \entete{SP} & \entete{Qui} \\
+US-01 & Corriger le bug et faire valider & L & 13 & Lucas, Brahim, Aïssa \\
+\rowcolor{grisclair} US-07 & Activité faite à plusieurs, avec un seul porteur & M & 5 & Kieran \\
+US-08 & Les participants confirment leur participation & S & 3 & Brahim \\
+\rowcolor{grisclair} US-11 & Télécharger son rapport (Word ou CSV) & M & 5 & Kieran \\
+US-12 & Importer les enseignements (.ics) & M & 5 & Aïssa \\
+\rowcolor{grisclair} US-13 & Importer les publications depuis HAL & M & 5 & Aïssa \\
+\multicolumn{3}{r}{\textbf{Total}} & \textbf{36} & \\
 \end{tabular}
+\end{center}
 
 \subsection{Pourquoi 36 SP ?}
 
