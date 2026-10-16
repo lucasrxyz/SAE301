@@ -11,6 +11,10 @@ DROP TABLE IF EXISTS Role CASCADE;
 DROP TABLE IF EXISTS Personnel_Statut_Historique CASCADE;
 DROP TABLE IF EXISTS Personnel CASCADE;
 DROP TABLE IF EXISTS Personnel_Nom_Historique CASCADE;
+DROP TABLE IF EXISTS Participation CASCADE;
+DROP TABLE IF EXISTS Activite_Departement CASCADE;
+DROP tABLE IF EXISTS Enseignement CASCADE;
+
 
 -- ===============================
 -- TABLE "Personnel"
@@ -163,6 +167,20 @@ CREATE TABLE Participation (
     id serial PRIMARY KEY,
     id_personnel INT NOT NULL REFERENCES Personnel(id),
     id_activite INT NOT NULL REFERENCES Activite(id_activite)
+);
+
+CREATE TABLE Activite_Departement (
+    id serial PRIMARY KEY,
+    id_departement INT NOT NULL REFERENCES Departement(id_departement),
+    id_activite INT NOT NULL REFERENCES Activite(id_activite)
+);
+
+CREATE TABLE Enseignement (
+    id serial PRIMARY KEY,
+    id_personnel INT NOT NULL REFERENCES Personnel(id),
+    intitule VARCHAR(100),
+    date_debut DATE NOT NULL,
+    date_fin DATE
 )
 
 -- ===============================
