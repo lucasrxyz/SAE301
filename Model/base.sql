@@ -159,6 +159,12 @@ CREATE TABLE Activite_Champ (
     valeur varchar(255) NOT NULL
 );
 
+CREATE TABLE Participation (
+    id serial PRIMARY KEY,
+    id_personnel INT NOT NULL REFERENCES Personnel(id),
+    id_activite INT NOT NULL REFERENCES Activite(id_activite)
+)
+
 -- ===============================
 -- DONNÉES DE TEST
 -- ===============================
