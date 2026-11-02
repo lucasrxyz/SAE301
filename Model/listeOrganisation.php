@@ -30,7 +30,11 @@
             COALESCE(d_groupe.nom, d_direct.nom) AS dept_nom,
             COALESCE(Groupe.nom, 'Sans groupe') AS groupe_nom,
             CONCAT(Personnel.prenom, ' ', Personnel.nom) AS person_nom,
-            CASE WHEN Rattachement.responsable_groupe THEN 'Responsable' ELSE 'Membre' END AS statut_groupe
+            CASE
+                WHEN Rattachement.responsable_groupe AND Rattachement.id_groupe IS NOT NULL THEN 'Responsable du groupe'
+                WHEN Rattachement.responsable_groupe THEN 'Responsable du département'
+                ELSE 'Membre'
+            END AS statut_groupe
             FROM Rattachement
             JOIN Personnel ON Personnel.id = Rattachement.id_personnel
             LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
