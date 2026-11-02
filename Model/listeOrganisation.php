@@ -15,12 +15,14 @@
 
     if ($vue === 'departements') {
         $requete = $pdo->prepare(
-            "SELECT
-            COALESCE(Departement.nom, 'Non rattaché dans un département') AS dept_nom,
+            "SELECT DISTINCT
+            COALESCE(d_groupe.nom, d_direct.nom, 'Non rattaché dans un département') AS dept_nom,
             Personnel.prenom, Personnel.nom
             FROM Rattachement
             JOIN Personnel ON Personnel.id = Rattachement.id_personnel
-            LEFT JOIN Departement ON Departement.id_departement = Rattachement.id_departement
+            LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
+            LEFT JOIN Departement d_groupe ON d_groupe.id_departement = Groupe.id_departement
+            LEFT JOIN Departement d_direct ON d_direct.id_departement = Rattachement.id_departement
             WHERE " . $actifALaDate . "
             ORDER BY dept_nom, Personnel.nom, Personnel.prenom");
 
