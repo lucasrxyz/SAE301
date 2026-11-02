@@ -17,8 +17,7 @@
         $requete = $pdo->prepare(
             "SELECT
             COALESCE(Departement.nom, 'Non rattaché dans un département') AS dept_nom,
-            Personnel.prenom,
-            Personnel.nom
+            Personnel.prenom, Personnel.nom
             FROM Rattachement
             JOIN Personnel ON Personnel.id = Rattachement.id_personnel
             LEFT JOIN Departement ON Departement.id_departement = Rattachement.id_departement
