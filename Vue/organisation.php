@@ -59,17 +59,25 @@
                         <tr>
                             <?php if ($vue === "departements"): ?>
                             <td><?= htmlspecialchars($lignes['dept_nom']) ?></td>
-                            <td><?= htmlspecialchars($lignes['person_nom']) ?></td>
+                            <td><?= htmlspecialchars($lignes['prenom'] . ' ' . $lignes['nom']) ?></td>
 
                             <?php elseif ($vue === "groupes"): ?>
                             <td><?= htmlspecialchars($lignes['dept_nom']) ?></td>
                             <td><?= htmlspecialchars($lignes['groupe_nom']) ?></td>
-                            <td><?= htmlspecialchars($lignes['person_nom'])?></td>
-                            <td><?= htmlspecialchars($lignes['statut_groupe'])?></td>
+                            <td><?= htmlspecialchars($lignes['prenom'] . ' ' . $lignes['nom']) ?></td>
+                            <td>
+                                <?php if (!$lignes['responsable_groupe']): ?>
+                                    Membre
+                                <?php elseif ($lignes['id_groupe'] !== null): ?>
+                                    Responsable du groupe
+                                <?php else: ?>
+                                    Responsable du département
+                                <?php endif; ?>
+                            </td>
 
                             <?php else: ?>
                             <td><?= htmlspecialchars($lignes["nom_role"])?></td>
-                            <td><?= htmlspecialchars($lignes["person_nom"])?></td>
+                            <td><?= htmlspecialchars($lignes['prenom'] . ' ' . $lignes['nom']) ?></td>
                             <td><?= htmlspecialchars($lignes["affectation"])?></td>
                             <?php endif; ?>
                         </tr>
