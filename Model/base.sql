@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS Enseignement CASCADE;
+DROP TABLE IF EXISTS Activite_Departement CASCADE;
+DROP TABLE IF EXISTS Participation CASCADE;
 DROP TABLE IF EXISTS Activite_Champ CASCADE;
 DROP TABLE IF EXISTS TypeActivite_Champ CASCADE;
 DROP TABLE IF EXISTS Activite CASCADE;
@@ -149,8 +152,7 @@ CREATE TABLE Activite (
     id_personnel INT NOT NULL REFERENCES Personnel(id),
     titre varchar(255) NOT NULL,
     date_debut DATE NOT NULL,
-    date_fin DATE,
-    donnees JSON
+    date_fin DATE
 );
 
 -- ===============================
@@ -182,6 +184,38 @@ CREATE TABLE Enseignement (
     date_debut DATE NOT NULL,
     date_fin DATE
 )
+
+-- ===============================
+-- TABLE "Participation"
+-- ===============================
+CREATE TABLE Participation (
+    id serial PRIMARY KEY,
+    id_activite INT NOT NULL REFERENCES Activite(id_activite),
+    id_personnel INT NOT NULL REFERENCES Personnel(id),
+    role varchar(100) NOT NULL,
+    confirme BOOLEAN DEFAULT NULL
+);
+
+-- ===============================
+-- TABLE "Activite_Departement"
+-- ===============================
+CREATE TABLE Activite_Departement (
+    id serial PRIMARY KEY,
+    id_activite INT NOT NULL REFERENCES Activite(id_activite),
+    id_departement INT NOT NULL REFERENCES Departement(id_departement),
+    principal BOOLEAN DEFAULT FALSE
+);
+
+-- ===============================
+-- TABLE "Enseignement"
+-- ===============================
+CREATE TABLE Enseignement (
+    id serial PRIMARY KEY,
+    id_personnel INT NOT NULL REFERENCES Personnel(id),
+    intitule varchar(255) NOT NULL,
+    date_debut TIMESTAMP NOT NULL,
+    date_fin TIMESTAMP NOT NULL
+);
 
 -- ===============================
 -- DONNÉES DE TEST
@@ -259,7 +293,7 @@ INSERT INTO Groupe (id_departement, nom, date_debut, date_fin) VALUES
 (3, 'Robotique', '2012-01-01', '2022-12-31');
 
 INSERT INTO Rattachement (id_personnel, id_departement, id_groupe, responsable_groupe, date_debut, date_fin) VALUES
-(1, NULL, 1, FALSE, '2021-03-15', NULL),
+(1, NULL, 1, FALSE, '2021-03-15', '2022-12-31'),
 (1, NULL, 2, FALSE, '2022-01-01', NULL),
 (1, NULL, 1, TRUE, '2023-01-01', NULL),
 (2, NULL, 2, FALSE, '2020-07-22', NULL),
@@ -274,7 +308,7 @@ INSERT INTO Rattachement (id_personnel, id_departement, id_groupe, responsable_g
 (9, NULL, 3, FALSE, '2024-01-08', NULL),
 (10, NULL, 3, FALSE, '2012-06-30', NULL),
 (11, 1, NULL, FALSE, '2018-10-12', NULL),
-(12, NULL, 4, FALSE, '2017-09-01', '2022-12-31'),
+(12, NULL, 4, FALSE, '2017-09-01', '2017-12-31'),
 (12, NULL, 4, TRUE, '2018-01-01', '2022-12-31'),
 (12, NULL, 1, FALSE, '2023-01-01', '2023-08-31');
 
@@ -310,17 +344,17 @@ INSERT INTO TypeActivite_Champ (id_type, nom_champ, type_champ) VALUES
 (15, 'Structure', 'text'),
 (15, 'Fonction occupée', 'text');
 
-INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin, donnees) VALUES
-(1, 1, 'Interfaces adaptatives pour la gestion de crise', '2024-03-10', '2024-03-10', '{"revue": "IJHCS", "hal_id": "hal-04512345"}'),
-(2, 2, 'Détection d''intrusion par apprentissage', '2024-04-20', '2024-04-25', '{"conference": "ACM CCS", "lieu": "Salt Lake City"}'),
-(5, 8, 'Thèse d''Emma Leroy', '2021-09-27', NULL, '{"doctorant": 7}'),
-(7, 5, 'Projet ANR OPTIMA', '2022-01-01', '2025-12-31', '{"financeur": "ANR", "montant": 250000}'),
-(8, 1, 'Journées IHM 2024', '2024-11-05', '2024-11-07', '{"lieu": "Valenciennes"}'),
-(9, 10, 'Relecture IEEE TSE', '2024-02-01', '2024-02-15', '{"revue": "IEEE TSE"}'),
-(11, 8, 'Keynote EICS 2023', '2023-06-27', '2023-06-27', '{"lieu": "Swansea"}'),
-(12, 4, 'Jury de thèse Université de Lille', '2024-06-14', '2024-06-14', '{"universite": "Lille"}'),
-(13, 2, 'Comité de programme ESORICS 2024', '2024-01-15', '2024-05-30', '{"conference": "ESORICS"}'),
-(1, 12, 'Commande robuste de bras manipulateurs', '2021-05-12', '2021-05-12', '{"revue": "Automatica"}');
+INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin) VALUES
+(1, 1, 'Interfaces adaptatives pour la gestion de crise', '2024-03-10', '2024-03-10'),
+(2, 2, 'Détection d''intrusion par apprentissage', '2024-04-20', '2024-04-25'),
+(5, 8, 'Thèse d''Emma Leroy', '2021-09-27', NULL),
+(7, 5, 'Projet ANR OPTIMA', '2022-01-01', '2025-12-31'),
+(8, 1, 'Journées IHM 2024', '2024-11-05', '2024-11-07'),
+(9, 10, 'Relecture IEEE TSE', '2024-02-01', '2024-02-15'),
+(11, 8, 'Keynote EICS 2023', '2023-06-27', '2023-06-27'),
+(12, 4, 'Jury de thèse Université de Lille', '2024-06-14', '2024-06-14'),
+(13, 2, 'Comité de programme ESORICS 2024', '2024-01-15', '2024-05-30'),
+(1, 12, 'Commande robuste de bras manipulateurs', '2021-05-12', '2021-05-12');
 
 INSERT INTO Activite_Champ (id_activite, nom_champ, valeur) VALUES
 (6, 'Revue', 'IEEE TSE'),
@@ -330,3 +364,15 @@ INSERT INTO Activite_Champ (id_activite, nom_champ, valeur) VALUES
 (8, 'Université', 'Université de Lille'),
 (8, 'Rôle dans le jury', 'Examinateur'),
 (9, 'Nom de la conférence', 'ESORICS 2024');
+
+INSERT INTO Participation (id_activite, id_personnel, role, confirme) VALUES
+(5, 8, 'Co-organisateur', TRUE),
+(5, 7, 'Participant', NULL);
+
+INSERT INTO Activite_Departement (id_activite, id_departement, principal) VALUES
+(5, 1, TRUE);
+
+INSERT INTO Enseignement (id_personnel, intitule, date_debut, date_fin) VALUES
+(1, 'Interfaces homme-machine', '2024-09-16 08:00:00', '2024-09-16 10:00:00'),
+(1, 'Programmation web', '2024-09-18 10:15:00', '2024-09-18 12:15:00'),
+(1, 'Bases de données', '2024-09-20 14:00:00', '2024-09-20 16:00:00');

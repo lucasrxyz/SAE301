@@ -191,7 +191,15 @@
                             <tr>
                                 <td><?= htmlspecialchars($rattachement['type_affectation'] . ' - ' . $rattachement['affectation']) ?></td>
                                 <td><?= htmlspecialchars(ucfirst($rattachement['type_rattachement'])) ?></td>
-                                <td><?= $rattachement['responsable_groupe'] ? 'Oui' : 'Non' ?></td>
+                                <td>
+                                    <?php if (!$rattachement['responsable_groupe']): ?>
+                                        Non
+                                    <?php elseif ($rattachement['id_groupe'] !== null): ?>
+                                        Du groupe
+                                    <?php else: ?>
+                                        Du département
+                                    <?php endif; ?>
+                                </td>
                                 <td><?= date('d/m/Y', strtotime($rattachement['date_debut'])) ?></td>
                                 <td><?= $rattachement['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($rattachement['date_fin'])) ?></td>
                                 <?php if ($estRH): ?>

@@ -29,6 +29,7 @@ if ($voirTout) {
 } elseif ($nomUtilisateur !== '') {
     $requete = $pdo->prepare($texteRequete . "
         AND (Personnel.nom ILIKE :nom
+        OR Personnel.prenom ILIKE :nom
         OR Personnel_Nom_Historique.ancien_nom ILIKE :nom
         OR Personnel.id_orcid = :exact
         OR Personnel.id_idhal = :exact)

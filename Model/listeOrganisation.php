@@ -15,35 +15,40 @@
 
     if ($vue === 'departements') {
         $requete = $pdo->prepare(
-            "SELECT
-            COALESCE(Departement.nom, 'Non rattaché dans un département') AS dept_nom,
-            CONCAT(Personnel.prenom, ' ', Personnel.nom) AS person_nom
-            FROM Rattachement
-            JOIN Personnel ON Personnel.id = Rattachement.id_personnel
-            LEFT JOIN Departement ON Departement.id_departement = Rattachement.id_departement
-            WHERE " . $actifALaDate . "
-            ORDER BY dept_nom, person_nom");
-
-    } elseif ($vue === 'groupes') {
-        $requete = $pdo->prepare(
-            "SELECT
-            COALESCE(d_groupe.nom, d_direct.nom) AS dept_nom,
-            COALESCE(Groupe.nom, 'Sans groupe') AS groupe_nom,
-            CONCAT(Personnel.prenom, ' ', Personnel.nom) AS person_nom,
-            CASE WHEN Rattachement.responsable_groupe THEN 'Responsable' ELSE 'Membre' END AS statut_groupe
+            "SELECT DISTINCT
+            COALESCE(d_groupe.nom, d_direct.nom, 'Non rattaché dans un département') AS dept_nom,
+            Personnel.prenom, Personnel.nom
             FROM Rattachement
             JOIN Personnel ON Personnel.id = Rattachement.id_personnel
             LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
             LEFT JOIN Departement d_groupe ON d_groupe.id_departement = Groupe.id_departement
             LEFT JOIN Departement d_direct ON d_direct.id_departement = Rattachement.id_departement
             WHERE " . $actifALaDate . "
-            ORDER BY dept_nom, groupe_nom, person_nom");
+            ORDER BY dept_nom, Personnel.nom, Personnel.prenom");
+
+    } elseif ($vue === 'groupes') {
+        $requete = $pdo->prepare(
+            "SELECT
+            COALESCE(d_groupe.nom, d_direct.nom) AS dept_nom,
+            COALESCE(Groupe.nom, 'Sans groupe') AS groupe_nom,
+            Personnel.prenom,
+            Personnel.nom,
+            Rattachement.responsable_groupe,
+            Rattachement.id_groupe
+            FROM Rattachement
+            JOIN Personnel ON Personnel.id = Rattachement.id_personnel
+            LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
+            LEFT JOIN Departement d_groupe ON d_groupe.id_departement = Groupe.id_departement
+            LEFT JOIN Departement d_direct ON d_direct.id_departement = Rattachement.id_departement
+            WHERE " . $actifALaDate . "
+            ORDER BY dept_nom, groupe_nom, Personnel.nom, Personnel.prenom");
 
     } elseif ($vue === 'hierarchie') {
         $requete = $pdo->prepare(
             "SELECT
             Role.nom_role AS nom_role,
-            CONCAT(Personnel.prenom, ' ', Personnel.nom) AS person_nom,
+            Personnel.prenom,
+            Personnel.nom,
             COALESCE(Groupe.nom, Departement.nom, 'Général') AS affectation
             FROM Role
             JOIN Compte_Role ON Compte_Role.id_role = Role.id_role
