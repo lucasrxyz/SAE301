@@ -7,10 +7,9 @@ DROP TABLE IF EXISTS Departement CASCADE;
 DROP TABLE IF EXISTS Compte_Role CASCADE;
 DROP TABLE IF EXISTS Compte CASCADE;
 DROP TABLE IF EXISTS Role CASCADE;
+DROP TABLE IF EXISTS Personnel_Nom_Historique CASCADE;
 DROP TABLE IF EXISTS Personnel_Statut_Historique CASCADE;
 DROP TABLE IF EXISTS Personnel CASCADE;
-DROP TABLE IF EXISTS Personnel_Nom_Historique CASCADE;
-
 -- ===============================
 -- TABLE "Personnel"
 -- ===============================
@@ -20,10 +19,11 @@ CREATE TABLE Personnel (
     prenom varchar(50) NOT NULL,
     mail varchar(60) NOT NULL,
     id_orcid varchar(19),
-    id_idhal varchar(100),
-    actif BOOLEAN DEFAULT TRUE,
+    id_idhal varchar(100) UNIQUE,
+    actif BOOLEAN NOT NULL DEFAULT TRUE,
     date_arrivee DATE NOT NULL,
-    date_depart DATE
+    date_depart DATE,
+    CHECK (date_depart IS NULL OR date_depart >= date_arrivee)
 );
 
 -- ===============================
@@ -35,7 +35,8 @@ CREATE TABLE Personnel_Statut_Historique (
     statut varchar(50) NOT NULL,
     quotite_recherche DECIMAL NOT NULL,
     date_debut DATE NOT NULL,
-    date_fin DATE
+    date_fin DATE,
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -63,11 +64,12 @@ CREATE TABLE Role (
 CREATE TABLE Compte (
     id_compte serial PRIMARY KEY,
     id_personnel INT NOT NULL REFERENCES Personnel(id),
-    identifiant varchar(100) NOT NULL,
+    identifiant varchar(100) NOT NULL UNIQUE,
     mot_de_passe_hash varchar(255) NOT NULL,
-    actif BOOLEAN DEFAULT TRUE,
-    date_activation DATE not null ,
-    date_desactivation DATE
+    actif BOOLEAN NOT NULL DEFAULT TRUE,
+    date_activation DATE NOT NULL,
+    date_desactivation DATE,
+    CHECK (date_desactivation IS NULL OR date_desactivation >= date_activation)
 );
 
 -- ===============================
@@ -86,7 +88,8 @@ CREATE TABLE Departement (
     id_departement serial PRIMARY KEY,
     nom varchar(50) NOT NULL,
     date_debut DATE NOT NULL,
-    date_fin DATE
+    date_fin DATE,
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -97,7 +100,8 @@ CREATE TABLE Groupe (
     id_departement INT NOT NULL REFERENCES Departement(id_departement),
     nom varchar(255) NOT NULL,
     date_debut DATE NOT NULL,
-    date_fin DATE
+    date_fin DATE,
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -110,9 +114,11 @@ CREATE TABLE Rattachement (
     id_groupe INT REFERENCES Groupe(id_groupe),
     type_rattachement varchar(20) NOT NULL DEFAULT 'principal'
         CHECK (type_rattachement IN ('principal', 'secondaire')),
-    responsable_groupe BOOLEAN DEFAULT false,
+    responsable_groupe BOOLEAN NOT NULL DEFAULT FALSE,
     date_debut DATE NOT NULL,
-    date_fin DATE
+    date_fin DATE,
+    CHECK (id_departement IS NOT NULL OR id_groupe IS NOT NULL),
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -120,9 +126,9 @@ CREATE TABLE Rattachement (
 -- ===============================
 CREATE TABLE TypeActivite (
     id_type serial PRIMARY KEY,
-    categorie varchar(102) NOT NULL,
-    nom_type varchar(102) NOT NULL,
-    est_collective boolean default false
+    categorie varchar(100) NOT NULL,
+    nom_type varchar(100) NOT NULL UNIQUE,
+    est_collective BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- ===============================
@@ -133,10 +139,11 @@ CREATE TABLE Activite (
     id_type INT NOT NULL REFERENCES TypeActivite(id_type),
     id_personnel INT NOT NULL REFERENCES Personnel(id),
     titre varchar(255) NOT NULL,
-    est_collective BOOLEAN DEFAULT FALSE,
+    est_collective BOOLEAN NOT NULL DEFAULT FALSE,
     description TEXT,
     date_debut TIMESTAMP NOT NULL,
-    date_fin TIMESTAMP
+    date_fin TIMESTAMP,
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -147,7 +154,8 @@ CREATE TABLE Participation (
     id_activite INT NOT NULL REFERENCES Activite(id_activite),
     id_personnel INT NOT NULL REFERENCES Personnel(id),
     role varchar(100) NOT NULL,
-    confirme BOOLEAN DEFAULT NULL
+    confirme BOOLEAN DEFAULT NULL,
+    UNIQUE (id_activite, id_personnel)
 );
 
 -- ===============================
