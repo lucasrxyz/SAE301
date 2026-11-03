@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS Activite_Champ CASCADE;
+DROP TABLE IF EXISTS Enseignement CASCADE;
 DROP TABLE IF EXISTS TypeActivite_Champ CASCADE;
 DROP TABLE IF EXISTS Activite CASCADE;
 DROP TABLE IF EXISTS TypeActivite CASCADE;
@@ -157,6 +158,18 @@ CREATE TABLE Activite_Champ (
     id_activite INT NOT NULL REFERENCES Activite(id_activite),
     nom_champ varchar(50) NOT NULL,
     valeur varchar(255) NOT NULL
+);
+
+-- ===============================
+-- TABLE "Enseignement"
+-- ===============================
+CREATE TABLE Enseignement (
+    id serial PRIMARY KEY,
+    id_personnel INT NOT NULL REFERENCES Personnel(id),
+    intitule varchar(255) NOT NULL,
+    date_debut timestamp NOT NULL,
+    date_fin timestamp NOT NULL,
+    UNIQUE (id_personnel, intitule, date_debut)
 );
 
 -- ===============================

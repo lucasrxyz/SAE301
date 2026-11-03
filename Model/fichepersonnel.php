@@ -8,6 +8,7 @@ $historiqueStatuts = [];
 $anciensNoms = [];
 $historiqueRattachements = [];
 $activites = [];
+$enseignements = [];
 $detailsActivites = [];
 $voirContenu = verifierDroit('voir_contenu_scientifique');
 
@@ -64,5 +65,12 @@ if ($idPersonnel !== null) {
         foreach ($requete->fetchAll() as $ligne) {
             $detailsActivites[$ligne['id_activite']][] = $ligne['nom_champ'] . ' : ' . $ligne['valeur'];
         }
+
+        $requete = $pdo->prepare('SELECT intitule, date_debut, date_fin
+            FROM Enseignement
+            WHERE id_personnel = :id
+            ORDER BY date_debut DESC, intitule');
+        $requete->execute(['id' => $idPersonnel]);
+        $enseignements = $requete->fetchAll(PDO::FETCH_ASSOC);
     }
 }
