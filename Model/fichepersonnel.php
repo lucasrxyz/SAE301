@@ -8,6 +8,7 @@ $historiqueStatuts = [];
 $anciensNoms = [];
 $historiqueRattachements = [];
 $activites = [];
+$enseignements = [];
 $voirContenu = verifierDroit('voir_contenu_scientifique');
 
 if ($idPersonnel !== null) {
@@ -53,5 +54,12 @@ if ($idPersonnel !== null) {
             ORDER BY Activite.date_debut DESC");
         $requete->execute(['id' => $idPersonnel]);
         $activites = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+        $requete = $pdo->prepare('SELECT intitule, date_debut, date_fin
+            FROM Enseignement
+            WHERE id_personnel = :id
+            ORDER BY date_debut DESC, intitule');
+        $requete->execute(['id' => $idPersonnel]);
+        $enseignements = $requete->fetchAll(PDO::FETCH_ASSOC);
     }
 }
