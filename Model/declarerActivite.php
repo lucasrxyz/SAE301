@@ -68,7 +68,7 @@
         $tri = 'date';
     }
 
-    $texteRequete = 'SELECT a.id_activite, a.titre, a.date_debut, a.date_fin, a.description, t.categorie, t.nom_type
+    $texteRequete = 'SELECT a.id_activite, a.titre, a.date_debut, a.date_fin, a.description, a.role, t.categorie, t.nom_type
         FROM Activite a
         JOIN TypeActivite t ON t.id_type = a.id_type
         WHERE a.id_personnel = :id';

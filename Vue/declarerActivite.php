@@ -133,6 +133,7 @@
                                 </a>
                             </th>
                             <th>Au</th>
+                            <th>Rôle</th>
                             <th>Détails</th>
                             <th>
                                 <a class="lien-tri" href="?<?= $filtresUrl ?>&tri=etat&ordre=<?= $tri === 'etat' ? $ordreInverse : 'desc' ?>">
@@ -147,6 +148,7 @@
                                 <td><?= htmlspecialchars($activite['titre']) ?></td>
                                 <td><?= formaterDate($activite['date_debut']) ?></td>
                                 <td><?= $activite['date_fin'] === null ? '—' : formaterDate($activite['date_fin']) ?></td>
+                                <td><?= htmlspecialchars($activite['role'] ?? '—') ?></td>
                                 <td><?= htmlspecialchars($activite['description'] ?? '') ?></td>
                                 <td>
                                     <?php if ($activite['date_fin'] === null || $activite['date_fin'] >= date('Y-m-d')): ?>

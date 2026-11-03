@@ -46,7 +46,7 @@ if ($idPersonnel !== null) {
         $requete->execute(['id' => $idPersonnel]);
         $historiqueRattachements = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-        $requete = $pdo->prepare("SELECT Activite.id_activite, Activite.titre, Activite.date_debut, Activite.date_fin, Activite.description, TypeActivite.categorie, TypeActivite.nom_type
+        $requete = $pdo->prepare("SELECT Activite.id_activite, Activite.titre, Activite.date_debut, Activite.date_fin, Activite.description, Activite.role, TypeActivite.categorie, TypeActivite.nom_type
             FROM Activite
             JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
             WHERE Activite.id_personnel = :id

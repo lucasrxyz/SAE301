@@ -255,6 +255,7 @@
                             <th>Type</th>
                             <?php if ($voirContenu): ?>
                                 <th>Titre</th>
+                                <th>Rôle</th>
                                 <th>Détails</th>
                             <?php endif; ?>
                             <th>Du</th>
@@ -266,6 +267,7 @@
                                 <td><?= htmlspecialchars($activite['nom_type']) ?></td>
                                 <?php if ($voirContenu): ?>
                                     <td><?= htmlspecialchars($activite['titre']) ?></td>
+                                    <td><?= htmlspecialchars($activite['role'] ?? '—') ?></td>
                                     <td><?= htmlspecialchars($activite['description'] ?? '') ?></td>
                                 <?php endif; ?>
                                 <td><?= formaterDate($activite['date_debut']) ?></td>
