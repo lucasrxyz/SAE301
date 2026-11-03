@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS Participation CASCADE;
 DROP TABLE IF EXISTS Activite CASCADE;
 DROP TABLE IF EXISTS TypeActivite CASCADE;
 DROP TABLE IF EXISTS Rattachement CASCADE;
@@ -147,18 +146,6 @@ CREATE TABLE Activite (
 );
 
 -- ===============================
--- TABLE "Participation"
--- ===============================
-CREATE TABLE Participation (
-    id serial PRIMARY KEY,
-    id_activite INT NOT NULL REFERENCES Activite(id_activite),
-    id_personnel INT NOT NULL REFERENCES Personnel(id),
-    role varchar(100) NOT NULL,
-    confirme BOOLEAN DEFAULT NULL,
-    UNIQUE (id_activite, id_personnel)
-);
-
--- ===============================
 -- DONNÉES DE TEST
 -- ===============================
 INSERT INTO Personnel (nom, prenom, mail, id_orcid, id_idhal, actif, date_arrivee, date_depart) VALUES
@@ -285,7 +272,3 @@ INSERT INTO Activite (id_type, id_personnel, titre, est_collective, description,
 (16, 1, 'Interfaces homme-machine', FALSE, NULL, '2024-09-16 08:00:00', '2024-09-16 10:00:00'),
 (16, 1, 'Programmation web', FALSE, NULL, '2024-09-18 10:15:00', '2024-09-18 12:15:00'),
 (16, 1, 'Bases de données', FALSE, NULL, '2024-09-20 14:00:00', '2024-09-20 16:00:00');
-
-INSERT INTO Participation (id_activite, id_personnel, role, confirme) VALUES
-(5, 8, 'Co-organisateur', TRUE),
-(5, 7, 'Participant', NULL);
