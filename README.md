@@ -1,14 +1,3 @@
 # SAE301
 
-L'import des enseignements nécessite la table `Enseignement`. Pour une base existante, exécuter une seule fois la migration suivante, sans relancer le script complet `Model/base.sql` qui recrée les tables :
-
-```sql
-CREATE TABLE Enseignement (
-    id serial PRIMARY KEY,
-    id_personnel INT NOT NULL REFERENCES Personnel(id),
-    intitule varchar(255) NOT NULL,
-    date_debut timestamp NOT NULL,
-    date_fin timestamp NOT NULL,
-    UNIQUE (id_personnel, intitule, date_debut)
-);
-```
+Les enseignements importés depuis un fichier ICS (US-12) sont enregistrés dans la table `Activite`, avec le type d'activité « Cours ». Les heures de début et de fin sont dans `date_debut` et `date_fin` (TIMESTAMP).

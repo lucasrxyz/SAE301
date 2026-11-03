@@ -188,9 +188,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['importer'])) {
     if (!preg_match('/^[a-f0-9]{64}$/', $jeton) || !is_array($importEnAttente)) {
         $erreurICS = 'Cet aperçu a expiré ou n’est plus disponible. Veuillez recommencer.';
     } else {
-        $requete = $pdo->prepare('INSERT INTO Enseignement (id_personnel, intitule, date_debut, date_fin)
-            VALUES (:id_personnel, :intitule, :date_debut, :date_fin)
-            ON CONFLICT (id_personnel, intitule, date_debut) DO NOTHING');
+        $requete = $pdo->prepare("INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin)
+            SELECT TypeActivite.id_type, :id_personnel, :intitule, :date_debut, :date_fin
+            FROM TypeActivite
+            WHERE TypeActivite.nom_type = 'Cours'
+            AND NOT EXISTS (
+                SELECT 1 FROM Activite
+                WHERE Activite.id_type = TypeActivite.id_type
+                AND Activite.id_personnel = :id_personnel
+                AND Activite.titre = :intitule
+                AND Activite.date_debut = :date_debut
+            )");
         $nombreImportes = 0;
         $pdo->beginTransaction();
         try {

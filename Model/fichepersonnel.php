@@ -51,14 +51,17 @@ if ($idPersonnel !== null) {
             FROM Activite
             JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
             WHERE Activite.id_personnel = :id
+            AND TypeActivite.nom_type <> 'Cours'
             ORDER BY Activite.date_debut DESC");
         $requete->execute(['id' => $idPersonnel]);
         $activites = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-        $requete = $pdo->prepare('SELECT intitule, date_debut, date_fin
-            FROM Enseignement
-            WHERE id_personnel = :id
-            ORDER BY date_debut DESC, intitule');
+        $requete = $pdo->prepare("SELECT Activite.titre AS intitule, Activite.date_debut, Activite.date_fin
+            FROM Activite
+            JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
+            WHERE Activite.id_personnel = :id
+            AND TypeActivite.nom_type = 'Cours'
+            ORDER BY Activite.date_debut DESC, Activite.titre");
         $requete->execute(['id' => $idPersonnel]);
         $enseignements = $requete->fetchAll(PDO::FETCH_ASSOC);
     }
