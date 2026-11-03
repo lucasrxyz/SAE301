@@ -15,8 +15,7 @@
     $datedebut = '';
     $datefin = '';
     $enCours = false;
-    $valeursChamps = [];
-    $champsDuType = [];
+    $description = '';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $typeactivite = $_POST['id_type'] ?? '';
@@ -24,13 +23,7 @@
         $datedebut = $_POST['date_debut'] ?? '';
         $datefin = $_POST['date_fin'] ?? '';
         $enCours = isset($_POST['en_cours']);
-        $valeursChamps = $_POST['champs'] ?? [];
-
-        $requete = $pdo->prepare('SELECT nom_champ, type_champ FROM TypeActivite_Champ WHERE id_type = ? ORDER BY id');
-        $requete->execute([(int) $typeactivite]);
-        foreach ($requete->fetchAll() as $ligne) {
-            $champsDuType[$ligne['nom_champ']] = $ligne['type_champ'];
-        }
+        $description = trim($_POST['description'] ?? '');
 
         $dateFinEnregistree = $datefin === '' ? $datedebut : $datefin;
         if ($enCours) {
@@ -39,36 +32,15 @@
 
         $typeValide = in_array($typeactivite, array_column($typesIndividuels, 'id_type'));
 
-        $champsManquants = false;
-        foreach ($champsDuType as $nomChamp => $typeChamp) {
-            if (trim($valeursChamps[$nomChamp] ?? '') === '') {
-                $champsManquants = true;
-            }
-        }
-
-        if (isset($_POST['choisir_type'])) {
-            $erreurActivite = '';
-        } elseif (!$typeValide) {
+        if (!$typeValide) {
             $erreurActivite = 'Veuillez choisir un type d\'activité individuelle.';
         } elseif ($titre === '' || $datedebut === '') {
             $erreurActivite = 'Le titre et la date de début sont obligatoires.';
-        } elseif ($champsManquants) {
-            $erreurActivite = 'Veuillez remplir tous les champs propres à ce type d\'activité.';
         } elseif (!$enCours && $datefin !== '' && $datefin < $datedebut) {
             $erreurActivite = 'La date de fin doit être après la date de début.';
         } else {
-            $pdo->beginTransaction();
-
-            $stmt = $pdo->prepare('INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin) VALUES (?, ?, ?, ?, ?) RETURNING id_activite');
-            $stmt->execute([$typeactivite, $idPersonnel, $titre, $datedebut, $dateFinEnregistree]);
-            $idActivite = $stmt->fetchColumn();
-
-            $stmt = $pdo->prepare('INSERT INTO Activite_Champ (id_activite, nom_champ, valeur) VALUES (?, ?, ?)');
-            foreach ($champsDuType as $nomChamp => $typeChamp) {
-                $stmt->execute([$idActivite, $nomChamp, trim($valeursChamps[$nomChamp])]);
-            }
-
-            $pdo->commit();
+            $stmt = $pdo->prepare('INSERT INTO Activite (id_type, id_personnel, titre, description, date_debut, date_fin) VALUES (?, ?, ?, ?, ?, ?)');
+            $stmt->execute([$typeactivite, $idPersonnel, $titre, $description === '' ? null : $description, $datedebut, $dateFinEnregistree]);
 
             header('Location: declarerActivite.php?enregistree=1');
             exit;
@@ -96,7 +68,7 @@
         $tri = 'date';
     }
 
-    $texteRequete = 'SELECT a.id_activite, a.titre, a.date_debut, a.date_fin, t.categorie, t.nom_type
+    $texteRequete = 'SELECT a.id_activite, a.titre, a.date_debut, a.date_fin, a.description, t.categorie, t.nom_type
         FROM Activite a
         JOIN TypeActivite t ON t.id_type = a.id_type
         WHERE a.id_personnel = :id';
@@ -120,7 +92,7 @@
         $parametres['debut'] = $filtreDebut;
     }
     if ($filtreFin !== '') {
-        $texteRequete .= ' AND a.date_debut <= :fin';
+        $texteRequete .= ' AND a.date_debut::date <= :fin';
         $parametres['fin'] = $filtreFin;
     }
 
@@ -129,17 +101,6 @@
     $requete = $pdo->prepare($texteRequete);
     $requete->execute($parametres);
     $mesActivites = $requete->fetchAll(PDO::FETCH_ASSOC);
-
-    $requete = $pdo->prepare('SELECT Activite_Champ.id_activite, Activite_Champ.nom_champ, Activite_Champ.valeur
-        FROM Activite_Champ
-        JOIN Activite ON Activite.id_activite = Activite_Champ.id_activite
-        WHERE Activite.id_personnel = ?
-        ORDER BY Activite_Champ.id');
-    $requete->execute([$idPersonnel]);
-    $detailsActivites = [];
-    foreach ($requete->fetchAll() as $ligne) {
-        $detailsActivites[$ligne['id_activite']][] = $ligne['nom_champ'] . ' : ' . $ligne['valeur'];
-    }
 
     $filtresUrl = http_build_query([
         'recherche' => $recherche,

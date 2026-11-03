@@ -266,10 +266,10 @@
                                 <td><?= htmlspecialchars($activite['nom_type']) ?></td>
                                 <?php if ($voirContenu): ?>
                                     <td><?= htmlspecialchars($activite['titre']) ?></td>
-                                    <td><?= htmlspecialchars(implode(' · ', $detailsActivites[$activite['id_activite']] ?? [])) ?></td>
+                                    <td><?= htmlspecialchars($activite['description'] ?? '') ?></td>
                                 <?php endif; ?>
-                                <td><?= date('d/m/Y', strtotime($activite['date_debut'])) ?></td>
-                                <td><?= $activite['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($activite['date_fin'])) ?></td>
+                                <td><?= formaterDate($activite['date_debut']) ?></td>
+                                <td><?= $activite['date_fin'] === null ? 'En cours' : formaterDate($activite['date_fin']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>

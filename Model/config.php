@@ -26,3 +26,9 @@ $pdo = new PDO(
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]
 );
+
+function formaterDate($valeur)
+{
+    $horodatage = strtotime($valeur);
+    return date('H:i', $horodatage) === '00:00' ? date('d/m/Y', $horodatage) : date('d/m/Y H:i', $horodatage);
+}
