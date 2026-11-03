@@ -72,7 +72,8 @@
         JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
         JOIN Rattachement ON Rattachement.id_personnel = Activite.id_personnel
         LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
-        WHERE Activite.date_debut::date <= :fin
+        WHERE Activite.id_activite_principale IS NULL
+        AND Activite.date_debut::date <= :fin
         AND (Activite.date_fin >= :debut OR Activite.date_fin IS NULL)" . $filtre . "
         GROUP BY TypeActivite.categorie");
     $requete->execute($parametres);

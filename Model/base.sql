@@ -140,6 +140,9 @@ CREATE TABLE Activite (
     titre varchar(255) NOT NULL,
     est_collective BOOLEAN NOT NULL DEFAULT FALSE,
     description TEXT,
+    id_activite_principale INT REFERENCES Activite(id_activite),
+    role varchar(100),
+    confirme BOOLEAN,
     date_debut TIMESTAMP NOT NULL,
     date_fin TIMESTAMP,
     CHECK (date_fin IS NULL OR date_fin >= date_debut)
@@ -258,17 +261,19 @@ INSERT INTO TypeActivite (categorie, nom_type, est_collective) VALUES
 ('Responsabilité', 'Administration et animation de structures', FALSE),
 ('Enseignement', 'Cours', FALSE);
 
-INSERT INTO Activite (id_type, id_personnel, titre, est_collective, description, date_debut, date_fin) VALUES
-(1, 1, 'Interfaces adaptatives pour la gestion de crise', TRUE, NULL, '2024-03-10', '2024-03-10'),
-(2, 2, 'Détection d''intrusion par apprentissage', TRUE, NULL, '2024-04-20', '2024-04-25'),
-(5, 8, 'Thèse d''Emma Leroy', TRUE, NULL, '2021-09-27', NULL),
-(7, 5, 'Projet ANR OPTIMA', TRUE, NULL, '2022-01-01', '2025-12-31'),
-(8, 1, 'Journées IHM 2024', TRUE, NULL, '2024-11-05', '2024-11-07'),
-(9, 10, 'Relecture IEEE TSE', FALSE, 'Revue : IEEE TSE · Nombre d''articles relus : 1', '2024-02-01', '2024-02-15'),
-(11, 8, 'Keynote EICS 2023', FALSE, 'Nom de la conférence : EICS 2023 · Lieu : Swansea', '2023-06-27', '2023-06-27'),
-(12, 4, 'Jury de thèse Université de Lille', FALSE, 'Université : Université de Lille · Rôle dans le jury : Examinateur', '2024-06-14', '2024-06-14'),
-(13, 2, 'Comité de programme ESORICS 2024', FALSE, 'Nom de la conférence : ESORICS 2024', '2024-01-15', '2024-05-30'),
-(1, 12, 'Commande robuste de bras manipulateurs', TRUE, NULL, '2021-05-12', '2021-05-12'),
-(16, 1, 'Interfaces homme-machine', FALSE, NULL, '2024-09-16 08:00:00', '2024-09-16 10:00:00'),
-(16, 1, 'Programmation web', FALSE, NULL, '2024-09-18 10:15:00', '2024-09-18 12:15:00'),
-(16, 1, 'Bases de données', FALSE, NULL, '2024-09-20 14:00:00', '2024-09-20 16:00:00');
+INSERT INTO Activite (id_type, id_personnel, titre, est_collective, description, id_activite_principale, role, confirme, date_debut, date_fin) VALUES
+(1, 1, 'Interfaces adaptatives pour la gestion de crise', TRUE, NULL, NULL, NULL, NULL, '2024-03-10', '2024-03-10'),
+(2, 2, 'Détection d''intrusion par apprentissage', TRUE, NULL, NULL, NULL, NULL, '2024-04-20', '2024-04-25'),
+(5, 8, 'Thèse d''Emma Leroy', TRUE, NULL, NULL, NULL, NULL, '2021-09-27', NULL),
+(7, 5, 'Projet ANR OPTIMA', TRUE, NULL, NULL, NULL, NULL, '2022-01-01', '2025-12-31'),
+(8, 1, 'Journées IHM 2024', TRUE, NULL, NULL, 'Porteur', TRUE, '2024-11-05', '2024-11-07'),
+(9, 10, 'Relecture IEEE TSE', FALSE, 'Revue : IEEE TSE · Nombre d''articles relus : 1', NULL, NULL, NULL, '2024-02-01', '2024-02-15'),
+(11, 8, 'Keynote EICS 2023', FALSE, 'Nom de la conférence : EICS 2023 · Lieu : Swansea', NULL, NULL, NULL, '2023-06-27', '2023-06-27'),
+(12, 4, 'Jury de thèse Université de Lille', FALSE, 'Université : Université de Lille · Rôle dans le jury : Examinateur', NULL, NULL, NULL, '2024-06-14', '2024-06-14'),
+(13, 2, 'Comité de programme ESORICS 2024', FALSE, 'Nom de la conférence : ESORICS 2024', NULL, NULL, NULL, '2024-01-15', '2024-05-30'),
+(1, 12, 'Commande robuste de bras manipulateurs', TRUE, NULL, NULL, NULL, NULL, '2021-05-12', '2021-05-12'),
+(8, 8, 'Journées IHM 2024', TRUE, NULL, 5, 'Co-organisateur', TRUE, '2024-11-05', '2024-11-07'),
+(8, 7, 'Journées IHM 2024', TRUE, NULL, 5, 'Participant', NULL, '2024-11-05', '2024-11-07'),
+(16, 1, 'Interfaces homme-machine', FALSE, NULL, NULL, NULL, NULL, '2024-09-16 08:00:00', '2024-09-16 10:00:00'),
+(16, 1, 'Programmation web', FALSE, NULL, NULL, NULL, NULL, '2024-09-18 10:15:00', '2024-09-18 12:15:00'),
+(16, 1, 'Bases de données', FALSE, NULL, NULL, NULL, NULL, '2024-09-20 14:00:00', '2024-09-20 16:00:00');
