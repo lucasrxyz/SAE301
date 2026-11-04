@@ -71,7 +71,8 @@
     $texteRequete = 'SELECT a.id_activite, a.titre, a.date_debut, a.date_fin, a.description, a.role, t.categorie, t.nom_type
         FROM Activite a
         JOIN TypeActivite t ON t.id_type = a.id_type
-        WHERE a.id_personnel = :id';
+        WHERE a.id_personnel = :id
+        AND (a.confirme IS NULL OR a.confirme = TRUE)';
     $parametres = ['id' => $idPersonnel];
 
     if ($recherche !== '') {

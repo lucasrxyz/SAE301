@@ -52,6 +52,7 @@ if ($idPersonnel !== null) {
             JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
             WHERE Activite.id_personnel = :id
             AND TypeActivite.nom_type <> 'Cours'
+            AND (Activite.confirme IS NULL OR Activite.confirme = TRUE)
             ORDER BY Activite.date_debut DESC");
         $requete->execute(['id' => $idPersonnel]);
         $activites = $requete->fetchAll(PDO::FETCH_ASSOC);

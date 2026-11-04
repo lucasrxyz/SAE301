@@ -10,6 +10,13 @@ $initiale = function_exists('mb_substr')
 $initiale = function_exists('mb_strtoupper')
     ? mb_strtoupper($initiale, 'UTF-8')
     : strtoupper($initiale);
+
+$nbInvitations = 0;
+if (verifierDroit('declarer_activite')) {
+    $requete = $pdo->prepare('SELECT COUNT(*) FROM Activite WHERE id_personnel = ? AND id_activite_principale IS NOT NULL AND confirme IS NULL');
+    $requete->execute([$_SESSION['id_personnel']]);
+    $nbInvitations = $requete->fetchColumn();
+}
 ?>
 <nav class="navbar">
     <a href="index.php" class="navbar-logo">
@@ -27,6 +34,7 @@ $initiale = function_exists('mb_strtoupper')
         <?php endif; ?>
         <?php if (verifierDroit('declarer_activite')): ?>
             <li><a href="declarerActivite.php">Déclarer une activité</a></li>
+            <li><a href="mesParticipations.php">Mes participations<?= $nbInvitations > 0 ? ' (' . $nbInvitations . ')' : '' ?></a></li>
         <?php endif; ?>
         <?php if (verifierDroit('gerer_personnel')): ?>
             <li><a href="creerCompte.php">Créer un compte</a></li>
