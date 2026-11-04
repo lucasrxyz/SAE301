@@ -37,24 +37,19 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <button type="submit" name="choisir_type" formnovalidate class="bouton-secondaire">Afficher les champs de ce type</button>
-
-                <?php $numero = 0; ?>
-                <?php foreach ($champsDuType as $nomChamp => $typeChamp): ?>
-                    <?php $numero++; ?>
-                    <label for="champ_<?= $numero ?>"><?= htmlspecialchars($nomChamp) ?></label>
-                    <input type="<?= $typeChamp ?>" name="champs[<?= htmlspecialchars($nomChamp) ?>]" id="champ_<?= $numero ?>" value="<?= htmlspecialchars($valeursChamps[$nomChamp] ?? '') ?>" <?= $typeChamp === 'number' ? 'min="1"' : '' ?> required>
-                <?php endforeach; ?>
 
                 <label for="titre">Titre de l'activité</label>
                 <input type="text" name="titre" id="titre" value="<?= htmlspecialchars($titre) ?>" required>
 
-                <label for="date_debut">Date de début</label>
-                <input type="date" name="date_debut" id="date_debut" value="<?= htmlspecialchars($datedebut) ?>" required>
+                <label for="date_debut">Début</label>
+                <input type="datetime-local" name="date_debut" id="date_debut" value="<?= htmlspecialchars($datedebut) ?>" required>
 
-                <label for="date_fin">Date de fin</label>
-                <input type="date" name="date_fin" id="date_fin" value="<?= htmlspecialchars($datefin) ?>">
-                <p class="aide">Laisser vide pour une activité d'une seule journée (relecture, jury…).</p>
+                <label for="date_fin">Fin</label>
+                <input type="datetime-local" name="date_fin" id="date_fin" value="<?= htmlspecialchars($datefin) ?>">
+                <p class="aide">Laisser vide si l'activité n'a pas de durée (relecture, jury…).</p>
+
+                <label for="description">Description (revue, lieu, organisme…)</label>
+                <textarea name="description" id="description" rows="3"><?= htmlspecialchars($description) ?></textarea>
 
                 <label class="case-a-cocher">
                     <input type="checkbox" name="en_cours" <?= $enCours ? 'checked' : '' ?>>
@@ -138,6 +133,7 @@
                                 </a>
                             </th>
                             <th>Au</th>
+                            <th>Rôle</th>
                             <th>Détails</th>
                             <th>
                                 <a class="lien-tri" href="?<?= $filtresUrl ?>&tri=etat&ordre=<?= $tri === 'etat' ? $ordreInverse : 'desc' ?>">
@@ -150,9 +146,10 @@
                                 <td><?= htmlspecialchars($activite['categorie']) ?></td>
                                 <td><?= htmlspecialchars($activite['nom_type']) ?></td>
                                 <td><?= htmlspecialchars($activite['titre']) ?></td>
-                                <td><?= date('d/m/Y', strtotime($activite['date_debut'])) ?></td>
-                                <td><?= $activite['date_fin'] === null ? '—' : date('d/m/Y', strtotime($activite['date_fin'])) ?></td>
-                                <td><?= htmlspecialchars(implode(' · ', $detailsActivites[$activite['id_activite']] ?? [])) ?></td>
+                                <td><?= formaterDate($activite['date_debut']) ?></td>
+                                <td><?= $activite['date_fin'] === null ? '—' : formaterDate($activite['date_fin']) ?></td>
+                                <td><?= htmlspecialchars($activite['role'] ?? '—') ?></td>
+                                <td><?= htmlspecialchars($activite['description'] ?? '') ?></td>
                                 <td>
                                     <?php if ($activite['date_fin'] === null || $activite['date_fin'] >= date('Y-m-d')): ?>
                                         <span class="bord-etat">En cours</span>

@@ -31,6 +31,7 @@ $initiale = function_exists('mb_strtoupper')
         <?php if (verifierDroit('gerer_personnel')): ?>
             <li><a href="creerCompte.php">Créer un compte</a></li>
             <li><a href="importerPublications.php">Importer des publications</a></li>
+            <li><a href="importerEnseignement.php">Importer un enseignement</a></li>
         <?php endif; ?>
         <?php if (verifierDroit('gerer_roles')): ?>
             <li><a href="gererRoles.php">Rôles</a></li>

@@ -81,7 +81,7 @@
                     if (!isset($typesHal[$codeHal])) {
                         $nbAutresTypes++;
                     } elseif ($titre !== '' && $dateValide && $dateValide->format('Y-m-d') === $date) {
-                        $requete = $pdo->prepare('SELECT COUNT(*) FROM Activite WHERE LOWER(titre) = LOWER(LEFT(?, 255)) AND date_debut = ?');
+                        $requete = $pdo->prepare('SELECT COUNT(*) FROM Activite WHERE LOWER(titre) = LOWER(LEFT(?, 255)) AND date_debut::date = ?');
                         $requete->execute([$titre, $date]);
                         $cle = strtolower($titre) . '|' . $date;
                         $dejaPresente = $requete->fetchColumn() > 0 || isset($dejaVues[$cle]);
@@ -107,11 +107,11 @@
                     $pdo->beginTransaction();
 
                     foreach ($publications as $publication) {
-                        $requete = $pdo->prepare('SELECT COUNT(*) FROM Activite WHERE LOWER(titre) = LOWER(LEFT(?, 255)) AND date_debut = ?');
+                        $requete = $pdo->prepare('SELECT COUNT(*) FROM Activite WHERE LOWER(titre) = LOWER(LEFT(?, 255)) AND date_debut::date = ?');
                         $requete->execute([$publication['titre'], $publication['date']]);
 
                         if ($requete->fetchColumn() == 0) {
-                            $requete = $pdo->prepare('INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin) VALUES (?, ?, LEFT(?, 255), ?, ?)');
+                            $requete = $pdo->prepare('INSERT INTO Activite (id_type, id_personnel, titre, est_collective, date_debut, date_fin) VALUES (?, ?, LEFT(?, 255), TRUE, ?, ?)');
                             $requete->execute([$publication['id_type'], $idPersonnel, $publication['titre'], $publication['date'], $publication['date']]);
                             $nbImportees++;
                         }

@@ -11,14 +11,9 @@ DROP TABLE IF EXISTS Departement CASCADE;
 DROP TABLE IF EXISTS Compte_Role CASCADE;
 DROP TABLE IF EXISTS Compte CASCADE;
 DROP TABLE IF EXISTS Role CASCADE;
+DROP TABLE IF EXISTS Personnel_Nom_Historique CASCADE;
 DROP TABLE IF EXISTS Personnel_Statut_Historique CASCADE;
 DROP TABLE IF EXISTS Personnel CASCADE;
-DROP TABLE IF EXISTS Personnel_Nom_Historique CASCADE;
-DROP TABLE IF EXISTS Participation CASCADE;
-DROP TABLE IF EXISTS Activite_Departement CASCADE;
-DROP tABLE IF EXISTS Enseignement CASCADE;
-
-
 -- ===============================
 -- TABLE "Personnel"
 -- ===============================
@@ -28,10 +23,11 @@ CREATE TABLE Personnel (
     prenom varchar(50) NOT NULL,
     mail varchar(60) NOT NULL,
     id_orcid varchar(19),
-    id_idhal varchar(100),
-    actif BOOLEAN DEFAULT TRUE,
+    id_idhal varchar(100) UNIQUE,
+    actif BOOLEAN NOT NULL DEFAULT TRUE,
     date_arrivee DATE NOT NULL,
-    date_depart DATE
+    date_depart DATE,
+    CHECK (date_depart IS NULL OR date_depart >= date_arrivee)
 );
 
 -- ===============================
@@ -43,7 +39,8 @@ CREATE TABLE Personnel_Statut_Historique (
     statut varchar(50) NOT NULL,
     quotite_recherche DECIMAL NOT NULL,
     date_debut DATE NOT NULL,
-    date_fin DATE
+    date_fin DATE,
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -71,11 +68,12 @@ CREATE TABLE Role (
 CREATE TABLE Compte (
     id_compte serial PRIMARY KEY,
     id_personnel INT NOT NULL REFERENCES Personnel(id),
-    identifiant varchar(100) NOT NULL,
+    identifiant varchar(100) NOT NULL UNIQUE,
     mot_de_passe_hash varchar(255) NOT NULL,
-    actif BOOLEAN DEFAULT TRUE,
-    date_activation DATE not null ,
-    date_desactivation DATE
+    actif BOOLEAN NOT NULL DEFAULT TRUE,
+    date_activation DATE NOT NULL,
+    date_desactivation DATE,
+    CHECK (date_desactivation IS NULL OR date_desactivation >= date_activation)
 );
 
 -- ===============================
@@ -94,7 +92,8 @@ CREATE TABLE Departement (
     id_departement serial PRIMARY KEY,
     nom varchar(50) NOT NULL,
     date_debut DATE NOT NULL,
-    date_fin DATE
+    date_fin DATE,
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -105,7 +104,8 @@ CREATE TABLE Groupe (
     id_departement INT NOT NULL REFERENCES Departement(id_departement),
     nom varchar(255) NOT NULL,
     date_debut DATE NOT NULL,
-    date_fin DATE
+    date_fin DATE,
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -118,9 +118,11 @@ CREATE TABLE Rattachement (
     id_groupe INT REFERENCES Groupe(id_groupe),
     type_rattachement varchar(20) NOT NULL DEFAULT 'principal'
         CHECK (type_rattachement IN ('principal', 'secondaire')),
-    responsable_groupe BOOLEAN DEFAULT false,
+    responsable_groupe BOOLEAN NOT NULL DEFAULT FALSE,
     date_debut DATE NOT NULL,
-    date_fin DATE
+    date_fin DATE,
+    CHECK (id_departement IS NOT NULL OR id_groupe IS NOT NULL),
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -128,19 +130,9 @@ CREATE TABLE Rattachement (
 -- ===============================
 CREATE TABLE TypeActivite (
     id_type serial PRIMARY KEY,
-    categorie varchar(102) NOT NULL,
-    nom_type varchar(102) NOT NULL,
-    est_collective boolean default false
-);
-
--- ===============================
--- TABLE "TypeActivite_Champ"
--- ===============================
-CREATE TABLE TypeActivite_Champ (
-    id serial PRIMARY KEY,
-    id_type INT NOT NULL REFERENCES TypeActivite(id_type),
-    nom_champ varchar(50) NOT NULL,
-    type_champ varchar(10) NOT NULL DEFAULT 'text'
+    categorie varchar(100) NOT NULL,
+    nom_type varchar(100) NOT NULL UNIQUE,
+    est_collective BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 -- ===============================
@@ -151,70 +143,14 @@ CREATE TABLE Activite (
     id_type INT NOT NULL REFERENCES TypeActivite(id_type),
     id_personnel INT NOT NULL REFERENCES Personnel(id),
     titre varchar(255) NOT NULL,
-    date_debut DATE NOT NULL,
-    date_fin DATE
-);
-
--- ===============================
--- TABLE "Activite_Champ"
--- ===============================
-CREATE TABLE Activite_Champ (
-    id serial PRIMARY KEY,
-    id_activite INT NOT NULL REFERENCES Activite(id_activite),
-    nom_champ varchar(50) NOT NULL,
-    valeur varchar(255) NOT NULL
-);
-
-CREATE TABLE Participation (
-    id serial PRIMARY KEY,
-    id_personnel INT NOT NULL REFERENCES Personnel(id),
-    id_activite INT NOT NULL REFERENCES Activite(id_activite)
-);
-
-CREATE TABLE Activite_Departement (
-    id serial PRIMARY KEY,
-    id_departement INT NOT NULL REFERENCES Departement(id_departement),
-    id_activite INT NOT NULL REFERENCES Activite(id_activite)
-);
-
-CREATE TABLE Enseignement (
-    id serial PRIMARY KEY,
-    id_personnel INT NOT NULL REFERENCES Personnel(id),
-    intitule VARCHAR(100),
-    date_debut DATE NOT NULL,
-    date_fin DATE
-)
-
--- ===============================
--- TABLE "Participation"
--- ===============================
-CREATE TABLE Participation (
-    id serial PRIMARY KEY,
-    id_activite INT NOT NULL REFERENCES Activite(id_activite),
-    id_personnel INT NOT NULL REFERENCES Personnel(id),
-    role varchar(100) NOT NULL,
-    confirme BOOLEAN DEFAULT NULL
-);
-
--- ===============================
--- TABLE "Activite_Departement"
--- ===============================
-CREATE TABLE Activite_Departement (
-    id serial PRIMARY KEY,
-    id_activite INT NOT NULL REFERENCES Activite(id_activite),
-    id_departement INT NOT NULL REFERENCES Departement(id_departement),
-    principal BOOLEAN DEFAULT FALSE
-);
-
--- ===============================
--- TABLE "Enseignement"
--- ===============================
-CREATE TABLE Enseignement (
-    id serial PRIMARY KEY,
-    id_personnel INT NOT NULL REFERENCES Personnel(id),
-    intitule varchar(255) NOT NULL,
+    est_collective BOOLEAN NOT NULL DEFAULT FALSE,
+    description TEXT,
+    id_activite_principale INT REFERENCES Activite(id_activite),
+    role varchar(100),
+    confirme BOOLEAN,
     date_debut TIMESTAMP NOT NULL,
-    date_fin TIMESTAMP NOT NULL
+    date_fin TIMESTAMP,
+    CHECK (date_fin IS NULL OR date_fin >= date_debut)
 );
 
 -- ===============================
@@ -327,52 +263,22 @@ INSERT INTO TypeActivite (categorie, nom_type, est_collective) VALUES
 ('Rayonnement', 'Jury de thèse', FALSE),
 ('Rayonnement', 'Comité de programme de conférence', FALSE),
 ('Rayonnement', 'Comité de sélection', FALSE),
-('Responsabilité', 'Administration et animation de structures', FALSE);
+('Responsabilité', 'Administration et animation de structures', FALSE),
+('Enseignement', 'Cours', FALSE);
 
-INSERT INTO TypeActivite_Champ (id_type, nom_champ, type_champ) VALUES
-(9, 'Revue', 'text'),
-(9, 'Nombre d''articles relus', 'number'),
-(10, 'Organisme', 'text'),
-(10, 'Nombre de dossiers', 'number'),
-(11, 'Nom de la conférence', 'text'),
-(11, 'Lieu', 'text'),
-(12, 'Université', 'text'),
-(12, 'Rôle dans le jury', 'text'),
-(13, 'Nom de la conférence', 'text'),
-(14, 'Établissement', 'text'),
-(14, 'Poste concerné', 'text'),
-(15, 'Structure', 'text'),
-(15, 'Fonction occupée', 'text');
-
-INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin) VALUES
-(1, 1, 'Interfaces adaptatives pour la gestion de crise', '2024-03-10', '2024-03-10'),
-(2, 2, 'Détection d''intrusion par apprentissage', '2024-04-20', '2024-04-25'),
-(5, 8, 'Thèse d''Emma Leroy', '2021-09-27', NULL),
-(7, 5, 'Projet ANR OPTIMA', '2022-01-01', '2025-12-31'),
-(8, 1, 'Journées IHM 2024', '2024-11-05', '2024-11-07'),
-(9, 10, 'Relecture IEEE TSE', '2024-02-01', '2024-02-15'),
-(11, 8, 'Keynote EICS 2023', '2023-06-27', '2023-06-27'),
-(12, 4, 'Jury de thèse Université de Lille', '2024-06-14', '2024-06-14'),
-(13, 2, 'Comité de programme ESORICS 2024', '2024-01-15', '2024-05-30'),
-(1, 12, 'Commande robuste de bras manipulateurs', '2021-05-12', '2021-05-12');
-
-INSERT INTO Activite_Champ (id_activite, nom_champ, valeur) VALUES
-(6, 'Revue', 'IEEE TSE'),
-(6, 'Nombre d''articles relus', '1'),
-(7, 'Nom de la conférence', 'EICS 2023'),
-(7, 'Lieu', 'Swansea'),
-(8, 'Université', 'Université de Lille'),
-(8, 'Rôle dans le jury', 'Examinateur'),
-(9, 'Nom de la conférence', 'ESORICS 2024');
-
-INSERT INTO Participation (id_activite, id_personnel, role, confirme) VALUES
-(5, 8, 'Co-organisateur', TRUE),
-(5, 7, 'Participant', NULL);
-
-INSERT INTO Activite_Departement (id_activite, id_departement, principal) VALUES
-(5, 1, TRUE);
-
-INSERT INTO Enseignement (id_personnel, intitule, date_debut, date_fin) VALUES
-(1, 'Interfaces homme-machine', '2024-09-16 08:00:00', '2024-09-16 10:00:00'),
-(1, 'Programmation web', '2024-09-18 10:15:00', '2024-09-18 12:15:00'),
-(1, 'Bases de données', '2024-09-20 14:00:00', '2024-09-20 16:00:00');
+INSERT INTO Activite (id_type, id_personnel, titre, est_collective, description, id_activite_principale, role, confirme, date_debut, date_fin) VALUES
+(1, 1, 'Interfaces adaptatives pour la gestion de crise', TRUE, NULL, NULL, NULL, NULL, '2024-03-10', '2024-03-10'),
+(2, 2, 'Détection d''intrusion par apprentissage', TRUE, NULL, NULL, NULL, NULL, '2024-04-20', '2024-04-25'),
+(5, 8, 'Thèse d''Emma Leroy', TRUE, NULL, NULL, NULL, NULL, '2021-09-27', NULL),
+(7, 5, 'Projet ANR OPTIMA', TRUE, NULL, NULL, NULL, NULL, '2022-01-01', '2025-12-31'),
+(8, 1, 'Journées IHM 2024', TRUE, NULL, NULL, 'Porteur', TRUE, '2024-11-05', '2024-11-07'),
+(9, 10, 'Relecture IEEE TSE', FALSE, 'Revue : IEEE TSE · Nombre d''articles relus : 1', NULL, NULL, NULL, '2024-02-01', '2024-02-15'),
+(11, 8, 'Keynote EICS 2023', FALSE, 'Nom de la conférence : EICS 2023 · Lieu : Swansea', NULL, NULL, NULL, '2023-06-27', '2023-06-27'),
+(12, 4, 'Jury de thèse Université de Lille', FALSE, 'Université : Université de Lille · Rôle dans le jury : Examinateur', NULL, NULL, NULL, '2024-06-14', '2024-06-14'),
+(13, 2, 'Comité de programme ESORICS 2024', FALSE, 'Nom de la conférence : ESORICS 2024', NULL, NULL, NULL, '2024-01-15', '2024-05-30'),
+(1, 12, 'Commande robuste de bras manipulateurs', TRUE, NULL, NULL, NULL, NULL, '2021-05-12', '2021-05-12'),
+(8, 8, 'Journées IHM 2024', TRUE, NULL, 5, 'Co-organisateur', TRUE, '2024-11-05', '2024-11-07'),
+(8, 7, 'Journées IHM 2024', TRUE, NULL, 5, 'Participant', NULL, '2024-11-05', '2024-11-07'),
+(16, 1, 'Interfaces homme-machine', FALSE, NULL, NULL, NULL, NULL, '2024-09-16 08:00:00', '2024-09-16 10:00:00'),
+(16, 1, 'Programmation web', FALSE, NULL, NULL, NULL, NULL, '2024-09-18 10:15:00', '2024-09-18 12:15:00'),
+(16, 1, 'Bases de données', FALSE, NULL, NULL, NULL, NULL, '2024-09-20 14:00:00', '2024-09-20 16:00:00');

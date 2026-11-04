@@ -74,6 +74,7 @@
                     <input type="hidden" name="id" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
                     <button type="submit" formaction="modifierPersonnel.php">Modifier les coordonnées</button>
                     <button type="submit" formaction="ajouterRattachement.php">Ajouter un rattachement</button>
+                    <a href="importerEnseignement.php?id_personnel=<?= urlencode((string) $personnel['id']) ?>">Importer un enseignement</a>
                 </form>
             <?php endif; ?>
 
@@ -255,6 +256,7 @@
                             <th>Type</th>
                             <?php if ($voirContenu): ?>
                                 <th>Titre</th>
+                                <th>Rôle</th>
                                 <th>Détails</th>
                             <?php endif; ?>
                             <th>Du</th>
@@ -266,10 +268,11 @@
                                 <td><?= htmlspecialchars($activite['nom_type']) ?></td>
                                 <?php if ($voirContenu): ?>
                                     <td><?= htmlspecialchars($activite['titre']) ?></td>
-                                    <td><?= htmlspecialchars(implode(' · ', $detailsActivites[$activite['id_activite']] ?? [])) ?></td>
+                                    <td><?= htmlspecialchars($activite['role'] ?? '—') ?></td>
+                                    <td><?= htmlspecialchars($activite['description'] ?? '') ?></td>
                                 <?php endif; ?>
-                                <td><?= date('d/m/Y', strtotime($activite['date_debut'])) ?></td>
-                                <td><?= $activite['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($activite['date_fin'])) ?></td>
+                                <td><?= formaterDate($activite['date_debut']) ?></td>
+                                <td><?= $activite['date_fin'] === null ? 'En cours' : formaterDate($activite['date_fin']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>
@@ -279,6 +282,28 @@
                 <?php endif; ?>
             <?php else: ?>
                 <p>Aucune activité déclarée.</p>
+            <?php endif; ?>
+
+            <h2>Enseignements</h2>
+            <?php if ($enseignements): ?>
+                <div class="tableau-defilant">
+                    <table>
+                        <tr>
+                            <th>Intitulé</th>
+                            <th>Date et heure de début</th>
+                            <th>Date et heure de fin</th>
+                        </tr>
+                        <?php foreach ($enseignements as $enseignement): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($enseignement['intitule']) ?></td>
+                                <td><?= date('d/m/Y H:i', strtotime($enseignement['date_debut'])) ?></td>
+                                <td><?= date('d/m/Y H:i', strtotime($enseignement['date_fin'])) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p>Aucun enseignement enregistré.</p>
             <?php endif; ?>
 
             <?php if ($estRH): ?>

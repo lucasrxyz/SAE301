@@ -8,7 +8,7 @@ $historiqueStatuts = [];
 $anciensNoms = [];
 $historiqueRattachements = [];
 $activites = [];
-$detailsActivites = [];
+$enseignements = [];
 $voirContenu = verifierDroit('voir_contenu_scientifique');
 
 if ($idPersonnel !== null) {
@@ -47,22 +47,22 @@ if ($idPersonnel !== null) {
         $requete->execute(['id' => $idPersonnel]);
         $historiqueRattachements = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-        $requete = $pdo->prepare("SELECT Activite.id_activite, Activite.titre, Activite.date_debut, Activite.date_fin, TypeActivite.categorie, TypeActivite.nom_type
+        $requete = $pdo->prepare("SELECT Activite.id_activite, Activite.titre, Activite.date_debut, Activite.date_fin, Activite.description, Activite.role, TypeActivite.categorie, TypeActivite.nom_type
             FROM Activite
             JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
             WHERE Activite.id_personnel = :id
+            AND TypeActivite.nom_type <> 'Cours'
             ORDER BY Activite.date_debut DESC");
         $requete->execute(['id' => $idPersonnel]);
         $activites = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-        $requete = $pdo->prepare('SELECT Activite_Champ.id_activite, Activite_Champ.nom_champ, Activite_Champ.valeur
-            FROM Activite_Champ
-            JOIN Activite ON Activite.id_activite = Activite_Champ.id_activite
-            WHERE Activite.id_personnel = ?
-            ORDER BY Activite_Champ.id');
-        $requete->execute([$idPersonnel]);
-        foreach ($requete->fetchAll() as $ligne) {
-            $detailsActivites[$ligne['id_activite']][] = $ligne['nom_champ'] . ' : ' . $ligne['valeur'];
-        }
+        $requete = $pdo->prepare("SELECT Activite.titre AS intitule, Activite.date_debut, Activite.date_fin
+            FROM Activite
+            JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
+            WHERE Activite.id_personnel = :id
+            AND TypeActivite.nom_type = 'Cours'
+            ORDER BY Activite.date_debut DESC, Activite.titre");
+        $requete->execute(['id' => $idPersonnel]);
+        $enseignements = $requete->fetchAll(PDO::FETCH_ASSOC);
     }
 }
