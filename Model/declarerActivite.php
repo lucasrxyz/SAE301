@@ -7,7 +7,7 @@
     $activiteEnregistree = isset($_GET['enregistree']);
     $idPersonnel = $_SESSION['id_personnel'];
 
-    $requete = $pdo->query('SELECT id_type, categorie, nom_type FROM TypeActivite WHERE est_collective = FALSE ORDER BY categorie, nom_type');
+    $requete = $pdo->query('SELECT id_type, categorie, nom_type FROM TypeActivite ORDER BY categorie, nom_type');
     $typesIndividuels = $requete->fetchAll(PDO::FETCH_ASSOC);
 
     $typeactivite = '';
@@ -33,7 +33,7 @@
         $typeValide = in_array($typeactivite, array_column($typesIndividuels, 'id_type'));
 
         if (!$typeValide) {
-            $erreurActivite = 'Veuillez choisir un type d\'activité individuelle.';
+            $erreurActivite = 'Veuillez choisir un type d\'activité.';
         } elseif ($titre === '' || $datedebut === '') {
             $erreurActivite = 'Le titre et la date de début sont obligatoires.';
         } elseif (!$enCours && $datefin !== '' && $datefin < $datedebut) {

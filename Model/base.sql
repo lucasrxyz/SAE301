@@ -131,8 +131,7 @@ CREATE TABLE Rattachement (
 CREATE TABLE TypeActivite (
     id_type serial PRIMARY KEY,
     categorie varchar(100) NOT NULL,
-    nom_type varchar(100) NOT NULL UNIQUE,
-    est_collective BOOLEAN NOT NULL DEFAULT FALSE
+    nom_type varchar(100) NOT NULL UNIQUE
 );
 
 -- ===============================
@@ -248,23 +247,23 @@ INSERT INTO Rattachement (id_personnel, id_departement, id_groupe, responsable_g
 (12, NULL, 4, TRUE, '2018-01-01', '2022-12-31'),
 (12, NULL, 1, FALSE, '2023-01-01', '2023-08-31');
 
-INSERT INTO TypeActivite (categorie, nom_type, est_collective) VALUES
-('Publication', 'Article de revue', TRUE),
-('Publication', 'Communication en conférence avec actes', TRUE),
-('Publication', 'Ouvrage', TRUE),
-('Publication', 'Chapitre d''ouvrage', TRUE),
-('Encadrement doctoral', 'Direction de thèse', TRUE),
-('Encadrement doctoral', 'Co-encadrement de thèse', TRUE),
-('Contrat', 'Projet de recherche', TRUE),
-('Événement', 'Organisation d''un événement scientifique', TRUE),
-('Rayonnement', 'Relecture d''article', FALSE),
-('Rayonnement', 'Expertise de dossier', FALSE),
-('Rayonnement', 'Conférence invitée', FALSE),
-('Rayonnement', 'Jury de thèse', FALSE),
-('Rayonnement', 'Comité de programme de conférence', FALSE),
-('Rayonnement', 'Comité de sélection', FALSE),
-('Responsabilité', 'Administration et animation de structures', FALSE),
-('Enseignement', 'Cours', FALSE);
+INSERT INTO TypeActivite (categorie, nom_type) VALUES
+('Publication', 'Article de revue'),
+('Publication', 'Communication en conférence avec actes'),
+('Publication', 'Ouvrage'),
+('Publication', 'Chapitre d''ouvrage'),
+('Encadrement doctoral', 'Direction de thèse'),
+('Encadrement doctoral', 'Co-encadrement de thèse'),
+('Contrat', 'Projet de recherche'),
+('Événement', 'Organisation d''un événement scientifique'),
+('Rayonnement', 'Relecture d''article'),
+('Rayonnement', 'Expertise de dossier'),
+('Rayonnement', 'Conférence invitée'),
+('Rayonnement', 'Jury de thèse'),
+('Rayonnement', 'Comité de programme de conférence'),
+('Rayonnement', 'Comité de sélection'),
+('Responsabilité', 'Administration et animation de structures'),
+('Enseignement', 'Cours');
 
 INSERT INTO Activite (id_type, id_personnel, titre, est_collective, description, id_activite_principale, role, confirme, date_debut, date_fin) VALUES
 (1, 1, 'Interfaces adaptatives pour la gestion de crise', TRUE, NULL, NULL, NULL, NULL, '2024-03-10', '2024-03-10'),
