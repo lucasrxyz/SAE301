@@ -49,7 +49,7 @@
             }
         }
 
-        if (!in_array($typeactivite, array_column($typesIndividuels, 'id_type'))) {
+        if (!in_array($typeactivite, array_column($typesActivite, 'id_type'))) {
             $erreurActivite = 'Veuillez choisir un type d\'activité.';
         } elseif ($titre === '' || $datedebut === '') {
             $erreurActivite = 'Le titre et la date de début sont obligatoires.';
@@ -63,7 +63,7 @@
             // 1. Mon activité (je suis le porteur)
             $requete = $pdo->prepare("INSERT INTO Activite (id_type, id_personnel, titre, est_collective, description, role, confirme, date_debut, date_fin)
                 VALUES (?, ?, ?, TRUE, ?, 'Porteur', TRUE, ?, ?) RETURNING id_activite");
-            $requete->execute([$typeactivite, $idPersonnel, $titre, $description, $datedebut, $dateFinEnregistree]);
+            $requete->execute([$typeactivite, $idPorteur, $titre, $description, $datedebut, $dateFinEnregistree]);
             $idActivitePrincipale = $requete->fetchColumn();
 
             // 2. Une ligne par collaborateur, reliée à mon activité
@@ -73,7 +73,7 @@
                 $requete->execute([$typeactivite, $idCollab, $titre, $description, $idActivitePrincipale, $datedebut, $dateFinEnregistree]);
             }
 
-            header('Location: declarerActivite.php?enregistree=1');
+            header('Location: declarerCollective.php?enregistree=1');
             exit;
         }
     }

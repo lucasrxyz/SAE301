@@ -1,8 +1,8 @@
 <?php
     require_once __DIR__ . '/config.php';
 
-$debut = $_GET['debut'] ?? date('d-m-y');
-$fin = $_GET['fin'] ?? date('d-m-y');
+$debut = $_GET['debut'] ?? date('Y-m-d');
+$fin = $_GET['fin'] ?? date('Y-m-d');
 $stmt = [];
 
 if ($debut <= $fin) {

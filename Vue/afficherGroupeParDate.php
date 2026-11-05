@@ -1,6 +1,6 @@
 <?php
     require __DIR__ . '/../Model/verifierconnexion.php';
-require __DIR__ . '/../Model/listeGroupesPeriode.php';
+require __DIR__ . '/../Model/groupeParHeure.php';
 ?>
 <!doctype html>
 <html lang="fr">
