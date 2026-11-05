@@ -17,7 +17,7 @@
         $requete = $pdo->prepare(
             "SELECT DISTINCT
             COALESCE(d_groupe.nom, d_direct.nom, 'Non rattaché dans un département') AS dept_nom,
-            Personnel.prenom, Personnel.nom
+            Personnel.id, Personnel.prenom, Personnel.nom
             FROM Rattachement
             JOIN Personnel ON Personnel.id = Rattachement.id_personnel
             LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
@@ -58,6 +58,7 @@
             LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
             LEFT JOIN Departement ON Departement.id_departement = Rattachement.id_departement
             WHERE NOT Role.nom_role = 'Administrateur fonctionnel'
+            AND Personnel.date_arrivee <= :date AND (Personnel.date_depart IS NULL OR Personnel.date_depart >= :date)
             ORDER BY Role.niveau_pyramidal ASC, Personnel.nom ASC");
     }
 

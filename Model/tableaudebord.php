@@ -67,12 +67,12 @@
         $effectifsParStatut[$ligne['statut']][] = $ligne['quotite_recherche'];
     }
 
-    $requete = $pdo->prepare("SELECT TypeActivite.categorie, COUNT(DISTINCT Activite.id_activite) AS nombre
+    $requete = $pdo->prepare("SELECT TypeActivite.categorie, COUNT(DISTINCT COALESCE(Activite.id_activite_principale, Activite.id_activite)) AS nombre
         FROM Activite
         JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
         JOIN Rattachement ON Rattachement.id_personnel = Activite.id_personnel
         LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
-        WHERE Activite.id_activite_principale IS NULL
+        WHERE (Activite.id_activite_principale IS NULL OR Activite.confirme = TRUE)
         AND Activite.date_debut::date <= :fin
         AND (Activite.date_fin >= :debut OR Activite.date_fin IS NULL)" . $filtre . "
         GROUP BY TypeActivite.categorie");
