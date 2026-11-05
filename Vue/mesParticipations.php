@@ -29,22 +29,16 @@
                 <div class="tableau-defilant">
                     <table>
                         <tr>
+                            <th>Statut</th>
                             <th>Activité</th>
                             <th>Type</th>
                             <th>Porteur</th>
                             <th>Mon rôle</th>
                             <th>Du</th>
                             <th>Au</th>
-                            <th>Statut</th>
                         </tr>
                         <?php foreach ($participations as $participation): ?>
                             <tr>
-                                <td><?= htmlspecialchars($participation['titre']) ?></td>
-                                <td><?= htmlspecialchars($participation['nom_type']) ?></td>
-                                <td><?= htmlspecialchars($participation['prenom'] . ' ' . $participation['nom']) ?></td>
-                                <td><?= htmlspecialchars($participation['role'] ?? '—') ?></td>
-                                <td><?= formaterDate($participation['date_debut']) ?></td>
-                                <td><?= $participation['date_fin'] === null ? '—' : formaterDate($participation['date_fin']) ?></td>
                                 <td>
                                     <?php if ($participation['confirme'] === null): ?>
                                         <form action="" method="post">
@@ -58,12 +52,50 @@
                                         <span class="bord-etat bord-etat-parti">Refusée</span>
                                     <?php endif; ?>
                                 </td>
+                                <td><?= htmlspecialchars($participation['titre']) ?></td>
+                                <td><?= htmlspecialchars($participation['nom_type']) ?></td>
+                                <td><?= htmlspecialchars($participation['prenom'] . ' ' . $participation['nom']) ?></td>
+                                <td><?= htmlspecialchars($participation['role'] ?? '—') ?></td>
+                                <td><?= formaterDate($participation['date_debut']) ?></td>
+                                <td><?= $participation['date_fin'] === null ? '—' : formaterDate($participation['date_fin']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>
                 </div>
             <?php else: ?>
                 <p>Vous n'êtes participant d'aucune activité collective.</p>
+            <?php endif; ?>
+
+            <h2>Réponses à mes activités</h2>
+            <?php if ($reponsesParticipants): ?>
+                <div class="tableau-defilant">
+                    <table>
+                        <tr>
+                            <th>Statut</th>
+                            <th>Activité</th>
+                            <th>Participant</th>
+                            <th>Rôle</th>
+                        </tr>
+                        <?php foreach ($reponsesParticipants as $participant): ?>
+                            <tr>
+                                <td>
+                                    <?php if ($participant['confirme'] === null): ?>
+                                        <span class="bord-etat">En attente</span>
+                                    <?php elseif ($participant['confirme']): ?>
+                                        <span class="bord-etat">Confirmée</span>
+                                    <?php else: ?>
+                                        <span class="bord-etat bord-etat-parti">Refusée</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?= htmlspecialchars($participant['titre']) ?></td>
+                                <td><?= htmlspecialchars($participant['prenom'] . ' ' . $participant['nom']) ?></td>
+                                <td><?= htmlspecialchars($participant['role'] ?? '—') ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p>Aucun participant sur vos activités collectives.</p>
             <?php endif; ?>
         </section>
     </main>

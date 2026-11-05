@@ -28,3 +28,12 @@
         ORDER BY Activite.confirme IS NOT NULL, Activite.date_debut DESC');
     $requete->execute([$idPersonnel]);
     $participations = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+    $requete = $pdo->prepare('SELECT Activite.titre, Activite.role, Activite.confirme, Personnel.prenom, Personnel.nom
+        FROM Activite
+        JOIN Activite Principale ON Principale.id_activite = Activite.id_activite_principale
+        JOIN Personnel ON Personnel.id = Activite.id_personnel
+        WHERE Principale.id_personnel = ?
+        ORDER BY Activite.titre, Personnel.nom, Personnel.prenom');
+    $requete->execute([$idPersonnel]);
+    $reponsesParticipants = $requete->fetchAll(PDO::FETCH_ASSOC);
