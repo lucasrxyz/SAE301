@@ -34,7 +34,6 @@ if (verifierDroit('declarer_activite')) {
         <?php endif; ?>
         <?php if (verifierDroit('declarer_activite')): ?>
             <li><a href="declarerActivite.php">Déclarer une activité</a></li>
-            <li><a href="declarerCollective.php">Déclarer une activité Collective</a></li>
             <li><a href="mesParticipations.php">Mes participations<?= $nbInvitations > 0 ? ' (' . $nbInvitations . ')' : '' ?></a></li>
         <?php endif; ?>
         <?php if (verifierDroit('gerer_personnel')): ?>

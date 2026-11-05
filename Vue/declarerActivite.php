@@ -17,7 +17,7 @@
     <main class="page-contenu formulaire-page">
         <section class="formulaire-carte">
             <p class="formulaire-surtitre">Mes activités</p>
-            <h1>Déclarer une activité individuelle</h1>
+            <h1>Déclarer une activité<?= $mode !== '' ? ' ' . $mode : '' ?></h1>
 
             <?php if ($erreurActivite !== ''): ?>
                 <p class="message-erreur"><?= htmlspecialchars($erreurActivite) ?></p>
@@ -27,11 +27,20 @@
                 <p class="message-succes">L'activité a été enregistrée.</p>
             <?php endif; ?>
 
+            <form action="declarerActivite.php" method="get" class="formulaire-vertical">
+                <p class="aide">Cette activité est-elle individuelle ou collective ?</p>
+                <button type="submit" name="mode" value="individuelle" <?= $mode !== 'individuelle' ? 'class="bouton-secondaire"' : '' ?>>Individuelle</button>
+                <button type="submit" name="mode" value="collective" <?= $mode !== 'collective' ? 'class="bouton-secondaire"' : '' ?>>Collective</button>
+            </form>
+
+            <?php if ($mode !== ''): ?>
             <form action="" method="post" class="formulaire-vertical">
+                <input type="hidden" name="mode" value="<?= $mode ?>">
+
                 <label for="id_type">Type d'activité</label>
                 <select name="id_type" id="id_type" required>
                     <option value="">-- Choisir un type --</option>
-                    <?php foreach ($typesIndividuels as $type): ?>
+                    <?php foreach ($tousLesTypes as $type): ?>
                         <option value="<?= $type['id_type'] ?>" <?= $typeactivite == $type['id_type'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($type['categorie'] . ' - ' . $type['nom_type']) ?>
                         </option>
@@ -51,6 +60,18 @@
                 <label for="description">Description (revue, lieu, organisme…)</label>
                 <textarea name="description" id="description" rows="3"><?= htmlspecialchars($description) ?></textarea>
 
+                <?php if ($mode === 'collective'): ?>
+                    <label for="collaborateurs">Sélectionnez vos collaborateurs</label>
+                    <select name="collaborateurs[]" id="collaborateurs" multiple size="5">
+                        <?php foreach ($listePersonnels as $personnel): ?>
+                            <option value="<?= $personnel['id'] ?>" <?= in_array($personnel['id'], $collaborateurs) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' [idhal: ' . $personnel['id_idhal'] . '] [orcid: ' . $personnel['id_orcid'] . ']') ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p class="aide">Ctrl + clic pour sélectionner plusieurs.</p>
+                <?php endif; ?>
+
                 <label class="case-a-cocher">
                     <input type="checkbox" name="en_cours" <?= $enCours ? 'checked' : '' ?>>
                     Activité toujours en cours
@@ -58,6 +79,7 @@
 
                 <button type="submit" name="enregistrer">Enregistrer l'activité</button>
             </form>
+            <?php endif; ?>
         </section>
 
         <section class="liste-activites">
