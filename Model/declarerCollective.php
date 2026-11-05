@@ -14,7 +14,7 @@
     $typesActivite = $requete->fetchAll(PDO::FETCH_ASSOC);
 
     // Personnels actifs, sauf moi
-    $requete = $pdo->prepare('SELECT id, nom, prenom, id_idhal, id_orcid FROM Personnel WHERE actif = TRUE AND id_idhal IS NULL AND id_orcid ID NULL AND id <> ? ORDER BY nom, prenom');
+    $requete = $pdo->prepare('SELECT id, nom, prenom, id_idhal, id_orcid FROM Personnel WHERE actif = TRUE AND id_idhal IS NULL AND id_orcid IS NULL AND id <> ? ORDER BY nom, prenom');
     $requete->execute([$idPorteur]);
     $listePersonnels = $requete->fetchAll(PDO::FETCH_ASSOC);
 
