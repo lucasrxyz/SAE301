@@ -2,7 +2,9 @@
     require_once __DIR__ . '/config.php';
 
     exigerDroit('declarer_activite');
-    $erreurRapport = '';
+        $erreurRapport = '';
+        $dateDebut = '';
+        $dateFin = '';
 
 
     if (isset($_POST['enregistrer'])) {
@@ -52,8 +54,8 @@
             JOIN TypeActivite ON TypeActivite.id_type = Activite.id_type
             WHERE Activite.id_personnel = ?
             AND (Activite.id_activite_principale IS NULL OR Activite.confirme = TRUE)
-            AND Activite.date_debut::date <= ?
-            AND (Activite.date_fin IS NULL OR Activite.date_fin::date >= ?)
+            AND Activite.date_debut <= ?
+            AND (Activite.date_fin IS NULL OR Activite.date_fin >= ?)
             ORDER BY TypeActivite.categorie, Activite.date_debut");
         $requete->execute([$idPersonnel, $dateFin, $dateDebut]);
         $activitesParCategorie = [];
@@ -96,5 +98,7 @@
 
             fclose($sortie);
             exit;
+        } else {
+            $erreurRapport = 'Veuillez choisir un format valide.';
         }
 }

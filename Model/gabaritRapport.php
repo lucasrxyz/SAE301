@@ -35,7 +35,7 @@
     <h1>Rapport d'activités individuel</h1>
     <p class="sous-titre">
         <?= htmlspecialchars($personnel['prenom']) ?> <?= htmlspecialchars($personnel['nom']) ?>
-        - période du <?= date('d/m/Y', strtotime($dateDebut)) ?> au <?= date('d/m/Y', strtotime($dateFin)) ?>
+        - période du <?= date('d/m/Y H:i', strtotime($dateDebut)) ?> au <?= date('d/m/Y H:i', strtotime($dateFin)) ?>
     </p>
 
     <h2>1.1 Fiche d'identité</h2>
