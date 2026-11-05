@@ -17,7 +17,7 @@
     <main class="page-contenu formulaire-page">
         <section class="formulaire-carte">
             <p class="formulaire-surtitre">Mes activités</p>
-            <h1>Déclarer une activité<?= $mode !== '' ? ' ' . $mode : '' ?></h1>
+            <h1>Générer Rapport</h1>
 
             <?php if ($erreurRapport !== ''): ?>
                 <p class="message-erreur"><?= htmlspecialchars($erreurRapport) ?></p>
