@@ -55,7 +55,7 @@
                 <select name="collaborateurs[]" id="collaborateurs" multiple size="5">
                     <?php foreach ($listePersonnels as $personnel): ?>
                         <option value="<?= $personnel['id'] ?>" <?= in_array($personnel['id'], $collaborateurs) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' idhal: ' . $personnel['id_idhal'] . ' orcid: ' . $personnel['id_orcid']) ?>
+                            <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' [idhal: ' . $personnel['id_idhal'] . '] [orcid: ' . $personnel['id_orcid'] . ']') ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
