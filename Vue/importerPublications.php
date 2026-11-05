@@ -1,5 +1,7 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+    // Interroge HAL et fait l'import
     require __DIR__ . '/../Model/importerHAL.php';
 ?>
 <!DOCTYPE html>
@@ -12,6 +14,7 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu formulaire-page">
@@ -19,6 +22,7 @@
             <p class="formulaire-surtitre">Publications HAL</p>
             <h1>Importer des publications</h1>
 
+            <?php // Messages d'erreur et de réussite ?>
             <?php if ($erreurImport !== ''): ?>
                 <p class="message-erreur"><?= htmlspecialchars($erreurImport) ?></p>
             <?php endif; ?>
@@ -27,6 +31,7 @@
                 <p class="message-succes"><?= $nbImportees ?> publication(s) importée(s).</p>
             <?php endif; ?>
 
+            <?php // Choix du personnel, parmi ceux qui ont un IdHAL ?>
             <?php if ($personnels): ?>
                 <form action="" method="post" class="formulaire-vertical">
                     <label for="id_personnel">Personnel (IdHAL renseigné)</label>
@@ -46,6 +51,7 @@
             <?php endif; ?>
         </section>
 
+        <?php // Aperçu des publications trouvées ?>
         <?php if ($apercuAffiche): ?>
             <section class="liste-activites">
                 <h2>Aperçu des publications</h2>
@@ -54,6 +60,7 @@
                     <p class="aide"><?= count($publications) ?> publication(s) trouvée(s), dont <?= $nbNouvelles ?> nouvelle(s).</p>
 
                     <div class="tableau-defilant">
+                        <?php // Tableau de l'aperçu, avec le statut de chaque publication ?>
                         <table>
                             <tr>
                                 <th>Titre</th>
@@ -72,10 +79,12 @@
                         </table>
                     </div>
 
+                    <?php // Nombre de documents ignorés ?>
                     <?php if ($nbAutresTypes > 0): ?>
                         <p class="aide"><?= $nbAutresTypes ?> autre(s) document(s) HAL ignoré(s) (type non géré).</p>
                     <?php endif; ?>
 
+                    <?php // Le bouton d'import s'affiche seulement s'il y a des nouveautés ?>
                     <?php if ($nbNouvelles > 0): ?>
                         <form action="" method="post" class="formulaire-vertical">
                             <input type="hidden" name="id_personnel" value="<?= $idPersonnel ?>">

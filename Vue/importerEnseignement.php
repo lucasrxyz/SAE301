@@ -1,6 +1,9 @@
 <?php
+// Vérifie que l'utilisateur est connecté
 require_once __DIR__ . '/../Model/verifierconnexion.php';
+// Réservé au RH et à l'administrateur
 exigerDroit('gerer_personnel');
+// Lit le fichier ICS et fait l'import
 require_once __DIR__ . '/../Model/importerICS.php';
 ?>
 <!doctype html>
@@ -12,12 +15,14 @@ require_once __DIR__ . '/../Model/importerICS.php';
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu">
         <h1>Importer des enseignements depuis un fichier ICS</h1>
         <p>Sélectionnez le personnel concerné puis un fichier ICS exporté depuis EVT. Vérifiez l’aperçu avant de lancer l’import.</p>
 
+        <?php // Messages d'erreur et de résultat ?>
         <?php if ($erreurICS !== ''): ?>
             <p class="message-erreur"><?= htmlspecialchars($erreurICS) ?></p>
         <?php endif; ?>
@@ -26,6 +31,7 @@ require_once __DIR__ . '/../Model/importerICS.php';
             <p class="message-succes"><?= htmlspecialchars($messageImport) ?></p>
         <?php endif; ?>
 
+        <?php // Choix du personnel et du fichier (enctype est obligatoire pour envoyer un fichier) ?>
         <form method="post" action="importerEnseignement.php" enctype="multipart/form-data">
             <label for="id_personnel">Personnel</label>
             <select name="id_personnel" id="id_personnel" required>
@@ -42,6 +48,7 @@ require_once __DIR__ . '/../Model/importerICS.php';
             <button type="submit" name="previsualiser" value="1">Prévisualiser</button>
         </form>
 
+        <?php // Aperçu des événements avant l'import ?>
         <?php if ($evenementsApercu): ?>
             <h2>Aperçu (<?= count($evenementsApercu) ?> événement(s))</h2>
             <div class="tableau-defilant">
@@ -62,14 +69,15 @@ require_once __DIR__ . '/../Model/importerICS.php';
                     <?php endforeach; ?>
                 </table>
             </div>
+            <?php // Bouton pour confirmer l'import, ou annuler ?>
             <form method="post" action="importerEnseignement.php">
-                <input type="hidden" name="jeton" value="<?= htmlspecialchars($jetonImport) ?>">
                 <button type="submit" name="importer" value="1">Importer</button>
                 <a href="importerEnseignement.php">Annuler</a>
             </form>
         <?php endif; ?>
     </main>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
     </footer>

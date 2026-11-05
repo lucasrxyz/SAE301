@@ -1,5 +1,7 @@
 <?php
+// Vérifie que l'utilisateur est connecté
 require __DIR__ . '/../Model/verifierconnexion.php';
+// Traite le formulaire
 require __DIR__ . '/../Model/modifierpersonnel.php';
 ?>
 <!DOCTYPE html>
@@ -12,10 +14,12 @@ require __DIR__ . '/../Model/modifierpersonnel.php';
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="formulaire-page">
         <section class="formulaire-carte">
+            <?php // Message si le personnel n'existe pas, sinon le formulaire ?>
             <?php if ($personnelIntrouvable): ?>
                 <h1>Modifier un personnel</h1>
                 <p class="message-erreur">Personnel introuvable.</p>
@@ -25,6 +29,7 @@ require __DIR__ . '/../Model/modifierpersonnel.php';
                 <h1><?= htmlspecialchars($personnel['prenom'] . ' ' . $personnel['nom']) ?></h1>
                 <p>Modifiez le nom, le prénom ou l'adresse mail de ce personnel.</p>
 
+                <?php // Messages de réussite et d'erreur ?>
                 <?php if ($modificationReussie): ?>
                     <p class="message-succes">Les coordonnées ont été modifiées.</p>
                 <?php endif; ?>
@@ -33,6 +38,7 @@ require __DIR__ . '/../Model/modifierpersonnel.php';
                     <p class="message-erreur"><?= htmlspecialchars($erreurModification) ?></p>
                 <?php endif; ?>
 
+                <?php // Formulaire : nom, prénom et mail ?>
                 <form action="" method="post" class="formulaire-vertical">
                     <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
 
@@ -54,6 +60,7 @@ require __DIR__ . '/../Model/modifierpersonnel.php';
         </section>
     </main>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

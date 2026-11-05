@@ -1,5 +1,7 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+    // Prépare la vue demandée
     require __DIR__ . '/../Model/listeOrganisation.php';
 ?>
 <!DOCTYPE html>
@@ -12,6 +14,7 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <div class="page-contenu">
@@ -22,6 +25,7 @@
 
         <p>Veuillez selectionner la vue désirée</p>
 
+        <?php // Choix de la date et de la vue ?>
         <form action="" method="get" class="form">
             <label for="date">Situation au</label>
             <input type="date" name="date" id="date" value="<?= htmlspecialchars($dateConsultee) ?>" required>
@@ -31,9 +35,11 @@
             <button type="submit" name="vue" value="hierarchie">Hiérarchie</button>
         </form>
 
+        <?php // Le tableau s'affiche une fois la vue choisie ?>
         <?php if ($vue !== null): ?>
         <h2>Situation au <?= date('d/m/Y', strtotime($dateConsultee)) ?></h2>
         <div class="tableau-defilant">
+            <?php // Les colonnes dépendent de la vue ?>
             <table>
                 <thead>
                     <tr>
@@ -55,6 +61,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php // Une ligne par résultat ?>
                     <?php foreach ($stmt as $lignes): ?>
                         <tr>
                             <?php if ($vue === "departements"): ?>
@@ -68,6 +75,7 @@
                             <td>
                                 <?php if (!$lignes['responsable_groupe']): ?>
                                     Membre
+                                <?php // Responsable du groupe, sinon du département ?>
                                 <?php elseif ($lignes['id_groupe'] !== null): ?>
                                     Responsable du groupe
                                 <?php else: ?>
@@ -88,6 +96,7 @@
         <?php endif; ?>
     </div>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

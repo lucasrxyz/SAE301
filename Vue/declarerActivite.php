@@ -1,5 +1,7 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+    // Traite le formulaire et prépare la liste
     require __DIR__ . '/../Model/declarerActivite.php';
 ?>
 <!DOCTYPE html>
@@ -12,6 +14,7 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu formulaire-page">
@@ -19,6 +22,7 @@
             <p class="formulaire-surtitre">Mes activités</p>
             <h1>Déclarer une activité<?= $mode !== '' ? ' ' . $mode : '' ?></h1>
 
+            <?php // Messages d'erreur et de réussite ?>
             <?php if ($erreurActivite !== ''): ?>
                 <p class="message-erreur"><?= htmlspecialchars($erreurActivite) ?></p>
             <?php endif; ?>
@@ -27,12 +31,14 @@
                 <p class="message-succes">L'activité a été enregistrée.</p>
             <?php endif; ?>
 
+            <?php // Choix : individuelle ou collective ?>
             <form action="declarerActivite.php" method="post" class="formulaire-vertical">
                 <p class="aide">Cette activité est-elle individuelle ou collective ?</p>
                 <button type="submit" name="mode" value="individuelle" <?= $mode !== 'individuelle' ? 'class="bouton-secondaire"' : '' ?>>Individuelle</button>
                 <button type="submit" name="mode" value="collective" <?= $mode !== 'collective' ? 'class="bouton-secondaire"' : '' ?>>Collective</button>
             </form>
 
+            <?php // Le formulaire s'affiche une fois le choix fait ?>
             <?php if ($mode !== ''): ?>
             <form action="declarerActivite.php" method="post" class="formulaire-vertical">
                 <input type="hidden" name="mode" value="<?= $mode ?>">
@@ -47,6 +53,7 @@
                     <?php endforeach; ?>
                 </select>
 
+                <?php // Titre, dates et description ?>
                 <label for="titre">Titre de l'activité</label>
                 <input type="text" name="titre" id="titre" value="<?= htmlspecialchars($titre) ?>" required>
 
@@ -60,6 +67,7 @@
                 <label for="description">Description (revue, lieu, organisme…)</label>
                 <textarea name="description" id="description" rows="3"><?= htmlspecialchars($description) ?></textarea>
 
+                <?php // Liste des collaborateurs, seulement en mode collectif ?>
                 <?php if ($mode === 'collective'): ?>
                     <label for="collaborateurs">Sélectionnez vos collaborateurs</label>
                     <select name="collaborateurs[]" id="collaborateurs" multiple size="5">
@@ -82,9 +90,11 @@
             <?php endif; ?>
         </section>
 
+        <?php // Liste de mes activités ?>
         <section class="liste-activites">
             <h2>Mes activités déclarées</h2>
 
+            <?php // Recherche et filtres ?>
             <form method="get" action="declarerActivite.php" class="filtres-activites">
                 <div class="bord-champ champ-recherche">
                     <label for="recherche">Rechercher</label>
@@ -133,6 +143,7 @@
                 </div>
             </form>
 
+            <?php // Tableau de mes activités, avec des titres de colonnes cliquables pour trier ?>
             <?php if ($mesActivites): ?>
                 <p class="aide nombre-resultats"><?= count($mesActivites) ?> activité(s)</p>
                 <div class="tableau-defilant">
@@ -173,6 +184,7 @@
                                 <td><?= htmlspecialchars($activite['role'] ?? '—') ?></td>
                                 <td><?= htmlspecialchars($activite['description'] ?? '') ?></td>
                                 <td>
+                                    <?php // Statut : en cours ou terminée ?>
                                     <?php if ($activite['date_fin'] === null || $activite['date_fin'] >= date('Y-m-d')): ?>
                                         <span class="bord-etat">En cours</span>
                                     <?php else: ?>
@@ -183,6 +195,7 @@
                         <?php endforeach; ?>
                     </table>
                 </div>
+            <?php // Message s'il n'y a aucune activité ?>
             <?php elseif ($filtreActif): ?>
                 <p>Aucune activité ne correspond à votre recherche.</p>
             <?php else: ?>
@@ -191,6 +204,7 @@
         </section>
     </main>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

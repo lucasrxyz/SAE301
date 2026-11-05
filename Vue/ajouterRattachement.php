@@ -1,5 +1,7 @@
 <?php
+// Vérifie que l'utilisateur est connecté
 require __DIR__ . '/../Model/verifierconnexion.php';
+// Traite le formulaire
 require __DIR__ . '/../Model/ajouterrattachement.php';
 ?>
 <!DOCTYPE html>
@@ -12,15 +14,18 @@ require __DIR__ . '/../Model/ajouterrattachement.php';
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="formulaire-page">
         <section class="formulaire-carte">
+            <?php // Le formulaire s'affiche seulement si le personnel existe ?>
             <?php if ($personnel): ?>
                 <p class="formulaire-surtitre">Rattachement</p>
                 <h1><?= htmlspecialchars($personnel['prenom'] . ' ' . $personnel['nom']) ?></h1>
                 <p>Rattachez ce personnel à un groupe ou à un département.</p>
 
+                <?php // Messages de réussite et d'erreur ?>
                 <?php if ($rattachementAjoute): ?>
                     <p class="message-succes">Le rattachement a été ajouté.</p>
                 <?php endif; ?>
@@ -29,31 +34,36 @@ require __DIR__ . '/../Model/ajouterrattachement.php';
                     <p class="message-erreur"><?= htmlspecialchars($erreurRattachement) ?></p>
                 <?php endif; ?>
 
+                <?php // Formulaire de rattachement ?>
                 <form action="" method="post" class="formulaire-vertical">
                     <input type="hidden" name="id_personnel" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
 
-                    <label for="choix">Groupe ou département</label>
-                     <select name="choix" id="choix" required>
-                        <option value="">-- Choisir --</option>
-                        <optgroup label="Groupes">
-                            <?php foreach ($groupes as $groupe): ?>
-                                <option value="groupe-<?= $groupe['id_groupe'] ?>" <?= $choix === 'groupe-' . $groupe['id_groupe'] ? 'selected' : '' ?>>
+                    <?php // Liste des groupes ?>
+                    <label for="id_groupe">Groupe</label>
+                    <select name="id_groupe" id="id_groupe">
+                        <option value="">-- Aucun --</option>
+                        <?php foreach ($groupes as $groupe): ?>
+                                <option value="<?= $groupe['id_groupe'] ?>" <?= $idGroupeChoisi == $groupe['id_groupe'] ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($groupe['nom_departement'] . ' - ' . $groupe['nom_groupe']) ?>
                                     <?php if ($groupe['date_fin']): ?>(clôturé le <?= date('d/m/Y', strtotime($groupe['date_fin'])) ?>)<?php endif; ?>
                                     <?php if ($groupe['date_debut'] > date('Y-m-d')): ?>(à partir du <?= date('d/m/Y', strtotime($groupe['date_debut'])) ?>)<?php endif; ?>
                                 </option>
                             <?php endforeach; ?>
-                        </optgroup>
-                        <optgroup label="Départements">
-                            <?php foreach ($departements as $departement): ?>
-                                <option value="departement-<?= $departement['id_departement'] ?>" <?= $choix === 'departement-' . $departement['id_departement'] ? 'selected' : '' ?>>
+                    </select>
+
+                    <?php // Liste des départements ?>
+                    <label for="id_departement">Département</label>
+                    <select name="id_departement" id="id_departement">
+                        <option value="">-- Aucun --</option>
+                        <?php foreach ($departements as $departement): ?>
+                                <option value="<?= $departement['id_departement'] ?>" <?= $idDepartementChoisi == $departement['id_departement'] ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($departement['nom']) ?>
                                     <?php if ($departement['date_fin']): ?>(clôturé le <?= date('d/m/Y', strtotime($departement['date_fin'])) ?>)<?php endif; ?>
                                     <?php if ($departement['date_debut'] > date('Y-m-d')): ?>(à partir du <?= date('d/m/Y', strtotime($departement['date_debut'])) ?>)<?php endif; ?>
                                 </option>
                             <?php endforeach; ?>
-                        </optgroup>
                     </select>
+                    <p class="aide">Choisissez un groupe ou un département, pas les deux.</p>
                     <p class="aide">Un rattachement se fait soit à un groupe, soit directement à un département.</p>
 
                     <label for="type_rattachement">Type de rattachement</label>
@@ -80,6 +90,7 @@ require __DIR__ . '/../Model/ajouterrattachement.php';
         </section>
     </main>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

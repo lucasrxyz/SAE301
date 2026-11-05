@@ -1,5 +1,7 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+    // Traite le formulaire
     require __DIR__ . '/../Model/ajouterpersonnel.php';
 ?>
 <!DOCTYPE html>
@@ -12,6 +14,7 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu formulaire-page">
@@ -19,6 +22,7 @@
             <p class="formulaire-surtitre">Gestion du personnel</p>
             <h1>Ajouter un personnel</h1>
 
+            <?php // Messages de réussite et d'erreur ?>
             <?php if ($personnelCree): ?>
                 <p class="message-succes">Le personnel a été ajouté.</p>
             <?php endif; ?>
@@ -27,6 +31,7 @@
                 <p class="message-erreur"><?= htmlspecialchars($erreurPersonnel) ?></p>
             <?php endif; ?>
 
+            <?php // Formulaire : identité, arrivée, statut et quotité ?>
             <form action="" method="post" class="formulaire-vertical">
                 <label for="nom">Nom</label>
                 <input type="text" name="nom" id="nom" maxlength="50" value="<?= htmlspecialchars($nomSaisi) ?>" required>
@@ -43,6 +48,7 @@
                 <label for="statut">Statut</label>
                     <select name="statut" id="statut" required>
                         <option value="">-- Choisir un statut --</option>
+                             <?php // Une option par statut autorisé ?>
                              <?php foreach ($statutsPossibles as $statut): ?>
                                 <option value="<?= htmlspecialchars($statut) ?>" <?= $statutSaisi === $statut ? 'selected' : '' ?>><?= htmlspecialchars($statut) ?></option>
                             <?php endforeach; ?>
@@ -58,6 +64,7 @@
         </section>
     </main>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

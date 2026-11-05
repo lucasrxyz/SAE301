@@ -1,241 +1,171 @@
 <?php
+// Connexion à la base de données et droits
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/droits.php';
 
-function decodifierValeurICS($valeur)
+// Les dates du fichier sont converties à l'heure française
+date_default_timezone_set('Europe/Paris');
+
+// Transforme une date ICS (20261014T080000) en date pour la base (2026-10-14 08:00:00)
+function convertirDateICS($valeur)
 {
-    return strtr($valeur, [
-        '\\n' => "\n",
-        '\\N' => "\n",
-        '\\,' => ',',
-        '\\;' => ';',
-        '\\\\' => '\\'
-    ]);
+    $horodatage = strtotime($valeur);
+    if ($horodatage === false) {
+        return '';
+    }
+    return date('Y-m-d H:i:s', $horodatage);
 }
 
-function convertirDateICS($valeur, $parametres)
+// Dans le fichier, une ligne a la forme NOM:valeur : on garde ce qui est après les deux-points
+function valeurLigneICS($ligne)
 {
-    $valeur = trim($valeur);
-    $zoneLocale = new DateTimeZone('Europe/Paris');
-
-    if (preg_match('/^(\d{8})$/', $valeur, $correspondance)) {
-        $date = DateTimeImmutable::createFromFormat('!Ymd', $correspondance[1], $zoneLocale);
-        $erreurs = DateTimeImmutable::getLastErrors();
-        if (!$date || ($erreurs !== false && ($erreurs['warning_count'] || $erreurs['error_count']))) {
-            return null;
-        }
-        return $date->format('Y-m-d 00:00:00');
-    }
-
-    if (!preg_match('/^(\d{8})T(\d{4})(\d{2})?(Z)?$/i', $valeur, $correspondance)) {
-        return null;
-    }
-
-    $dateHeure = $correspondance[1] . 'T' . $correspondance[2] . ($correspondance[3] ?? '00');
-    $zone = !empty($correspondance[4]) ? new DateTimeZone('UTC') : $zoneLocale;
-
-    if (preg_match('/(?:^|;)TZID=(?:"([^"]+)"|([^;:]+))/i', $parametres, $timezone)) {
-        try {
-            $zone = new DateTimeZone($timezone[1] !== '' ? $timezone[1] : trim($timezone[2]));
-        } catch (Exception $exception) {
-            return null;
-        }
-    }
-
-    $date = DateTimeImmutable::createFromFormat('!Ymd\THis', $dateHeure, $zone);
-    $erreurs = DateTimeImmutable::getLastErrors();
-    if (!$date || ($erreurs !== false && ($erreurs['warning_count'] || $erreurs['error_count']))) {
-        return null;
-    }
-
-    return $date->setTimezone($zoneLocale)->format('Y-m-d H:i:s');
+    return trim(substr($ligne, strpos($ligne, ':') + 1));
 }
 
-function analyserFichierICS($contenu)
+// Lit le fichier et renvoie la liste de ses événements
+function lireFichierICS($cheminFichier)
 {
-    if (substr($contenu, 0, 3) === "\xEF\xBB\xBF") {
-        $contenu = substr($contenu, 3);
-    }
+    $lignesDuFichier = file($cheminFichier, FILE_IGNORE_NEW_LINES);
 
-    $lignes = preg_split('/\r\n|\n|\r/', $contenu);
-    $lignesDepliees = [];
-
-    foreach ($lignes as $ligne) {
-        if (($ligne[0] ?? '') === ' ' || ($ligne[0] ?? '') === "\t") {
-            if ($lignesDepliees) {
-                $index = count($lignesDepliees) - 1;
-                $lignesDepliees[$index] .= substr($ligne, 1);
-            }
+    // Une ligne trop longue continue sur la suivante, qui commence par un espace : on les recolle
+    $lignes = [];
+    foreach ($lignesDuFichier as $ligne) {
+        if (str_starts_with($ligne, ' ') && count($lignes) > 0) {
+            $lignes[count($lignes) - 1] .= substr($ligne, 1);
         } else {
-            $lignesDepliees[] = $ligne;
+            $lignes[] = $ligne;
         }
     }
 
     $evenements = [];
     $evenement = null;
-    foreach ($lignesDepliees as $ligne) {
-        if (strcasecmp(trim($ligne), 'BEGIN:VEVENT') === 0) {
-            if ($evenement !== null) {
-                return null;
-            }
-            $evenement = [];
-            continue;
-        }
 
-        if (strcasecmp(trim($ligne), 'END:VEVENT') === 0) {
-            if ($evenement === null) {
-                return null;
-            }
-            foreach (['SUMMARY', 'DTSTART', 'DTEND'] as $champ) {
-                if (!isset($evenement[$champ])) {
-                    return null;
-                }
-            }
-
-            $intitule = trim(decodifierValeurICS($evenement['SUMMARY']['valeur']));
-            $nombreCaracteres = preg_match_all('/./us', $intitule);
-            $dateDebut = convertirDateICS($evenement['DTSTART']['valeur'], $evenement['DTSTART']['parametres']);
-            $dateFin = convertirDateICS($evenement['DTEND']['valeur'], $evenement['DTEND']['parametres']);
-            if ($intitule === '' || $nombreCaracteres === false || $nombreCaracteres > 255 || $dateDebut === null || $dateFin === null || $dateFin < $dateDebut) {
-                return null;
-            }
-
-            $evenements[] = [
-                'intitule' => $intitule,
-                'date_debut' => $dateDebut,
-                'date_fin' => $dateFin
-            ];
+    foreach ($lignes as $ligne) {
+        if (trim($ligne) === 'BEGIN:VEVENT') {
+            // Début d'un événement
+            $evenement = ['intitule' => '', 'date_debut' => '', 'date_fin' => ''];
+        } elseif (trim($ligne) === 'END:VEVENT') {
+            // Fin de l'événement : on l'ajoute à la liste
+            $evenements[] = $evenement;
             $evenement = null;
-            continue;
+        } elseif ($evenement !== null) {
+            // Dans un événement, on garde le titre, le début et la fin
+            if (str_starts_with($ligne, 'SUMMARY')) {
+                // Dans un fichier ICS, une virgule s'écrit \, : on la remet normalement
+                $evenement['intitule'] = str_replace('\\,', ',', valeurLigneICS($ligne));
+            }
+            if (str_starts_with($ligne, 'DTSTART')) {
+                $evenement['date_debut'] = convertirDateICS(valeurLigneICS($ligne));
+            }
+            if (str_starts_with($ligne, 'DTEND')) {
+                $evenement['date_fin'] = convertirDateICS(valeurLigneICS($ligne));
+            }
         }
-
-        if ($evenement === null || strpos($ligne, ':') === false) {
-            continue;
-        }
-
-        [$propriete, $valeur] = explode(':', $ligne, 2);
-        $segments = explode(';', $propriete);
-        $nom = strtoupper(array_shift($segments));
-        if (in_array($nom, ['SUMMARY', 'DTSTART', 'DTEND'], true)) {
-            $evenement[$nom] = [
-                'parametres' => implode(';', $segments),
-                'valeur' => $valeur
-            ];
-        }
-    }
-
-    if ($evenement !== null || !$evenements) {
-        return null;
     }
 
     return $evenements;
 }
 
-$erreurICS = '';
-$evenementsApercu = [];
-$jetonImport = '';
-$personnelPreselectionne = '';
-$messageImport = '';
+// Vérifie que le fichier contient des événements, et qu'ils sont tous complets et corrects
+function evenementsValides($evenements)
+{
+    if (count($evenements) === 0) {
+        return false;
+    }
 
+    foreach ($evenements as $evenement) {
+        if ($evenement['intitule'] === '' || strlen($evenement['intitule']) > 255) {
+            return false;
+        }
+        if ($evenement['date_debut'] === '' || $evenement['date_fin'] === '') {
+            return false;
+        }
+        if ($evenement['date_fin'] < $evenement['date_debut']) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Valeurs de départ de la page
+$erreurICS = '';
+$messageImport = '';
+$evenementsApercu = [];
+$personnelPreselectionne = $_POST['id_personnel'] ?? $_GET['id_personnel'] ?? '';
+
+// Tous les personnels pour la liste
 $requete = $pdo->query('SELECT id, nom, prenom, mail FROM Personnel ORDER BY nom, prenom, id');
 $personnelsImportables = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-if (isset($_GET['importe'], $_GET['doublons']) && ctype_digit((string) $_GET['importe']) && ctype_digit((string) $_GET['doublons'])) {
+// Message de résultat après un import
+if (isset($_GET['importe'])) {
     $messageImport = (int) $_GET['importe'] . ' enseignement(s) importé(s), ' . (int) $_GET['doublons'] . ' doublon(s) ignoré(s).';
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['previsualiser'])) {
-    $personnelPreselectionne = is_string($_POST['id_personnel'] ?? null) ? $_POST['id_personnel'] : '';
-    $fichier = $_FILES['fichier'] ?? null;
+// Bouton Prévisualiser : on contrôle le fichier, puis on affiche l'aperçu
+if (isset($_POST['previsualiser'])) {
+    $fichier = $_FILES['fichier'];
+    $extension = strtolower(pathinfo($fichier['name'], PATHINFO_EXTENSION));
 
-    if (!ctype_digit($personnelPreselectionne) || !in_array((int) $personnelPreselectionne, array_column($personnelsImportables, 'id'))) {
+    if (!in_array($personnelPreselectionne, array_column($personnelsImportables, 'id'))) {
         $erreurICS = 'Veuillez choisir un personnel valide.';
-    } elseif (!is_array($fichier) || ($fichier['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+    } elseif ($fichier['error'] !== UPLOAD_ERR_OK) {
         $erreurICS = 'Le fichier ICS n’a pas pu être téléversé.';
-    } elseif (!is_string($fichier['name'] ?? null) || !is_string($fichier['tmp_name'] ?? null)) {
-        $erreurICS = 'Le fichier téléversé est invalide.';
-    } elseif (strtolower(pathinfo($fichier['name'] ?? '', PATHINFO_EXTENSION)) !== 'ics') {
+    } elseif ($extension !== 'ics') {
         $erreurICS = 'Fichier ICS invalide.';
-    } elseif (($fichier['size'] ?? 0) > 5 * 1024 * 1024) {
+    } elseif ($fichier['size'] > 5 * 1024 * 1024) {
         $erreurICS = 'Le fichier ICS ne doit pas dépasser 5 Mo.';
-    } elseif (!is_uploaded_file($fichier['tmp_name'] ?? '')) {
-        $erreurICS = 'Le fichier téléversé est invalide.';
     } else {
-        $contenu = file_get_contents($fichier['tmp_name']);
-        if ($contenu === false) {
-            $erreurICS = 'Impossible de lire le fichier ICS.';
+        $evenements = lireFichierICS($fichier['tmp_name']);
+
+        if (evenementsValides($evenements)) {
+            // On garde les événements en session jusqu'au clic sur Importer
+            $_SESSION['import_ics'] = ['id_personnel' => (int) $personnelPreselectionne, 'evenements' => $evenements];
+            $evenementsApercu = $evenements;
         } else {
-            $evenements = analyserFichierICS($contenu);
-            if ($evenements === null) {
-                $erreurICS = 'Fichier ICS invalide.';
-            } else {
-                $jetonImport = bin2hex(random_bytes(32));
-                $_SESSION['imports_enseignement'][$jetonImport] = [
-                    'id_personnel' => (int) $personnelPreselectionne,
-                    'evenements' => $evenements
-                ];
-                header('Location: importerEnseignement.php?jeton=' . urlencode($jetonImport));
-                exit;
-            }
+            $erreurICS = 'Fichier ICS invalide.';
         }
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['importer'])) {
-    $jeton = is_string($_POST['jeton'] ?? null) ? $_POST['jeton'] : '';
-    $importEnAttente = $_SESSION['imports_enseignement'][$jeton] ?? null;
-
-    if (!preg_match('/^[a-f0-9]{64}$/', $jeton) || !is_array($importEnAttente)) {
+// Bouton Importer : on enregistre les événements gardés en session
+if (isset($_POST['importer'])) {
+    if (!isset($_SESSION['import_ics'])) {
         $erreurICS = 'Cet aperçu a expiré ou n’est plus disponible. Veuillez recommencer.';
     } else {
-        $requete = $pdo->prepare("INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin)
-            SELECT TypeActivite.id_type, :id_personnel, :intitule, :date_debut, :date_fin
-            FROM TypeActivite
-            WHERE TypeActivite.nom_type = 'Cours'
-            AND NOT EXISTS (
-                SELECT 1 FROM Activite
-                WHERE Activite.id_type = TypeActivite.id_type
-                AND Activite.id_personnel = :id_personnel
-                AND Activite.titre = :intitule
-                AND Activite.date_debut = :date_debut
-            )");
+        $idPersonnel = $_SESSION['import_ics']['id_personnel'];
+        $evenements = $_SESSION['import_ics']['evenements'];
+
+        // Cherche le numéro du type d'activité « Cours »
+        $requete = $pdo->query("SELECT id_type FROM TypeActivite WHERE nom_type = 'Cours'");
+        $idTypeCours = $requete->fetchColumn();
+
         $nombreImportes = 0;
+
+        // Si une écriture plante, on annule tout
         $pdo->beginTransaction();
-        try {
-            foreach ($importEnAttente['evenements'] as $evenement) {
-                $requete->execute([
-                    'id_personnel' => $importEnAttente['id_personnel'],
-                    'intitule' => $evenement['intitule'],
-                    'date_debut' => $evenement['date_debut'],
-                    'date_fin' => $evenement['date_fin']
-                ]);
-                $nombreImportes += $requete->rowCount();
+
+        foreach ($evenements as $evenement) {
+            // Regarde si cette personne a déjà ce cours à la même heure
+            $requete = $pdo->prepare('SELECT COUNT(*) FROM Activite WHERE id_type = ? AND id_personnel = ? AND titre = ? AND date_debut = ?');
+            $requete->execute([$idTypeCours, $idPersonnel, $evenement['intitule'], $evenement['date_debut']]);
+            $dejaPresent = $requete->fetchColumn() > 0;
+
+            // Pas encore en base : on l'ajoute
+            if (!$dejaPresent) {
+                $requete = $pdo->prepare('INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)');
+                $requete->execute([$idTypeCours, $idPersonnel, $evenement['intitule'], $evenement['date_debut'], $evenement['date_fin']]);
+                $nombreImportes++;
             }
-            $pdo->commit();
-        } catch (Throwable $exception) {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
-            throw $exception;
         }
 
-        $nombreDoublons = count($importEnAttente['evenements']) - $nombreImportes;
-        unset($_SESSION['imports_enseignement'][$jeton]);
+        $pdo->commit();
+
+        // Oublie l'aperçu et recharge la page avec le résultat
+        $nombreDoublons = count($evenements) - $nombreImportes;
+        unset($_SESSION['import_ics']);
         header('Location: importerEnseignement.php?importe=' . $nombreImportes . '&doublons=' . $nombreDoublons);
         exit;
     }
-}
-
-if (isset($_GET['jeton']) && is_string($_GET['jeton'])) {
-    $jetonImport = $_GET['jeton'];
-    $importEnAttente = $_SESSION['imports_enseignement'][$jetonImport] ?? null;
-    if (preg_match('/^[a-f0-9]{64}$/', $jetonImport) && is_array($importEnAttente)) {
-        $evenementsApercu = $importEnAttente['evenements'];
-        $personnelPreselectionne = (string) $importEnAttente['id_personnel'];
-    } else {
-        $jetonImport = '';
-        $erreurICS = 'Cet aperçu a expiré ou n’est plus disponible. Veuillez recommencer.';
-    }
-} elseif ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    $personnelPreselectionne = is_string($_GET['id_personnel'] ?? null) ? $_GET['id_personnel'] : '';
 }

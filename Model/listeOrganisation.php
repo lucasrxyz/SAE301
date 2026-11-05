@@ -1,18 +1,24 @@
 <?php
+    // Connexion à la base de données
     require_once __DIR__ . '/config.php';
+    // Vérifie le droit de voir l'organisation
     exigerDroit('voir_organisation');
+    // Vue choisie et date consultée (aujourd'hui par défaut)
     $vue = $_GET['vue'] ?? null;
     $dateConsultee = $_GET['date'] ?? date('Y-m-d');
     $requete = null;
     $stmt = [];
 
+    // Si la date n'est pas valide, on prend aujourd'hui
     $date = DateTime::createFromFormat('!Y-m-d', $dateConsultee);
     if (!$date || $date->format('Y-m-d') !== $dateConsultee) {
         $dateConsultee = date('Y-m-d');
     }
 
+    // Condition : le rattachement est en cours à la date consultée
     $actifALaDate = "Rattachement.date_debut <= :date AND (Rattachement.date_fin IS NULL OR Rattachement.date_fin >= :date)";
 
+    // Vue départements : une ligne par personne et par département
     if ($vue === 'departements') {
         $requete = $pdo->prepare(
             "SELECT DISTINCT
@@ -26,6 +32,7 @@
             WHERE " . $actifALaDate . "
             ORDER BY dept_nom, Personnel.nom, Personnel.prenom");
 
+    // Vue groupes : département, groupe, personne et responsabilité
     } elseif ($vue === 'groupes') {
         $requete = $pdo->prepare(
             "SELECT
@@ -43,6 +50,7 @@
             WHERE " . $actifALaDate . "
             ORDER BY dept_nom, groupe_nom, Personnel.nom, Personnel.prenom");
 
+    // Vue hiérarchie : rôles des personnes présentes à cette date
     } elseif ($vue === 'hierarchie') {
         $requete = $pdo->prepare(
             "SELECT
@@ -62,6 +70,7 @@
             ORDER BY Role.niveau_pyramidal ASC, Personnel.nom ASC");
     }
 
+    // Lance la requête si une vue a été choisie
     if ($requete) {
         $requete->execute(['date' => $dateConsultee]);
         $stmt = $requete->fetchAll(PDO::FETCH_ASSOC);
