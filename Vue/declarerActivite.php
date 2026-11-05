@@ -27,14 +27,14 @@
                 <p class="message-succes">L'activité a été enregistrée.</p>
             <?php endif; ?>
 
-            <form action="declarerActivite.php" method="get" class="formulaire-vertical">
+            <form action="declarerActivite.php" method="post" class="formulaire-vertical">
                 <p class="aide">Cette activité est-elle individuelle ou collective ?</p>
                 <button type="submit" name="mode" value="individuelle" <?= $mode !== 'individuelle' ? 'class="bouton-secondaire"' : '' ?>>Individuelle</button>
                 <button type="submit" name="mode" value="collective" <?= $mode !== 'collective' ? 'class="bouton-secondaire"' : '' ?>>Collective</button>
             </form>
 
             <?php if ($mode !== ''): ?>
-            <form action="" method="post" class="formulaire-vertical">
+            <form action="declarerActivite.php" method="post" class="formulaire-vertical">
                 <input type="hidden" name="mode" value="<?= $mode ?>">
 
                 <label for="id_type">Type d'activité</label>

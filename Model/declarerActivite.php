@@ -6,7 +6,7 @@
     $erreurActivite = '';
     $activiteEnregistree = isset($_GET['enregistree']);
     $idPersonnel = $_SESSION['id_personnel'];
-    $mode = $_POST['mode'] ?? $_GET['mode'] ?? '';
+    $mode = $_POST['mode'] ?? '';
     if ($mode !== 'individuelle' && $mode !== 'collective') {
         $mode = '';
     }
@@ -26,7 +26,7 @@
     $description = '';
     $collaborateurs = [];
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['enregistrer'])) {
         $typeactivite = $_POST['id_type'] ?? '';
         $titre = trim($_POST['titre'] ?? '');
         $datedebut = $_POST['date_debut'] ?? '';
