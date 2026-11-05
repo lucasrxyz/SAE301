@@ -16,7 +16,7 @@
 
     <main class="page-contenu formulaire-page">
         <section class="formulaire-carte">
-            <p class="formulaire-surtitre">Mes activités</p>
+            <p class="formulaire-surtitre">Rapports d'activités</p>
             <h1>Générer Rapport</h1>
 
             <?php if ($erreurRapport !== ''): ?>

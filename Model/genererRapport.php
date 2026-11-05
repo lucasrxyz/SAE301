@@ -68,7 +68,7 @@
             header('Content-Disposition: attachment; filename="rapport.doc"');
             // Ligne pour lire les accents
             echo "\xEF\xBB\xBF";
-            require __DIR__ . '/gabarit_rapport.php';
+            require __DIR__ . '/gabaritRapport.php';
             exit;
 
         } elseif ($format ==='csv') {
