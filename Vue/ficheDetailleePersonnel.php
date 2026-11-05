@@ -80,7 +80,10 @@
                 <form method="get" action="">
                     <input type="hidden" name="id" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
                     <button type="submit" formaction="modifierPersonnel.php">Modifier les coordonnées</button>
-                    <button type="submit" formaction="ajouterRattachement.php">Ajouter un rattachement</button>
+                    <?php // Pas de nouveau rattachement pour une personne partie ?>
+                    <?php if ($personnel['date_depart'] === null): ?>
+                        <button type="submit" formaction="ajouterRattachement.php">Ajouter un rattachement</button>
+                    <?php endif; ?>
                     <a href="importerEnseignement.php?id_personnel=<?= urlencode((string) $personnel['id']) ?>">Importer un enseignement</a>
                 </form>
             <?php endif; ?>
