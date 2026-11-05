@@ -35,6 +35,7 @@ if (verifierDroit('declarer_activite')) {
         <?php if (verifierDroit('declarer_activite')): ?>
             <li><a href="declarerActivite.php">Déclarer une activité</a></li>
             <li><a href="mesParticipations.php">Mes participations<?= $nbInvitations > 0 ? ' (' . $nbInvitations . ')' : '' ?></a></li>
+            <li><a href="genererRapport.php">Générer mon rapport</a></li>
         <?php endif; ?>
         <?php if (verifierDroit('gerer_personnel')): ?>
             <li><a href="creerCompte.php">Créer un compte</a></li>
