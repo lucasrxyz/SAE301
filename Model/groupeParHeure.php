@@ -1,10 +1,13 @@
 <?php
+    // Connexion à la base de données
     require_once __DIR__ . '/config.php';
 
+// Période choisie (aujourd'hui par défaut)
 $debut = $_GET['debut'] ?? date('Y-m-d');
 $fin = $_GET['fin'] ?? date('Y-m-d');
 $stmt = [];
 
+// Si la période est correcte, on cherche les groupes ouverts sur toute la période
 if ($debut <= $fin) {
 $requete = $pdo->prepare( 
     "SELECT Departement.nom AS dept_nom, Groupe.nom AS groupe_nom, TO_CHAR(Groupe.date_debut,
@@ -16,5 +19,6 @@ $requete = $pdo->prepare(
     IS NULL OR Groupe.date_fin >= ?)
     ORDER BY dept_nom, groupe_nom;");
     
+    // Lance la requête et récupère les lignes
     $requete->execute([$debut, $fin]); 
     $stmt = $requete->fetchAll(PDO::FETCH_ASSOC); } ?>

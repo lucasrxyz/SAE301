@@ -1,4 +1,5 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
 ?>
 <!DOCTYPE html>
@@ -11,11 +12,13 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu formulaire-page">
         <section class="formulaire-carte">
             <p class="formulaire-surtitre">Droits insuffisants</p>
+            <?php // Page affichée quand on n'a pas le droit d'ouvrir une page ?>
             <h1>Accès refusé</h1>
             <?php if (empty($_SESSION['roles'])): ?>
                 <p>Aucun rôle n'est attribué à votre compte. Contactez l'administrateur fonctionnel.</p>

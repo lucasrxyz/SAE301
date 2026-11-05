@@ -1,5 +1,7 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+// Cherche les groupes de la période
 require __DIR__ . '/../Model/groupeParHeure.php';
 ?>
 <!doctype html>
@@ -11,17 +13,20 @@ require __DIR__ . '/../Model/groupeParHeure.php';
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
+        <?php // Barre de navigation, commune à toutes les pages ?>
         <?php require __DIR__ . '/navbar.php'; ?>
 
         <div class="page-contenu">
             <h1>Groupes présents sur une période</h1>
 
+            <?php // Choix de la période ?>
             <form action="" method="get" class="form">
                 <label>Du <input type="date" name="debut" value="<?= htmlspecialchars($debut) ?>" required /></label>
                 <label>au <input type="date" name="fin" value="<?= htmlspecialchars($fin) ?>" required /></label>
                 <button type="submit">Afficher</button>
             </form>
 
+            <?php // Message si la période est incorrecte ou s'il n'y a aucun groupe ?>
             <?php if ($debut > $fin): ?>
             <p>La date de début doit être avant la date de fin.</p>
 
@@ -30,6 +35,7 @@ require __DIR__ . '/../Model/groupeParHeure.php';
 
             <?php else: ?>
             <div class="tableau-defilant">
+                <?php // Tableau des groupes trouvés ?>
                 <table>
                     <thead>
                         <tr>
@@ -54,6 +60,7 @@ require __DIR__ . '/../Model/groupeParHeure.php';
             <?php endif; ?>
         </div>
 
+        <?php // Pied de page ?>
         <footer class="footer">
             <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
             <ul class="footer-liens">

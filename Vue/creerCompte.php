@@ -1,5 +1,7 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+    // Traite le formulaire
     require __DIR__ . '/../Model/creercompte.php';
     exigerDroit('gerer_personnel');
 ?>
@@ -13,6 +15,7 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu formulaire-page">
@@ -21,6 +24,7 @@
             <h1>Créer un compte</h1>
             <p>Donnez un accès à l'application à un membre du personnel.</p>
 
+            <?php // Messages de réussite et d'erreur ?>
             <?php if ($compteCree): ?>
                 <p class="message-succes">Le compte a été créé.</p>
             <?php endif; ?>
@@ -29,11 +33,13 @@
                 <p class="message-erreur"><?= htmlspecialchars($erreurCompte) ?></p>
             <?php endif; ?>
 
+            <?php // Le formulaire s'affiche seulement s'il reste des personnels sans compte ?>
             <?php if ($personnelsSansCompte): ?>
                 <form action="" method="post" class="formulaire-vertical">
                     <label for="id_personnel">Personnel</label>
                     <select name="id_personnel" id="id_personnel" required>
                         <option value="">-- Choisir un personnel --</option>
+                        <?php // Une option par personnel sans compte ?>
                         <?php foreach ($personnelsSansCompte as $ligne): ?>
                             <option value="<?= $ligne['id'] ?>" <?= $idPersonnelChoisi == $ligne['id'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($ligne['nom'] . ' ' . $ligne['prenom'] . ' (' . $ligne['mail'] . ')') ?>
@@ -50,6 +56,7 @@
 
                     <label for="id_role">Rôle</label>
                     <select name="id_role" id="id_role" required>
+                        <?php // Une option par rôle attribuable ?>
                         <?php foreach ($listeRoles as $role): ?>
                             <option value="<?= $role['id_role'] ?>" <?= $idRoleChoisi == $role['id_role'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($role['nom_role']) ?>
@@ -65,6 +72,7 @@
         </section>
     </main>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

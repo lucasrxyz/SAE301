@@ -1,9 +1,12 @@
 <?php
+// Nom à afficher : prénom et nom, sinon l'identifiant
 $nomAffiche = trim(($_SESSION['prenom'] ?? '') . ' ' . ($_SESSION['nom'] ?? ''));
 if ($nomAffiche === '') {
     $nomAffiche = $_SESSION['identifiant'] ?? '';
 }
+// Rôle principal de la personne
 $grade = $_SESSION['roles'][0] ?? 'Aucun rôle';
+// Première lettre du nom, en majuscule, pour le rond de profil
 $initiale = function_exists('mb_substr')
     ? mb_substr($nomAffiche, 0, 1, 'UTF-8')
     : (preg_match('/^./us', $nomAffiche, $premiereLettre) ? $premiereLettre[0] : '');
@@ -11,6 +14,7 @@ $initiale = function_exists('mb_strtoupper')
     ? mb_strtoupper($initiale, 'UTF-8')
     : strtoupper($initiale);
 
+// Compte les invitations à des activités collectives qui attendent une réponse
 $nbInvitations = 0;
 if (verifierDroit('declarer_activite')) {
     $requete = $pdo->prepare('SELECT COUNT(*) FROM Activite WHERE id_personnel = ? AND id_activite_principale IS NOT NULL AND confirme IS NULL');
@@ -22,6 +26,7 @@ if (verifierDroit('declarer_activite')) {
     <a href="index.php" class="navbar-logo">
         <img src="images/logo-uphf.png" alt="Université Polytechnique Hauts-de-France">
     </a>
+    <?php // Chaque lien s'affiche seulement si la personne a le droit ?>
     <ul class="navbar-liens">
         <?php if (verifierDroit('voir_tableau_bord')): ?>
             <li><a href="tableauDeBord.php">Accueil</a></li>
@@ -45,6 +50,7 @@ if (verifierDroit('declarer_activite')) {
             <li><a href="gererRoles.php">Rôles</a></li>
         <?php endif; ?>
     </ul>
+    <?php // Profil de la personne connectée et déconnexion ?>
     <div class="navbar-profil">
         <span class="avatar"><?= htmlspecialchars($initiale) ?></span>
         <div class="profil-texte">

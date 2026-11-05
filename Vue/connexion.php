@@ -1,4 +1,5 @@
 <?php
+    // Traite le formulaire de connexion
     require __DIR__ . '/../Model/optionconnection.php';
 ?>
 <!DOCTYPE html>
@@ -11,6 +12,7 @@
 </head>
 <body>
 
+    <?php // Barre simple avec le logo, car personne n'est connecté ?>
     <nav class="navbar">
           <div class="navbar-logo">
               <img src="images/logo-uphf.png" alt="Université Polytechnique Hauts-de-France">
@@ -23,10 +25,12 @@
             <h1 id="titre-connexion">Connexion</h1>
             <p>Identifiez-vous pour accéder à la liste du personnel.</p>
 
+            <?php // Message si la connexion a échoué ?>
             <?php if ($erreur !== ''): ?>
                 <p class="connexion-erreur" role="alert"><?= htmlspecialchars($erreur) ?></p>
             <?php endif; ?>
 
+            <?php // Formulaire de connexion ?>
             <form class="connexion-form" action="connexion.php" method="post">
                 <label for="identifiant">Identifiant</label>
                 <input type="text" name="identifiant" id="identifiant" autocomplete="username" required value="<?= htmlspecialchars($identifiant) ?>">
@@ -39,6 +43,7 @@
         </section>
     </main>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

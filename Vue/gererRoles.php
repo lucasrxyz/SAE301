@@ -1,6 +1,9 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+    // Réservé à l'administrateur
     exigerDroit('gerer_roles');
+    // Traite les formulaires et prépare les listes
     require __DIR__ . '/../Model/gererroles.php';
 ?>
 <!DOCTYPE html>
@@ -13,12 +16,14 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu">
         <h1>Gestion des rôles</h1>
         <p>Attribuez ou retirez les rôles de chaque compte. Un compte sans rôle n'a accès à rien.</p>
 
+        <?php // Messages de réussite et d'erreur ?>
         <?php if ($messageRole): ?>
             <p class="message-succes"><?= htmlspecialchars($messageRole) ?></p>
         <?php endif; ?>
@@ -28,6 +33,7 @@
         <?php endif; ?>
 
         <div class="tableau-defilant">
+            <?php // Tableau des comptes et de leurs rôles ?>
             <table>
                 <tr>
                     <th>Personne</th>
@@ -49,6 +55,7 @@
                                 <span class="aide">Aucun rôle</span>
                             <?php else: ?>
                                 <?php foreach ($rolesParCompte[$compte['id_compte']] as $role): ?>
+                                    <?php // Un petit bouton pour retirer chaque rôle ?>
                                     <form method="post" action="" class="role-pastille">
                                         <input type="hidden" name="id_compte" value="<?= $compte['id_compte'] ?>">
                                         <input type="hidden" name="id_role" value="<?= $role['id_role'] ?>">
@@ -59,6 +66,7 @@
                             <?php endif; ?>
                         </td>
                         <td>
+                            <?php // Formulaire pour ajouter un rôle ?>
                             <form method="post" action="" class="role-ajout">
                                 <input type="hidden" name="id_compte" value="<?= $compte['id_compte'] ?>">
                                 <select name="id_role" required>
@@ -75,6 +83,7 @@
             </table>
         </div>
 
+        <?php // Rappel de ce que chaque rôle peut faire ?>
         <h2>Grille des droits</h2>
         <div class="tableau-defilant">
             <table>

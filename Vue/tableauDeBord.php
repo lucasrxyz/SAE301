@@ -1,6 +1,9 @@
 <?php
+// Vérifie que l'utilisateur est connecté
 require __DIR__ . '/../Model/verifierconnexion.php';
+// Il faut le droit de voir le tableau de bord
 exigerDroit('voir_tableau_bord');
+// Calcule les chiffres
 require __DIR__ . '/../Model/tableaudebord.php';
 ?>
 <!DOCTYPE html>
@@ -12,12 +15,14 @@ require __DIR__ . '/../Model/tableaudebord.php';
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu">
         <h1>Tableau de bord</h1>
         <p><?= htmlspecialchars($nomPerimetre) ?>, du <?= date('d/m/Y', strtotime($dateDebut)) ?> au <?= date('d/m/Y', strtotime($dateFin)) ?></p>
 
+        <?php // Choix du périmètre et de la période ?>
         <form method="get" action="tableauDeBord.php">
             <?php if (!$perimetreImpose): ?>
                 <label for="choix">Périmètre</label>
@@ -45,6 +50,7 @@ require __DIR__ . '/../Model/tableaudebord.php';
             <button type="submit">Afficher</button>
         </form>
 
+        <?php // Message s'il n'y a personne sur cette période, sinon les chiffres ?>
         <?php if ($effectifTotal === 0): ?>
 
             <?php if ($perimetre === 'personnel'): ?>
@@ -64,6 +70,7 @@ require __DIR__ . '/../Model/tableaudebord.php';
 
             <div class="deux-colonnes">
                 <section>
+                    <?php // Nombre de personnes et quotité moyenne par statut ?>
                     <h2>Effectifs par statut</h2>
                     <?php if ($effectifsParStatut): ?>
                         <div class="tableau-defilant">
@@ -90,6 +97,7 @@ require __DIR__ . '/../Model/tableaudebord.php';
                 </section>
 
                 <section>
+                    <?php // Nombre d'activités par catégorie ?>
                     <h2>Activités par catégorie</h2>
                     <?php if ($activitesParCategorie): ?>
                         <div class="tableau-defilant">
@@ -114,6 +122,7 @@ require __DIR__ . '/../Model/tableaudebord.php';
                 </section>
             </div>
 
+            <?php // Liste des personnes ?>
             <h2>Personnes du périmètre</h2>
             <div class="tableau-defilant">
                 <table>
@@ -135,6 +144,7 @@ require __DIR__ . '/../Model/tableaudebord.php';
         <?php endif; ?>
     </main>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

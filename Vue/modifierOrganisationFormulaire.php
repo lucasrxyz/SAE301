@@ -1,5 +1,7 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+    // Traite le formulaire
     require __DIR__ . '/../Model/modifierOrganisation.php';
 
 ?>
@@ -13,11 +15,13 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <div class="page-contenu">
         <h1>Bienvenue sur la page de modification de l'organisation.</h1>
 
+        <?php // Messages de réussite et d'erreur ?>
         <?php if ($message): ?>
             <p class="message-succes"><?= htmlspecialchars($message) ?></p>
         <?php endif; ?>
@@ -26,6 +30,7 @@
             <p class="message-erreur"><?= htmlspecialchars($erreurOrganisation) ?></p>
         <?php endif; ?>
         <label>Selectionnez l'action souhaitée : </label>
+        <?php // Choix de l'action à faire ?>
         <form action="" method="post" class="form-choix">
             <div class="filtres-boutons">
                 <label>Départements : </label>
@@ -55,6 +60,7 @@
 
                     <button type="submit" name="valider">Ajouter le département</button>
 
+            <?php // Modifier un département ?>
             <?php elseif($choix_orga === 'modifierDepartement'): ?>
                     <label for="id_departement">Choisissez le département à modifier</label>
                       
@@ -72,6 +78,7 @@
                         <input type="date" name="nouvelleDateFin" id="nouvelleDateFin" value="">
                     <button type="submit" name="valider">Valider Modification</button>
             
+            <?php // Clôturer un département ?>
             <?php elseif($choix_orga === 'supprimerDepartement'): ?>
                     <label for="id_departement">Choisissez le département à clôturer</label>
 
@@ -85,6 +92,7 @@
                         <input type="date" name="dateCloture" id="dateCloture" value="" required>
                     <button type="submit" name="valider">Valider clôture</button>
 
+            <?php // Ajouter un groupe ?>
             <?php elseif($choix_orga === 'ajouterGroupe'): ?>
                     <label for="nomGroupe">Nom Groupe</label>
                     <input type="text" name="nomGroupe" id="nom" maxlength="255" value="" required>
@@ -101,6 +109,7 @@
 
                     <button type="submit" name="valider">Ajouter le groupe</button>
 
+            <?php // Modifier un groupe ?>
             <?php elseif($choix_orga === 'modifierGroupe'): ?>
                 <label for="id_groupe">Choisissez le groupe à modifier</label>
                 <select name="id_groupe" id="id_groupe">
@@ -117,6 +126,7 @@
                     <input type="date" name="nouvelleDateFin" id="nouvelleDateFin" value="">
                 <button type="submit" name="valider">Valider Modification</button>
  
+            <?php // Clôturer un groupe ?>
             <?php elseif($choix_orga === 'supprimerGroupe'): ?>
                 <label for="id_groupe">Choisissez le groupe à clôturer</label>
                 <select name="id_groupe" id="id_groupe">
@@ -135,6 +145,7 @@
                 <p><a href="organisation.php">Retour à l'affichage de l'organisation</a></p>
     </div>
     
+    <?php // Pied de page ?>
     <footer class="footer">
     <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

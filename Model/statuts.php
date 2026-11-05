@@ -1,4 +1,5 @@
 <?php
+// Liste des statuts qu'un personnel peut avoir
 $statutsPossibles = [
     'Doctorant',
     'Post-doctorant',

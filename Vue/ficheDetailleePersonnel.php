@@ -1,6 +1,9 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+    // Il faut le droit de voir le personnel
     exigerDroit('voir_personnel');
+    // Un fichier par action possible sur la fiche, puis les données à afficher
     require __DIR__ . '/../Model/desactiverpersonnel.php';
     require __DIR__ . '/../Model/modifieridentite.php';
     require __DIR__ . '/../Model/cloturerrattachement.php';
@@ -18,10 +21,12 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <div class="page-contenu">
 
+        <?php // Messages de réussite et d'erreur de chaque action ?>
         <?php if ($personnelIntrouvable): ?>
             <p class="message-erreur">Personnel introuvable.</p>
         <?php endif; ?>
@@ -66,9 +71,11 @@
             <p class="message-erreur"><?= htmlspecialchars($erreurResponsable) ?></p>
         <?php endif; ?>
 
+        <?php // La fiche s'affiche seulement si le personnel est trouvé ?>
         <?php if ($personnel): ?>
             <h1>Fiche de <?= htmlspecialchars($personnel['prenom']) ?> <?= htmlspecialchars($personnel['nom']) ?></h1>
 
+            <?php // Boutons réservés au RH et à l'administrateur ?>
             <?php if ($estRH): ?>
                 <form method="get" action="">
                     <input type="hidden" name="id" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
@@ -79,6 +86,7 @@
             <?php endif; ?>
 
             <div class="tableau-defilant">
+                <?php // Identité de la personne ?>
                 <table id="detail-table">
                     <tr>
                         <th>Nom</th>
@@ -111,6 +119,7 @@
                 </table>
             </div>
 
+            <?php // Anciens noms, s'il y en a ?>
             <?php if ($anciensNoms): ?>
                 <h2>Anciens noms</h2>
                 <div class="tableau-defilant">
@@ -129,6 +138,7 @@
                 </div>
             <?php endif; ?>
 
+            <?php // Historique des statuts ?>
             <h2>Historique des statuts</h2>
             <?php if ($historiqueStatuts): ?>
                 <div class="tableau-defilant">
@@ -153,6 +163,7 @@
                 <p>Aucun statut enregistré.</p>
             <?php endif; ?>
 
+            <?php // Formulaire pour changer de statut ?>
             <?php if ($estRH && $personnel['date_depart'] === null): ?>
                 <form method="post" action="">
                     <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
@@ -174,6 +185,7 @@
                 </form>
             <?php endif; ?>
 
+            <?php // Historique des rattachements ?>
             <h2>Historique des rattachements</h2>
             <?php if ($historiqueRattachements): ?>
                 <div class="tableau-defilant">
@@ -188,6 +200,7 @@
                                 <th>Action</th>
                             <?php endif; ?>
                         </tr>
+                        <?php // Une ligne par rattachement, avec ses boutons pour le RH ?>
                         <?php foreach ($historiqueRattachements as $rattachement): ?>
                             <tr>
                                 <td><?= htmlspecialchars($rattachement['type_affectation'] . ' - ' . $rattachement['affectation']) ?></td>
@@ -211,6 +224,7 @@
                                                     ? $dateFinClotureSaisie
                                                     : max(date('Y-m-d'), $rattachement['date_debut']);
                                             ?>
+                                            <?php // Clôturer un rattachement en cours ?>
                                             <form method="post" action="ficheDetailleePersonnel.php?id=<?= urlencode((string) $personnel['id']) ?>">
                                                 <input type="hidden" name="id_personnel" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
                                                 <input type="hidden" name="id_rattachement" value="<?= htmlspecialchars((string) $rattachement['id']) ?>">
@@ -226,6 +240,7 @@
                                                 <button type="submit" name="cloturer_rattachement" value="true">Clôturer</button>
                                             </form>
                                             <?php if (!$rattachement['responsable_groupe']): ?>
+                                                <?php // Nommer responsable ?>
                                                 <form method="post" action="ficheDetailleePersonnel.php?id=<?= $personnel['id'] ?>">
                                                     <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
                                                     <input type="hidden" name="id_rattachement" value="<?= $rattachement['id'] ?>">
@@ -247,6 +262,7 @@
                 <p>Aucun rattachement enregistré.</p>
             <?php endif; ?>
 
+            <?php // Activités : le RH ne voit ni le titre ni les détails ?>
             <h2>Activités</h2>
             <?php if ($activites): ?>
                 <div class="tableau-defilant">
@@ -284,6 +300,7 @@
                 <p>Aucune activité déclarée.</p>
             <?php endif; ?>
 
+            <?php // Enseignements ?>
             <h2>Enseignements</h2>
             <?php if ($enseignements): ?>
                 <div class="tableau-defilant">
@@ -306,6 +323,7 @@
                 <p>Aucun enseignement enregistré.</p>
             <?php endif; ?>
 
+            <?php // Formulaires des identifiants et du changement de nom ?>
             <?php if ($estRH): ?>
                 <h2>Identifiants ORCID et IdHAL</h2>
                 <form method="post" action="">
@@ -334,6 +352,7 @@
                 </form>
             <?php endif; ?>
 
+            <?php // Formulaire de désactivation, si la personne est encore présente ?>
             <?php if ($personnel['date_depart'] === null && $estRH): ?>
                 <h2>Désactiver le personnel</h2>
                 <form method="post" action="">
@@ -358,6 +377,7 @@
 
     </div>
 
+    <?php // Pied de page ?>
     <footer class="footer">
         <p>&copy; <?= date('Y') ?> Université Polytechnique Hauts-de-France - Tous droits réservés</p>
         <ul class="footer-liens">

@@ -1,5 +1,7 @@
 <?php
+    // Vérifie que l'utilisateur est connecté
     require __DIR__ . '/../Model/verifierconnexion.php';
+    // Enregistre la réponse et prépare les listes
     require __DIR__ . '/../Model/confirmerParticipation.php';
 ?>
 <!DOCTYPE html>
@@ -12,6 +14,7 @@
 </head>
 <body>
 
+    <?php // Barre de navigation, commune à toutes les pages ?>
     <?php require __DIR__ . '/navbar.php'; ?>
 
     <main class="page-contenu formulaire-page">
@@ -19,12 +22,14 @@
             <p class="formulaire-surtitre">Activités collectives</p>
             <h1>Mes participations</h1>
 
+            <?php // Message après une réponse ?>
             <?php if ($reponse === 'confirmee'): ?>
                 <p class="message-succes">Votre participation est confirmée.</p>
             <?php elseif ($reponse === 'refusee'): ?>
                 <p class="message-succes">Votre participation est refusée. Elle ne sera pas comptée dans les bilans.</p>
             <?php endif; ?>
 
+            <?php // Activités où on m'a invité comme participant ?>
             <?php if ($participations): ?>
                 <div class="tableau-defilant">
                     <table>
@@ -40,6 +45,7 @@
                         <?php foreach ($participations as $participation): ?>
                             <tr>
                                 <td>
+                                    <?php // En attente : boutons, sinon la réponse déjà donnée ?>
                                     <?php if ($participation['confirme'] === null): ?>
                                         <form action="" method="post">
                                             <input type="hidden" name="id_activite" value="<?= $participation['id_activite'] ?>">
@@ -66,6 +72,7 @@
                 <p>Vous n'êtes participant d'aucune activité collective.</p>
             <?php endif; ?>
 
+            <?php // Activités dont je suis le porteur : la réponse de chaque participant ?>
             <h2>Réponses à mes activités</h2>
             <?php if ($reponsesParticipants): ?>
                 <div class="tableau-defilant">
@@ -79,6 +86,7 @@
                         <?php foreach ($reponsesParticipants as $participant): ?>
                             <tr>
                                 <td>
+                                    <?php // Statut : en attente, confirmée ou refusée ?>
                                     <?php if ($participant['confirme'] === null): ?>
                                         <span class="bord-etat">En attente</span>
                                     <?php elseif ($participant['confirme']): ?>
