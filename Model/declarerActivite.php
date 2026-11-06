@@ -19,8 +19,8 @@
     $requete = $pdo->query('SELECT id_type, categorie, nom_type FROM TypeActivite ORDER BY categorie, nom_type');
     $tousLesTypes = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-    // Collaborateurs possibles : personnels actifs avec IdHAL et ORCID, sauf moi
-    $requete = $pdo->prepare('SELECT id, nom, prenom, id_idhal, id_orcid FROM Personnel WHERE actif = TRUE AND id_idhal IS NOT NULL AND id_orcid IS NOT NULL AND id <> ? ORDER BY nom, prenom');
+    // Collaborateurs possibles : tous les personnels actifs, sauf moi
+    $requete = $pdo->prepare('SELECT id, nom, prenom, id_idhal, id_orcid FROM Personnel WHERE actif = TRUE AND id <> ? ORDER BY nom, prenom');
     $requete->execute([$idPersonnel]);
     $listePersonnels = $requete->fetchAll(PDO::FETCH_ASSOC);
 
@@ -50,7 +50,7 @@
         FROM Personnel
         LEFT JOIN Rattachement ON Rattachement.id_personnel = Personnel.id AND Rattachement.date_fin IS NULL
         LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
-        WHERE Personnel.actif = TRUE AND Personnel.id_idhal IS NOT NULL AND Personnel.id_orcid IS NOT NULL AND Personnel.id <> :id';
+        WHERE Personnel.actif = TRUE AND Personnel.id <> :id';
     $parametresCollaborateurs = ['id' => $idPersonnel];
 
     if ($filtreNom !== '') {
