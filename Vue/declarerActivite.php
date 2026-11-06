@@ -76,7 +76,7 @@
                             <?php if (in_array($personnel['id'], $collaborateurs)): ?>
                                 <label class="case-a-cocher">
                                     <input type="checkbox" name="collaborateurs[]" value="<?= $personnel['id'] ?>" checked>
-                                    <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' [idhal: ' . ($personnel['id_idhal'] ?? 'non renseigné') . '] [orcid: ' . ($personnel['id_orcid'] ?? 'non renseigné') . ']') ?>
+                                    <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' [idhal: ' . $personnel['id_idhal'] . '] [orcid: ' . $personnel['id_orcid'] . ']') ?>
                                 </label>
                             <?php endif; ?>
                         <?php endforeach; ?>
@@ -116,7 +116,7 @@
                             <?php if (!in_array($personnel['id'], $collaborateurs)): ?>
                                 <label class="case-a-cocher">
                                     <input type="checkbox" name="collaborateurs[]" value="<?= $personnel['id'] ?>">
-                                    <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' [idhal: ' . ($personnel['id_idhal'] ?? 'non renseigné') . '] [orcid: ' . ($personnel['id_orcid'] ?? 'non renseigné') . ']') ?>
+                                    <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' [idhal: ' . $personnel['id_idhal'] . '] [orcid: ' . $personnel['id_orcid'] . ']') ?>
                                 </label>
                             <?php endif; ?>
                         <?php endforeach; ?>
