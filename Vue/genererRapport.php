@@ -20,7 +20,7 @@
 
     <main class="page-contenu formulaire-page">
         <section class="formulaire-carte">
-            <p class="formulaire-surtitre">Rapports d'activités</p>
+            <p class="formulaire-surtitre">Rapports d'activitées</p>
             <h1>Générer Rapport</h1>
 
             <!-- Message d'erreur (ex. format invalide), rempli par le Model -->
