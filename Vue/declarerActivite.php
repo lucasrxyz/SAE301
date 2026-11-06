@@ -63,7 +63,6 @@
 
                 <label for="date_fin">Fin</label>
                 <input type="datetime-local" name="date_fin" id="date_fin" value="<?= htmlspecialchars($datefin) ?>">
-                <p class="aide">Laisser vide si l'activité n'a pas de durée (relecture, jury…).</p>
 
                 <label class="case-a-cocher">
                     <input type="checkbox" name="en_cours" <?= $enCours ? 'checked' : '' ?>>
