@@ -7,6 +7,8 @@
         '2.2 Publications' => 'Publication',
         '2.3 Encadrement doctoral' => 'Encadrement doctoral',
         '2.4 Rayonnement' => 'Rayonnement',
+        '2.5 Événements scientifiques' => 'Événement',
+        '2.6 Responsabilités' => 'Responsabilité',
         '3 Pédagogie' => '',
         '5 Production scientifique' => '',
         '6 Conditions' => '',
@@ -61,7 +63,7 @@
             <?php foreach ($statuts as $statut): ?>
                 <tr>
                     <td><?= htmlspecialchars($statut['statut']) ?></td>
-                    <td><?= htmlspecialchars($statut['quotite_recherche']) ?> %</td>
+                    <td><?= round($statut['quotite_recherche'] * 100) ?> %</td>
                     <td><?= date('d/m/Y', strtotime($statut['date_debut'])) ?></td>
                     <td><?= $statut['date_fin'] === null ? 'En cours' : date('d/m/Y', strtotime($statut['date_fin'])) ?></td>
                 </tr>
