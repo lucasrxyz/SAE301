@@ -536,6 +536,11 @@ h2 {
     color: #7a8a99;
 }
 
+/* Astérisque des champs obligatoires */
+.obligatoire {
+    color: #c0392b;
+}
+
 /* Messages de réussite et d'erreur */
 .message-succes,
 .message-erreur {

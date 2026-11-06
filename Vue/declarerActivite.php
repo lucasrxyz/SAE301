@@ -42,8 +42,9 @@
             <?php if ($mode !== ''): ?>
             <form action="declarerActivite.php" method="post" class="formulaire-vertical">
                 <input type="hidden" name="mode" value="<?= $mode ?>">
+                <p class="aide">Les champs marqués d'un <span class="obligatoire">*</span> sont obligatoires.</p>
 
-                <label for="id_type">Type d'activité</label>
+                <label for="id_type">Type d'activité <span class="obligatoire">*</span></label>
                 <select name="id_type" id="id_type" required>
                     <option value="">-- Choisir un type --</option>
                     <?php foreach ($tousLesTypes as $type): ?>
@@ -54,15 +55,20 @@
                 </select>
 
                 <?php // Titre, dates et description ?>
-                <label for="titre">Titre de l'activité</label>
+                <label for="titre">Titre de l'activité <span class="obligatoire">*</span></label>
                 <input type="text" name="titre" id="titre" value="<?= htmlspecialchars($titre) ?>" required>
 
-                <label for="date_debut">Début</label>
+                <label for="date_debut">Début <span class="obligatoire">*</span></label>
                 <input type="datetime-local" name="date_debut" id="date_debut" value="<?= htmlspecialchars($datedebut) ?>" required>
 
                 <label for="date_fin">Fin</label>
                 <input type="datetime-local" name="date_fin" id="date_fin" value="<?= htmlspecialchars($datefin) ?>">
                 <p class="aide">Laisser vide si l'activité n'a pas de durée (relecture, jury…).</p>
+
+                <label class="case-a-cocher">
+                    <input type="checkbox" name="en_cours" <?= $enCours ? 'checked' : '' ?>>
+                    Activité toujours en cours
+                </label>
 
                 <label for="description">Description (revue, lieu, organisme…)</label>
                 <textarea name="description" id="description" rows="3"><?= htmlspecialchars($description) ?></textarea>
@@ -70,7 +76,7 @@
                 <?php // Liste des collaborateurs, seulement en mode collectif ?>
                 <?php if ($mode === 'collective'): ?>
                     <?php // Les collaborateurs déjà cochés restent affichés, même si les filtres changent ?>
-                    <p class="formulaire-surtitre">Collaborateurs choisis (<?= count($collaborateurs) ?>)</p>
+                    <p class="formulaire-surtitre">Collaborateurs choisis <span class="obligatoire">*</span> (<?= count($collaborateurs) ?>)</p>
                     <div class="liste-collaborateurs">
                         <?php foreach ($listePersonnels as $personnel): ?>
                             <?php if (in_array($personnel['id'], $collaborateurs)): ?>
@@ -122,11 +128,6 @@
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-
-                <label class="case-a-cocher">
-                    <input type="checkbox" name="en_cours" <?= $enCours ? 'checked' : '' ?>>
-                    Activité toujours en cours
-                </label>
 
                 <button type="submit" name="enregistrer">Enregistrer l'activité</button>
             </form>
