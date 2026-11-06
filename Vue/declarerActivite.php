@@ -69,15 +69,58 @@
 
                 <?php // Liste des collaborateurs, seulement en mode collectif ?>
                 <?php if ($mode === 'collective'): ?>
-                    <label for="collaborateurs">Sélectionnez vos collaborateurs</label>
-                    <select name="collaborateurs[]" id="collaborateurs" multiple size="5">
+                    <?php // Les collaborateurs déjà cochés restent affichés, même si les filtres changent ?>
+                    <p class="formulaire-surtitre">Collaborateurs choisis (<?= count($collaborateurs) ?>)</p>
+                    <div class="liste-collaborateurs">
                         <?php foreach ($listePersonnels as $personnel): ?>
-                            <option value="<?= $personnel['id'] ?>" <?= in_array($personnel['id'], $collaborateurs) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' [idhal: ' . $personnel['id_idhal'] . '] [orcid: ' . $personnel['id_orcid'] . ']') ?>
+                            <?php if (in_array($personnel['id'], $collaborateurs)): ?>
+                                <label class="case-a-cocher">
+                                    <input type="checkbox" name="collaborateurs[]" value="<?= $personnel['id'] ?>" checked>
+                                    <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' [idhal: ' . $personnel['id_idhal'] . '] [orcid: ' . $personnel['id_orcid'] . ']') ?>
+                                </label>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <?php // Filtres : le bouton recharge la page sans rien enregistrer ?>
+                    <p class="formulaire-surtitre">Rechercher des collaborateurs</p>
+                    <label for="filtre_nom">Nom ou prénom</label>
+                    <input type="text" name="filtre_nom" id="filtre_nom" value="<?= htmlspecialchars($filtreNom) ?>">
+
+                    <label for="filtre_departement">Département</label>
+                    <select name="filtre_departement" id="filtre_departement">
+                        <option value="">Tous</option>
+                        <?php foreach ($departementsFiltre as $departement): ?>
+                            <option value="<?= $departement['id_departement'] ?>" <?= $filtreDepartement == $departement['id_departement'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($departement['nom']) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
-                    <p class="aide">Ctrl + clic pour sélectionner plusieurs.</p>
+
+                    <label for="filtre_groupe">Groupe</label>
+                    <select name="filtre_groupe" id="filtre_groupe">
+                        <option value="">Tous</option>
+                        <?php foreach ($groupesFiltre as $groupe): ?>
+                            <option value="<?= $groupe['id_groupe'] ?>" <?= $filtreGroupe == $groupe['id_groupe'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($groupe['nom']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <button type="submit" name="filtrer" formnovalidate class="bouton-secondaire">Filtrer</button>
+
+                    <?php // Résultats des filtres, sans ceux qui sont déjà cochés ?>
+                    <p class="aide"><?= count($collaborateursFiltres) ?> personne(s) trouvée(s). Cochez puis cliquez sur Enregistrer.</p>
+                    <div class="liste-collaborateurs">
+                        <?php foreach ($collaborateursFiltres as $personnel): ?>
+                            <?php if (!in_array($personnel['id'], $collaborateurs)): ?>
+                                <label class="case-a-cocher">
+                                    <input type="checkbox" name="collaborateurs[]" value="<?= $personnel['id'] ?>">
+                                    <?= htmlspecialchars($personnel['nom'] . ' ' . $personnel['prenom'] . ' [idhal: ' . $personnel['id_idhal'] . '] [orcid: ' . $personnel['id_orcid'] . ']') ?>
+                                </label>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
                 <?php endif; ?>
 
                 <label class="case-a-cocher">

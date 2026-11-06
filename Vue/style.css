@@ -802,6 +802,12 @@ h2 {
     background: #d0d7e0;
 }
 
+/* Liste des collaborateurs : défile si elle est longue */
+.liste-collaborateurs {
+    max-height: 240px;
+    overflow-y: auto;
+}
+
 /* Tablette */
 @media (max-width: 900px) {
     .navbar {

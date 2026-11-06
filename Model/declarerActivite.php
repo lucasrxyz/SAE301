@@ -24,26 +24,54 @@
     $requete->execute([$idPersonnel]);
     $listePersonnels = $requete->fetchAll(PDO::FETCH_ASSOC);
 
-    // Valeurs de départ du formulaire
-    $typeactivite = '';
-    $titre = '';
-    $datedebut = '';
-    $datefin = '';
-    $enCours = false;
-    $description = '';
-    $collaborateurs = [];
+    // Valeurs du formulaire : vides à l'ouverture, gardées quand on filtre ou en cas d'erreur
+    $typeactivite = $_POST['id_type'] ?? '';
+    $titre = trim($_POST['titre'] ?? '');
+    $datedebut = $_POST['date_debut'] ?? '';
+    $datefin = $_POST['date_fin'] ?? '';
+    $enCours = isset($_POST['en_cours']);
+    $description = trim($_POST['description'] ?? '');
+    $collaborateurs = $_POST['collaborateurs'] ?? [];
 
-    // Le code suivant s'exécute seulement quand on clique sur Enregistrer
+    // Filtres de la liste des collaborateurs
+    $filtreNom = trim($_POST['filtre_nom'] ?? '');
+    $filtreDepartement = $_POST['filtre_departement'] ?? '';
+    $filtreGroupe = $_POST['filtre_groupe'] ?? '';
+
+    // Départements et groupes encore ouverts, pour les listes de filtres
+    $requete = $pdo->query('SELECT id_departement, nom FROM Departement WHERE date_fin IS NULL ORDER BY nom');
+    $departementsFiltre = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+    $requete = $pdo->query('SELECT id_groupe, nom FROM Groupe WHERE date_fin IS NULL ORDER BY nom');
+    $groupesFiltre = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+    // Collaborateurs qui correspondent aux filtres, d'après leur rattachement en cours
+    $texteCollaborateurs = 'SELECT DISTINCT Personnel.id, Personnel.nom, Personnel.prenom, Personnel.id_idhal, Personnel.id_orcid
+        FROM Personnel
+        LEFT JOIN Rattachement ON Rattachement.id_personnel = Personnel.id AND Rattachement.date_fin IS NULL
+        LEFT JOIN Groupe ON Groupe.id_groupe = Rattachement.id_groupe
+        WHERE Personnel.actif = TRUE AND Personnel.id_idhal IS NOT NULL AND Personnel.id_orcid IS NOT NULL AND Personnel.id <> :id';
+    $parametresCollaborateurs = ['id' => $idPersonnel];
+
+    if ($filtreNom !== '') {
+        $texteCollaborateurs .= ' AND (Personnel.nom ILIKE :nom OR Personnel.prenom ILIKE :nom)';
+        $parametresCollaborateurs['nom'] = '%' . $filtreNom . '%';
+    }
+    if ($filtreDepartement !== '') {
+        $texteCollaborateurs .= ' AND (Rattachement.id_departement = :departement OR Groupe.id_departement = :departement)';
+        $parametresCollaborateurs['departement'] = (int) $filtreDepartement;
+    }
+    if ($filtreGroupe !== '') {
+        $texteCollaborateurs .= ' AND Rattachement.id_groupe = :groupe';
+        $parametresCollaborateurs['groupe'] = (int) $filtreGroupe;
+    }
+
+    $texteCollaborateurs .= ' ORDER BY Personnel.nom, Personnel.prenom';
+    $requete = $pdo->prepare($texteCollaborateurs);
+    $requete->execute($parametresCollaborateurs);
+    $collaborateursFiltres = $requete->fetchAll(PDO::FETCH_ASSOC);
+
     if (isset($_POST['enregistrer'])) {
-        // Récupère ce que l'utilisateur a saisi
-        $typeactivite = $_POST['id_type'] ?? '';
-        $titre = trim($_POST['titre'] ?? '');
-        $datedebut = $_POST['date_debut'] ?? '';
-        $datefin = $_POST['date_fin'] ?? '';
-        $enCours = isset($_POST['en_cours']);
-        $description = trim($_POST['description'] ?? '');
-        $collaborateurs = $_POST['collaborateurs'] ?? [];
-
         // Sans date de fin, la fin vaut le début ; « en cours » veut dire pas de fin
         $dateFinEnregistree = $datefin === '' ? $datedebut : $datefin;
         if ($enCours) {
