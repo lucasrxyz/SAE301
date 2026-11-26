@@ -88,19 +88,67 @@ function evenementsValides($evenements)
     return true;
 }
 
+function analyserEvenements($pdo, $idTypeCours, $idPersonnel, $evenements)
+{
+    $clesFichier = [];
+    foreach ($evenements as $evenement) {
+        $clesFichier[] = $evenement['intitule'] . '|' . $evenement['date_debut'] . '|' . $evenement['date_fin'];
+    }
+
+    $clesVues = [];
+    $idsUtilises = [];
+    $evenementsAnalyses = [];
+
+    foreach ($evenements as $evenement) {
+        $cle = $evenement['intitule'] . '|' . $evenement['date_debut'] . '|' . $evenement['date_fin'];
+        $evenement['statut'] = 'Nouveau';
+        $evenement['id_activite'] = null;
+
+        $requete = $pdo->prepare('SELECT id_activite, date_debut, date_fin FROM Activite WHERE id_type = ? AND id_personnel = ? AND titre = ? AND CAST(date_debut AS DATE) = ? ORDER BY date_debut');
+        $requete->execute([$idTypeCours, $idPersonnel, $evenement['intitule'], substr($evenement['date_debut'], 0, 10)]);
+        $coursDuJour = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+        if (in_array($cle, $clesVues)) {
+            $evenement['statut'] = 'Doublon';
+        }
+
+        foreach ($coursDuJour as $cours) {
+            if ($cours['date_debut'] === $evenement['date_debut'] && $cours['date_fin'] === $evenement['date_fin']) {
+                $evenement['statut'] = 'Doublon';
+            }
+        }
+
+        if ($evenement['statut'] === 'Nouveau') {
+            foreach ($coursDuJour as $cours) {
+                $cleCours = $evenement['intitule'] . '|' . $cours['date_debut'] . '|' . $cours['date_fin'];
+                if ($evenement['id_activite'] === null && !in_array($cleCours, $clesFichier) && !in_array($cours['id_activite'], $idsUtilises)) {
+                    $evenement['statut'] = 'Modifié';
+                    $evenement['id_activite'] = $cours['id_activite'];
+                    $idsUtilises[] = $cours['id_activite'];
+                }
+            }
+        }
+
+        $clesVues[] = $cle;
+        $evenementsAnalyses[] = $evenement;
+    }
+
+    return $evenementsAnalyses;
+}
+
 // Valeurs de départ de la page
 $erreurICS = '';
 $messageImport = '';
 $evenementsApercu = [];
-$personnelPreselectionne = $_POST['id_personnel'] ?? $_GET['id_personnel'] ?? '';
+$idPersonnel = $_SESSION['id_personnel'];
 
-// Tous les personnels pour la liste
-$requete = $pdo->query('SELECT id, nom, prenom, mail FROM Personnel ORDER BY nom, prenom, id');
-$personnelsImportables = $requete->fetchAll(PDO::FETCH_ASSOC);
+// Cherche le numéro du type d'activité « Cours »
+$requete = $pdo->query("SELECT id_type FROM TypeActivite WHERE nom_type = 'Cours'");
+$idTypeCours = $requete->fetchColumn();
 
 // Message de résultat après un import
 if (isset($_GET['importe'])) {
-    $messageImport = (int) $_GET['importe'] . ' enseignement(s) importé(s), ' . (int) $_GET['doublons'] . ' doublon(s) ignoré(s).';
+    $messageImport = (int) $_GET['importe'] . ' enseignement(s) ajouté(s), ' . (int) ($_GET['modifies'] ?? 0) . ' modifié(s), ' . (int) $_GET['doublons'] . ' doublon(s) ignoré(s).';
 }
 
 // Bouton Prévisualiser : on contrôle le fichier, puis on affiche l'aperçu
@@ -108,9 +156,7 @@ if (isset($_POST['previsualiser'])) {
     $fichier = $_FILES['fichier'];
     $extension = strtolower(pathinfo($fichier['name'], PATHINFO_EXTENSION));
 
-    if (!in_array($personnelPreselectionne, array_column($personnelsImportables, 'id'))) {
-        $erreurICS = 'Veuillez choisir un personnel valide.';
-    } elseif ($fichier['error'] !== UPLOAD_ERR_OK) {
+    if ($fichier['error'] !== UPLOAD_ERR_OK) {
         $erreurICS = 'Le fichier ICS n’a pas pu être téléversé.';
     } elseif ($extension !== 'ics') {
         $erreurICS = 'Fichier ICS invalide.';
@@ -121,8 +167,8 @@ if (isset($_POST['previsualiser'])) {
 
         if (evenementsValides($evenements)) {
             // On garde les événements en session jusqu'au clic sur Importer
-            $_SESSION['import_ics'] = ['id_personnel' => (int) $personnelPreselectionne, 'evenements' => $evenements];
-            $evenementsApercu = $evenements;
+            $_SESSION['import_ics'] = ['id_personnel' => $idPersonnel, 'evenements' => $evenements];
+            $evenementsApercu = analyserEvenements($pdo, $idTypeCours, $idPersonnel, $evenements);
         } else {
             $erreurICS = 'Fichier ICS invalide.';
         }
@@ -131,41 +177,37 @@ if (isset($_POST['previsualiser'])) {
 
 // Bouton Importer : on enregistre les événements gardés en session
 if (isset($_POST['importer'])) {
-    if (!isset($_SESSION['import_ics'])) {
+    if (!isset($_SESSION['import_ics']) || $_SESSION['import_ics']['id_personnel'] !== $idPersonnel) {
         $erreurICS = 'Cet aperçu a expiré ou n’est plus disponible. Veuillez recommencer.';
     } else {
-        $idPersonnel = $_SESSION['import_ics']['id_personnel'];
-        $evenements = $_SESSION['import_ics']['evenements'];
-
-        // Cherche le numéro du type d'activité « Cours »
-        $requete = $pdo->query("SELECT id_type FROM TypeActivite WHERE nom_type = 'Cours'");
-        $idTypeCours = $requete->fetchColumn();
+        $evenements = analyserEvenements($pdo, $idTypeCours, $idPersonnel, $_SESSION['import_ics']['evenements']);
 
         $nombreImportes = 0;
+        $nombreModifies = 0;
+        $nombreDoublons = 0;
 
         // Si une écriture plante, on annule tout
         $pdo->beginTransaction();
 
         foreach ($evenements as $evenement) {
-            // Regarde si cette personne a déjà ce cours à la même heure
-            $requete = $pdo->prepare('SELECT COUNT(*) FROM Activite WHERE id_type = ? AND id_personnel = ? AND titre = ? AND date_debut = ?');
-            $requete->execute([$idTypeCours, $idPersonnel, $evenement['intitule'], $evenement['date_debut']]);
-            $dejaPresent = $requete->fetchColumn() > 0;
-
-            // Pas encore en base : on l'ajoute
-            if (!$dejaPresent) {
+            if ($evenement['statut'] === 'Nouveau') {
                 $requete = $pdo->prepare('INSERT INTO Activite (id_type, id_personnel, titre, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)');
                 $requete->execute([$idTypeCours, $idPersonnel, $evenement['intitule'], $evenement['date_debut'], $evenement['date_fin']]);
                 $nombreImportes++;
+            } elseif ($evenement['statut'] === 'Modifié') {
+                $requete = $pdo->prepare('UPDATE Activite SET date_debut = ?, date_fin = ? WHERE id_activite = ? AND id_personnel = ?');
+                $requete->execute([$evenement['date_debut'], $evenement['date_fin'], $evenement['id_activite'], $idPersonnel]);
+                $nombreModifies++;
+            } else {
+                $nombreDoublons++;
             }
         }
 
         $pdo->commit();
 
         // Oublie l'aperçu et recharge la page avec le résultat
-        $nombreDoublons = count($evenements) - $nombreImportes;
         unset($_SESSION['import_ics']);
-        header('Location: importerEnseignement.php?importe=' . $nombreImportes . '&doublons=' . $nombreDoublons);
+        header('Location: importerEnseignement.php?importe=' . $nombreImportes . '&modifies=' . $nombreModifies . '&doublons=' . $nombreDoublons);
         exit;
     }
 }
