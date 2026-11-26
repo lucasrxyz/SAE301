@@ -1,12 +1,13 @@
 <?php
-// Connexion à la base de données
-require_once __DIR__ . '/config.php';
+// Vérifie que l'utilisateur est connecté
+require __DIR__ . '/verifierconnexion.php';
+require_once __DIR__ . '/../Model/Personnel.php';
 
 // Seuls le RH et l'administrateur peuvent ajouter un personnel
-exigerDroit('gerer_personnel');
+Droits::exiger('gerer_personnel');
 
-// Liste des statuts autorisés
-require_once __DIR__ . '/statuts.php';
+$personnelModele = new Personnel($pdo);
+$statutsPossibles = Personnel::STATUTS;
 
 // Valeurs de départ du formulaire (vides à l'ouverture de la page)
 $erreurPersonnel = '';
@@ -34,11 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Transforme la quotité en nombre (false si ce n'est pas un nombre)
     $quotite = filter_var($quotiteSaisie, FILTER_VALIDATE_FLOAT);
 
-    // Regarde si ce mail existe déjà, sans tenir compte des majuscules
-    $requete = $pdo->prepare('SELECT COUNT(*) FROM Personnel WHERE LOWER(mail) = LOWER(?)');
-    $requete->execute([$mailSaisi]);
-    $mailDejaUtilise = $requete->fetchColumn() > 0;
-
     // Contrôle les données : on garde le premier message d'erreur trouvé
     if (in_array('', [$nomSaisi, $prenomSaisi, $mailSaisi, $dateArriveeSaisie, $statutSaisi, $quotiteSaisie])) {
         $erreurPersonnel = 'Veuillez remplir tous les champs.';
@@ -48,30 +44,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erreurPersonnel = 'Veuillez choisir un statut dans la liste.';
     } elseif (!filter_var($mailSaisi, FILTER_VALIDATE_EMAIL)) {
         $erreurPersonnel = 'Veuillez saisir une adresse mail valide.';
-    } elseif ($mailDejaUtilise) {
+    } elseif ($personnelModele->mailUtilise($mailSaisi, 0)) {
         $erreurPersonnel = 'Cette adresse mail est déjà utilisée.';
     } elseif (!$dateValide) {
         $erreurPersonnel = 'Veuillez saisir une date d\'arrivée valide.';
     } elseif ($quotite === false || $quotite < 0 || $quotite > 100) {
         $erreurPersonnel = 'La quotité doit être comprise entre 0 et 100 %.';
     } else {
-        // Tout est bon : les deux ajouts réussissent ensemble ou pas du tout
-        $pdo->beginTransaction();
-
-        // Crée le personnel et récupère son numéro
-        $requete = $pdo->prepare('INSERT INTO Personnel (nom, prenom, mail, date_arrivee) VALUES (?, ?, ?, ?) RETURNING id');
-        $requete->execute([$nomSaisi, $prenomSaisi, $mailSaisi, $dateArriveeSaisie]);
-        $idPersonnel = $requete->fetchColumn();
-
-        // Crée son premier statut (la quotité passe de 80 à 0.8)
-        $requete = $pdo->prepare('INSERT INTO Personnel_Statut_Historique (id_personnel, statut, quotite_recherche, date_debut) VALUES (?, ?, ?, ?)');
-        $requete->execute([$idPersonnel, $statutSaisi, $quotite / 100, $dateArriveeSaisie]);
-
-        // Valide les deux ajouts
-        $pdo->commit();
+        $idPersonnel = $personnelModele->ajouter($nomSaisi, $prenomSaisi, $mailSaisi, $dateArriveeSaisie, $statutSaisi, $quotite);
 
         // Envoie vers la page pour lui ajouter un rattachement
         header('Location: ajouterRattachement.php?id=' . $idPersonnel);
         exit;
     }
 }
+
+require __DIR__ . '/../Vue/ajouterpersonnel.php';

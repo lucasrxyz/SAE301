@@ -1,16 +1,10 @@
-<?php
-    // Vérifie que l'utilisateur est connecté
-    require __DIR__ . '/../Model/verifierconnexion.php';
-// Cherche les groupes de la période
-require __DIR__ . '/../Model/groupeParHeure.php';
-?>
 <!doctype html>
 <html lang="fr">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Groupes par période</title>
-        <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="../Vue/style.css" />
     </head>
     <body>
         <?php // Barre de navigation, commune à toutes les pages ?>

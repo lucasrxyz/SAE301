@@ -1,18 +1,10 @@
-<?php
-    // Vérifie que l'utilisateur est connecté
-    require __DIR__ . '/../Model/verifierconnexion.php';
-    // Il faut le droit de voir le personnel
-    exigerDroit('voir_personnel');
-    // Fait la recherche
-    require __DIR__ . '/../Model/listepersonnel.php';
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste de personnel</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../Vue/style.css">
 </head>
 <body>
 
@@ -34,7 +26,7 @@
         <p>
             <a href="?tout=1"><button type="button">Voir tout le personnel</button></a>
             <a href="?rattaches=1"><button type="button">Voir le personnel rattaché</button></a>
-            <?php if (verifierDroit('gerer_personnel')): ?>
+            <?php if (Droits::verifier('gerer_personnel')): ?>
                 <a href="ajouterpersonnel.php"><button type="button">Ajouter un personnel</button></a>
             <?php endif; ?>
         </p>
@@ -81,7 +73,7 @@
                             <td>
                                 <a href="ficheDetailleePersonnel.php?id=<?= $ligne['id'] ?>" target="_blank">Choisir</a>
                                 <?php // Lien pour ajouter un rattachement si elle n'en a pas ?>
-                                <?php if ($ligne['sans_rattachement'] && verifierDroit('gerer_personnel')): ?>
+                                <?php if ($ligne['sans_rattachement'] && Droits::verifier('gerer_personnel')): ?>
                                     · <a href="ajouterRattachement.php?id=<?= $ligne['id'] ?>">Rattacher</a>
                                 <?php endif; ?>
                             </td>

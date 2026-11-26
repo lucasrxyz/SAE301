@@ -14,40 +14,34 @@ $initiale = function_exists('mb_strtoupper')
     ? mb_strtoupper($initiale, 'UTF-8')
     : strtoupper($initiale);
 
-// Compte les invitations à des activités collectives qui attendent une réponse
-$nbInvitations = 0;
-if (verifierDroit('declarer_activite')) {
-    $requete = $pdo->prepare('SELECT COUNT(*) FROM Activite WHERE id_personnel = ? AND id_activite_principale IS NOT NULL AND confirme IS NULL');
-    $requete->execute([$_SESSION['id_personnel']]);
-    $nbInvitations = $requete->fetchColumn();
-}
+// Le nombre d'invitations en attente ($nbInvitations) est calculé par le contrôleur verifierconnexion.php
 ?>
 <nav class="navbar">
     <a href="index.php" class="navbar-logo">
-        <img src="images/logo-uphf.png" alt="Université Polytechnique Hauts-de-France">
+        <img src="../Vue/images/logo-uphf.png" alt="Université Polytechnique Hauts-de-France">
     </a>
     <?php // Chaque lien s'affiche seulement si la personne a le droit ?>
     <ul class="navbar-liens">
-        <?php if (verifierDroit('voir_tableau_bord')): ?>
+        <?php if (Droits::verifier('voir_tableau_bord')): ?>
             <li><a href="tableauDeBord.php">Accueil</a></li>
         <?php endif; ?>
-        <?php if (verifierDroit('voir_personnel')): ?>
+        <?php if (Droits::verifier('voir_personnel')): ?>
             <li><a href="afficherListePersonnel.php">Personnel</a></li>
         <?php endif; ?>
-        <?php if (verifierDroit('voir_organisation')): ?>
+        <?php if (Droits::verifier('voir_organisation')): ?>
             <li><a href="organisation.php">Organisation</a></li>
         <?php endif; ?>
-        <?php if (verifierDroit('declarer_activite')): ?>
+        <?php if (Droits::verifier('declarer_activite')): ?>
             <li><a href="declarerActivite.php">Déclarer une activité</a></li>
             <li><a href="mesParticipations.php">Mes participations<?= $nbInvitations > 0 ? ' (' . $nbInvitations . ')' : '' ?></a></li>
             <li><a href="genererRapport.php">Générer mon rapport</a></li>
             <li><a href="importerEnseignement.php">Importer mes enseignements</a></li>
         <?php endif; ?>
-        <?php if (verifierDroit('gerer_personnel')): ?>
+        <?php if (Droits::verifier('gerer_personnel')): ?>
             <li><a href="creerCompte.php">Créer un compte</a></li>
             <li><a href="importerPublications.php">Importer des publications</a></li>
         <?php endif; ?>
-        <?php if (verifierDroit('gerer_roles')): ?>
+        <?php if (Droits::verifier('gerer_roles')): ?>
             <li><a href="gererRoles.php">Rôles</a></li>
         <?php endif; ?>
     </ul>

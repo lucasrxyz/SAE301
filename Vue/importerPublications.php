@@ -1,16 +1,10 @@
-<?php
-    // Vérifie que l'utilisateur est connecté
-    require __DIR__ . '/../Model/verifierconnexion.php';
-    // Interroge HAL et fait l'import
-    require __DIR__ . '/../Model/importerHAL.php';
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Importer des publications</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../Vue/style.css">
 </head>
 <body>
 

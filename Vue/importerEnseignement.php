@@ -1,18 +1,10 @@
-<?php
-// Vérifie que l'utilisateur est connecté
-require_once __DIR__ . '/../Model/verifierconnexion.php';
-// Chaque personnel importe ses propres enseignements
-exigerDroit('declarer_activite');
-// Lit le fichier ICS et fait l'import
-require_once __DIR__ . '/../Model/importerICS.php';
-?>
 <!doctype html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Importer mes enseignements</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../Vue/style.css">
 </head>
 <body>
     <?php // Barre de navigation, commune à toutes les pages ?>

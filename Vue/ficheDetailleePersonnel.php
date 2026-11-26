@@ -1,23 +1,10 @@
-<?php
-    // Vérifie que l'utilisateur est connecté
-    require __DIR__ . '/../Model/verifierconnexion.php';
-    // Il faut le droit de voir le personnel
-    exigerDroit('voir_personnel');
-    // Un fichier par action possible sur la fiche, puis les données à afficher
-    require __DIR__ . '/../Model/desactiverpersonnel.php';
-    require __DIR__ . '/../Model/modifieridentite.php';
-    require __DIR__ . '/../Model/cloturerrattachement.php';
-    require __DIR__ . '/../Model/changerstatut.php';
-    require __DIR__ . '/../Model/nommerresponsable.php';
-    require __DIR__ . '/../Model/fichepersonnel.php';
-?>
 <!doctype html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fiche personnel</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../Vue/style.css" />
 </head>
 <body>
 

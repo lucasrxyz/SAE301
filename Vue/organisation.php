@@ -1,16 +1,10 @@
-<?php
-    // Vérifie que l'utilisateur est connecté
-    require __DIR__ . '/../Model/verifierconnexion.php';
-    // Prépare la vue demandée
-    require __DIR__ . '/../Model/listeOrganisation.php';
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organisation</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../Vue/style.css">
 </head>
 <body>
 
@@ -20,7 +14,7 @@
     <div class="page-contenu">
         <h1>Bienvenue sur la page Organisation</h1>
 
-        <?php if (verifierDroit('gerer_personnel')): ?>            <p><a href="modifierOrganisationFormulaire.php"><button type="button">Modifier organisation</button></a></p>
+        <?php if (Droits::verifier('gerer_personnel')): ?>            <p><a href="modifierOrganisationFormulaire.php"><button type="button">Modifier organisation</button></a></p>
         <?php endif; ?>
 
         <p>Veuillez selectionner la vue désirée</p>

@@ -1,18 +1,10 @@
-<?php
-    // Format inconnu : la page se réaffiche avec ce message
-    require __DIR__ . '/../Model/verifierconnexion.php';
-
-    // Traite le formulaire. Si un fichier est demandé, il est envoyé
-    // et la page s'arrête là (exit dans le Model). Sinon, la page s'affiche.
-    require __DIR__ . '/../Model/genererRapport.php';
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Générer votre rapport</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../Vue/style.css">
 </head>
 <body>
 
