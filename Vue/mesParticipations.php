@@ -56,8 +56,8 @@
                                 <td><?= htmlspecialchars($participation['nom_type']) ?></td>
                                 <td><?= htmlspecialchars($participation['prenom'] . ' ' . $participation['nom']) ?></td>
                                 <td><?= htmlspecialchars($participation['role'] ?? '—') ?></td>
-                                <td><?= formaterDate($participation['date_debut']) ?></td>
-                                <td><?= $participation['date_fin'] === null ? '—' : formaterDate($participation['date_fin']) ?></td>
+                                <td><?= htmlspecialchars($participation['debut_affiche']) ?></td>
+                                <td><?= htmlspecialchars($participation['fin_affichee']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>

@@ -36,3 +36,28 @@ if (Droits::verifier('declarer_activite')) {
     $activiteModele = new Activite($pdo);
     $nbInvitations = $activiteModele->nombreInvitations($_SESSION['id_personnel']);
 }
+
+// Ce que la vue a le droit d'afficher : elle ne consulte jamais les droits elle-même
+$peutVoirTableauBord = Droits::verifier('voir_tableau_bord');
+$peutVoirPersonnel = Droits::verifier('voir_personnel');
+$peutVoirOrganisation = Droits::verifier('voir_organisation');
+$peutDeclarerActivite = Droits::verifier('declarer_activite');
+$peutGererPersonnel = Droits::verifier('gerer_personnel');
+$peutGererRoles = Droits::verifier('gerer_roles');
+$aucunRole = empty($_SESSION['roles']);
+$pageAccueil = Droits::pageAccueil();
+
+// Nom à afficher dans la barre de navigation : prénom et nom, sinon l'identifiant
+$nomAffiche = trim(($_SESSION['prenom'] ?? '') . ' ' . ($_SESSION['nom'] ?? ''));
+if ($nomAffiche === '') {
+    $nomAffiche = $_SESSION['identifiant'] ?? '';
+}
+// Rôle principal de la personne
+$grade = $_SESSION['roles'][0] ?? 'Aucun rôle';
+// Première lettre du nom, en majuscule, pour le rond de profil
+$initiale = function_exists('mb_substr')
+    ? mb_substr($nomAffiche, 0, 1, 'UTF-8')
+    : (preg_match('/^./us', $nomAffiche, $premiereLettre) ? $premiereLettre[0] : '');
+$initiale = function_exists('mb_strtoupper')
+    ? mb_strtoupper($initiale, 'UTF-8')
+    : strtoupper($initiale);

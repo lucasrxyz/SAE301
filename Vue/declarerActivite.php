@@ -216,8 +216,8 @@
                                 <td><?= htmlspecialchars($activite['categorie']) ?></td>
                                 <td><?= htmlspecialchars($activite['nom_type']) ?></td>
                                 <td><?= htmlspecialchars($activite['titre']) ?></td>
-                                <td><?= formaterDate($activite['date_debut']) ?></td>
-                                <td><?= $activite['date_fin'] === null ? '—' : formaterDate($activite['date_fin']) ?></td>
+                                <td><?= htmlspecialchars($activite['debut_affiche']) ?></td>
+                                <td><?= htmlspecialchars($activite['fin_affichee']) ?></td>
                                 <td><?= htmlspecialchars($activite['role'] ?? '—') ?></td>
                                 <td><?= htmlspecialchars($activite['description'] ?? '') ?></td>
                                 <td>

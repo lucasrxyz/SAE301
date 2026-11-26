@@ -188,6 +188,10 @@ if ($idPersonnel !== null) {
         $anciensNoms = $personnelModele->anciensNoms($idPersonnel);
         $historiqueRattachements = $rattachementModele->historique($idPersonnel);
         $activites = $activiteModele->activitesFiche($idPersonnel);
+        foreach ($activites as $numero => $activite) {
+            $activites[$numero]['debut_affiche'] = formaterDate($activite['date_debut']);
+            $activites[$numero]['fin_affichee'] = $activite['date_fin'] === null ? 'En cours' : formaterDate($activite['date_fin']);
+        }
         $enseignements = $activiteModele->enseignementsFiche($idPersonnel);
     }
 }

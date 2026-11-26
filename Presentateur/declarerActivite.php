@@ -105,6 +105,10 @@ if (!isset(Activite::COLONNES_TRI[$tri])) {
 }
 
 $mesActivites = $activiteModele->mesActivites($idPersonnel, $recherche, $filtreType, $filtreEtat, $filtreDebut, $filtreFin, $tri, $ordre);
+foreach ($mesActivites as $numero => $activite) {
+    $mesActivites[$numero]['debut_affiche'] = formaterDate($activite['date_debut']);
+    $mesActivites[$numero]['fin_affichee'] = $activite['date_fin'] === null ? '—' : formaterDate($activite['date_fin']);
+}
 
 // Prépare les liens de tri, qui gardent les filtres en cours
 $filtresUrl = http_build_query([

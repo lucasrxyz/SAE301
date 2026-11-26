@@ -1,47 +1,29 @@
-<?php
-// Nom à afficher : prénom et nom, sinon l'identifiant
-$nomAffiche = trim(($_SESSION['prenom'] ?? '') . ' ' . ($_SESSION['nom'] ?? ''));
-if ($nomAffiche === '') {
-    $nomAffiche = $_SESSION['identifiant'] ?? '';
-}
-// Rôle principal de la personne
-$grade = $_SESSION['roles'][0] ?? 'Aucun rôle';
-// Première lettre du nom, en majuscule, pour le rond de profil
-$initiale = function_exists('mb_substr')
-    ? mb_substr($nomAffiche, 0, 1, 'UTF-8')
-    : (preg_match('/^./us', $nomAffiche, $premiereLettre) ? $premiereLettre[0] : '');
-$initiale = function_exists('mb_strtoupper')
-    ? mb_strtoupper($initiale, 'UTF-8')
-    : strtoupper($initiale);
-
-// Le nombre d'invitations en attente ($nbInvitations) est calculé par le contrôleur verifierconnexion.php
-?>
 <nav class="navbar">
     <a href="index.php" class="navbar-logo">
         <img src="../Vue/images/logo-uphf.png" alt="Université Polytechnique Hauts-de-France">
     </a>
     <?php // Chaque lien s'affiche seulement si la personne a le droit ?>
     <ul class="navbar-liens">
-        <?php if (Droits::verifier('voir_tableau_bord')): ?>
+        <?php if ($peutVoirTableauBord): ?>
             <li><a href="tableauDeBord.php">Accueil</a></li>
         <?php endif; ?>
-        <?php if (Droits::verifier('voir_personnel')): ?>
+        <?php if ($peutVoirPersonnel): ?>
             <li><a href="afficherListePersonnel.php">Personnel</a></li>
         <?php endif; ?>
-        <?php if (Droits::verifier('voir_organisation')): ?>
+        <?php if ($peutVoirOrganisation): ?>
             <li><a href="organisation.php">Organisation</a></li>
         <?php endif; ?>
-        <?php if (Droits::verifier('declarer_activite')): ?>
+        <?php if ($peutDeclarerActivite): ?>
             <li><a href="declarerActivite.php">Déclarer une activité</a></li>
             <li><a href="mesParticipations.php">Mes participations<?= $nbInvitations > 0 ? ' (' . $nbInvitations . ')' : '' ?></a></li>
             <li><a href="genererRapport.php">Générer mon rapport</a></li>
             <li><a href="importerEnseignement.php">Importer mes enseignements</a></li>
         <?php endif; ?>
-        <?php if (Droits::verifier('gerer_personnel')): ?>
+        <?php if ($peutGererPersonnel): ?>
             <li><a href="creerCompte.php">Créer un compte</a></li>
             <li><a href="importerPublications.php">Importer des publications</a></li>
         <?php endif; ?>
-        <?php if (Droits::verifier('gerer_roles')): ?>
+        <?php if ($peutGererRoles): ?>
             <li><a href="gererRoles.php">Rôles</a></li>
         <?php endif; ?>
     </ul>

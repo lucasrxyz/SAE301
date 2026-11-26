@@ -26,7 +26,7 @@
         <p>
             <a href="?tout=1"><button type="button">Voir tout le personnel</button></a>
             <a href="?rattaches=1"><button type="button">Voir le personnel rattaché</button></a>
-            <?php if (Droits::verifier('gerer_personnel')): ?>
+            <?php if ($peutGererPersonnel): ?>
                 <a href="ajouterpersonnel.php"><button type="button">Ajouter un personnel</button></a>
             <?php endif; ?>
         </p>
@@ -73,7 +73,7 @@
                             <td>
                                 <a href="ficheDetailleePersonnel.php?id=<?= $ligne['id'] ?>" target="_blank">Choisir</a>
                                 <?php // Lien pour ajouter un rattachement si elle n'en a pas ?>
-                                <?php if ($ligne['sans_rattachement'] && Droits::verifier('gerer_personnel')): ?>
+                                <?php if ($ligne['sans_rattachement'] && $peutGererPersonnel): ?>
                                     · <a href="ajouterRattachement.php?id=<?= $ligne['id'] ?>">Rattacher</a>
                                 <?php endif; ?>
                             </td>

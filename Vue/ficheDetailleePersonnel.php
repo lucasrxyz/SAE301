@@ -276,8 +276,8 @@
                                     <td><?= htmlspecialchars($activite['role'] ?? '—') ?></td>
                                     <td><?= htmlspecialchars($activite['description'] ?? '') ?></td>
                                 <?php endif; ?>
-                                <td><?= formaterDate($activite['date_debut']) ?></td>
-                                <td><?= $activite['date_fin'] === null ? 'En cours' : formaterDate($activite['date_fin']) ?></td>
+                                <td><?= htmlspecialchars($activite['debut_affiche']) ?></td>
+                                <td><?= htmlspecialchars($activite['fin_affichee']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </table>

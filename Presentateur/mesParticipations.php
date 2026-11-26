@@ -25,6 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Mes participations, et les réponses aux activités dont je suis le porteur
 $participations = $activiteModele->participations($idPersonnel);
+foreach ($participations as $numero => $participation) {
+    $participations[$numero]['debut_affiche'] = formaterDate($participation['date_debut']);
+    $participations[$numero]['fin_affichee'] = $participation['date_fin'] === null ? '—' : formaterDate($participation['date_fin']);
+}
 $reponsesParticipants = $activiteModele->reponsesParticipants($idPersonnel);
 
 require __DIR__ . '/../Vue/mesParticipations.php';

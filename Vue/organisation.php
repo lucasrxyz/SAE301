@@ -14,7 +14,7 @@
     <div class="page-contenu">
         <h1>Bienvenue sur la page Organisation</h1>
 
-        <?php if (Droits::verifier('gerer_personnel')): ?>            <p><a href="modifierOrganisationFormulaire.php"><button type="button">Modifier organisation</button></a></p>
+        <?php if ($peutGererPersonnel): ?>            <p><a href="modifierOrganisationFormulaire.php"><button type="button">Modifier organisation</button></a></p>
         <?php endif; ?>
 
         <p>Veuillez selectionner la vue désirée</p>
