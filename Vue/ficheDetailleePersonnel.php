@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fiche personnel</title>
-    <link rel="stylesheet" href="../Vue/style.css" />
+    <link rel="stylesheet" href="Vue/style.css" />
 </head>
 <body>
 
@@ -66,10 +66,10 @@
             <?php if ($estRH): ?>
                 <form method="get" action="">
                     <input type="hidden" name="id" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
-                    <button type="submit" formaction="modifierPersonnel.php">Modifier les coordonnées</button>
+                    <button type="submit" formaction="index.php" name="page" value="modifierPersonnel">Modifier les coordonnées</button>
                     <?php // Pas de nouveau rattachement pour une personne partie ?>
                     <?php if ($personnel['date_depart'] === null): ?>
-                        <button type="submit" formaction="ajouterRattachement.php">Ajouter un rattachement</button>
+                        <button type="submit" formaction="index.php" name="page" value="ajouterRattachement">Ajouter un rattachement</button>
                     <?php endif; ?>
                 </form>
             <?php endif; ?>
@@ -214,7 +214,7 @@
                                                     : max(date('Y-m-d'), $rattachement['date_debut']);
                                             ?>
                                             <?php // Clôturer un rattachement en cours ?>
-                                            <form method="post" action="ficheDetailleePersonnel.php?id=<?= urlencode((string) $personnel['id']) ?>">
+                                            <form method="post" action="index.php?page=ficheDetailleePersonnel&id=<?= urlencode((string) $personnel['id']) ?>">
                                                 <input type="hidden" name="id_personnel" value="<?= htmlspecialchars((string) $personnel['id']) ?>">
                                                 <input type="hidden" name="id_rattachement" value="<?= htmlspecialchars((string) $rattachement['id']) ?>">
                                                 <label for="date_fin_rattachement_<?= htmlspecialchars((string) $rattachement['id']) ?>">Date de fin</label>
@@ -230,7 +230,7 @@
                                             </form>
                                             <?php if (!$rattachement['responsable_groupe']): ?>
                                                 <?php // Nommer responsable ?>
-                                                <form method="post" action="ficheDetailleePersonnel.php?id=<?= $personnel['id'] ?>">
+                                                <form method="post" action="index.php?page=ficheDetailleePersonnel&id=<?= $personnel['id'] ?>">
                                                     <input type="hidden" name="id_personnel" value="<?= $personnel['id'] ?>">
                                                     <input type="hidden" name="id_rattachement" value="<?= $rattachement['id'] ?>">
                                                     <label for="date_nomination_<?= $rattachement['id'] ?>">Responsable à partir du</label>
@@ -361,7 +361,7 @@
         <?php endif; ?>
 
         <p>
-            <a href="afficherListePersonnel.php?tout=1">Retour à la liste</a>
+            <a href="index.php?page=afficherListePersonnel&tout=1">Retour à la liste</a>
         </p>
 
     </div>

@@ -5,7 +5,7 @@ require_once __DIR__ . '/../Model/Droits.php';
 
 // Pas connecté : vers la connexion, sinon vers sa page d'accueil
 if (empty($_SESSION['identifiant'])) {
-    header('Location: connexion.php');
+    header('Location: index.php?page=connexion');
 } else {
     header('Location: ' . Droits::pageAccueil());
 }

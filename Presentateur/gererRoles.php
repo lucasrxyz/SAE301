@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $erreurRole = 'Ce compte a déjà ce rôle.';
         } else {
             $compteModele->ajouterRole($idCompte, $idRole);
-            header('Location: gererRoles.php?ajoute=1');
+            header('Location: index.php?page=gererRoles&ajoute=1');
             exit;
         }
     }
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $erreurRole = 'Vous ne pouvez pas retirer votre propre rôle d\'administrateur.';
         } else {
             $compteModele->retirerRole($idCompte, $idRole);
-            header('Location: gererRoles.php?retire=1');
+            header('Location: index.php?page=gererRoles&retire=1');
             exit;
         }
     }

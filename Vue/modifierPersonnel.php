@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier un personnel</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
             <?php if ($personnelIntrouvable): ?>
                 <h1>Modifier un personnel</h1>
                 <p class="message-erreur">Personnel introuvable.</p>
-                <p><a href="afficherListePersonnel.php">Retour à la liste</a></p>
+                <p><a href="index.php?page=afficherListePersonnel">Retour à la liste</a></p>
             <?php else: ?>
                 <p class="formulaire-surtitre">Coordonnées</p>
                 <h1><?= htmlspecialchars($personnel['prenom'] . ' ' . $personnel['nom']) ?></h1>
@@ -49,7 +49,7 @@
                     <button type="submit">Enregistrer les modifications</button>
                 </form>
 
-                <p><a href="ficheDetailleePersonnel.php?id=<?= $personnel['id'] ?>">Retour à la fiche</a></p>
+                <p><a href="index.php?page=ficheDetailleePersonnel&id=<?= $personnel['id'] ?>">Retour à la fiche</a></p>
             <?php endif; ?>
         </section>
     </main>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste de personnel</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
 
@@ -18,16 +18,17 @@
 
         <?php // Recherche par nom, et boutons pour tout voir ?>
         <form action="" method="get">
+            <input type="hidden" name="page" value="afficherListePersonnel">
             <label for="nom">Rechercher</label>
             <input type="text" name="nom" id="nom" value="<?= htmlspecialchars($nomUtilisateur) ?>">
             <button type="submit">Rechercher</button>
         </form>
 
         <p>
-            <a href="?tout=1"><button type="button">Voir tout le personnel</button></a>
-            <a href="?rattaches=1"><button type="button">Voir le personnel rattaché</button></a>
+            <a href="?page=afficherListePersonnel&tout=1"><button type="button">Voir tout le personnel</button></a>
+            <a href="?page=afficherListePersonnel&rattaches=1"><button type="button">Voir le personnel rattaché</button></a>
             <?php if ($peutGererPersonnel): ?>
-                <a href="ajouterpersonnel.php"><button type="button">Ajouter un personnel</button></a>
+                <a href="index.php?page=ajouterpersonnel"><button type="button">Ajouter un personnel</button></a>
             <?php endif; ?>
         </p>
 
@@ -71,10 +72,10 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <a href="ficheDetailleePersonnel.php?id=<?= $ligne['id'] ?>" target="_blank">Choisir</a>
+                                <a href="index.php?page=ficheDetailleePersonnel&id=<?= $ligne['id'] ?>" target="_blank">Choisir</a>
                                 <?php // Lien pour ajouter un rattachement si elle n'en a pas ?>
                                 <?php if ($ligne['sans_rattachement'] && $peutGererPersonnel): ?>
-                                    · <a href="ajouterRattachement.php?id=<?= $ligne['id'] ?>">Rattacher</a>
+                                    · <a href="index.php?page=ajouterRattachement&id=<?= $ligne['id'] ?>">Rattacher</a>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -83,7 +84,7 @@
             </div>
 
             <p>
-                <a href="?"><button type="button">Fermer la liste</button></a>
+                <a href="?page=afficherListePersonnel"><button type="button">Fermer la liste</button></a>
             </p>
         <?php endif; ?>
 

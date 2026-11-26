@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Générer votre rapport</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
             <?php endif; ?>
 
             <!-- Formulaire : format + période du rapport -->
-            <form action="genererRapport.php" method="post" class="formulaire-vertical">
+            <form action="index.php?page=genererRapport" method="post" class="formulaire-vertical">
 
                 <!-- Format de sortie : les valeurs doivent correspondre aux tests du Model
                  ('csv' et 'word') -->

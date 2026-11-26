@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
     <?php // Barre de navigation, commune à toutes les pages ?>
@@ -15,7 +15,8 @@
         <p><?= htmlspecialchars($nomPerimetre) ?>, du <?= date('d/m/Y', strtotime($dateDebut)) ?> au <?= date('d/m/Y', strtotime($dateFin)) ?></p>
 
         <?php // Choix du périmètre et de la période ?>
-        <form method="get" action="tableauDeBord.php">
+        <form method="get" action="index.php?page=tableauDeBord">
+            <input type="hidden" name="page" value="tableauDeBord">
             <?php if (!$perimetreImpose): ?>
                 <label for="choix">Périmètre</label>
                 <select id="choix" name="choix">

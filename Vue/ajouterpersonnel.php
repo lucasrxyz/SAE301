@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter un personnel</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
 
@@ -54,7 +54,7 @@
                 <button type="submit">Ajouter le personnel</button>
             </form>
 
-            <p><a href="afficherListePersonnel.php">Retour à la liste du personnel</a></p>
+            <p><a href="index.php?page=afficherListePersonnel">Retour à la liste du personnel</a></p>
         </section>
     </main>
 

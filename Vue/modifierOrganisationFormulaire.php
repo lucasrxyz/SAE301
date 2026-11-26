@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter/Modifier Departement</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
 
@@ -135,7 +135,7 @@
 
             </form>
         <?php endif; ?>
-                <p><a href="organisation.php">Retour à l'affichage de l'organisation</a></p>
+                <p><a href="index.php?page=organisation">Retour à l'affichage de l'organisation</a></p>
     </div>
     
     <?php // Pied de page ?>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organisation</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
 
@@ -14,13 +14,14 @@
     <div class="page-contenu">
         <h1>Bienvenue sur la page Organisation</h1>
 
-        <?php if ($peutGererPersonnel): ?>            <p><a href="modifierOrganisationFormulaire.php"><button type="button">Modifier organisation</button></a></p>
+        <?php if ($peutGererPersonnel): ?>            <p><a href="index.php?page=modifierOrganisationFormulaire"><button type="button">Modifier organisation</button></a></p>
         <?php endif; ?>
 
         <p>Veuillez selectionner la vue désirée</p>
 
         <?php // Choix de la date et de la vue ?>
         <form action="" method="get" class="form">
+            <input type="hidden" name="page" value="organisation">
             <label for="date">Situation au</label>
             <input type="date" name="date" id="date" value="<?= htmlspecialchars($dateConsultee) ?>" required>
 

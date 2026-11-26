@@ -59,7 +59,7 @@ if (isset($_POST['importer'])) {
 
         // Oublie l'aperçu et recharge la page avec le résultat
         unset($_SESSION['import_ics']);
-        header('Location: importerEnseignement.php?importe=' . $resultat['importes'] . '&modifies=' . $resultat['modifies'] . '&doublons=' . $resultat['doublons']);
+        header('Location: index.php?page=importerEnseignement&importe=' . $resultat['importes'] . '&modifies=' . $resultat['modifies'] . '&doublons=' . $resultat['doublons']);
         exit;
     }
 }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Déclarer une activité</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
 
@@ -26,7 +26,7 @@
             <?php endif; ?>
 
             <?php // Choix : individuelle ou collective ?>
-            <form action="declarerActivite.php" method="post" class="formulaire-vertical">
+            <form action="index.php?page=declarerActivite" method="post" class="formulaire-vertical">
                 <p class="aide">Cette activité est-elle individuelle ou collective ?</p>
                 <button type="submit" name="mode" value="individuelle" <?= $mode !== 'individuelle' ? 'class="bouton-secondaire"' : '' ?>>Individuelle</button>
                 <button type="submit" name="mode" value="collective" <?= $mode !== 'collective' ? 'class="bouton-secondaire"' : '' ?>>Collective</button>
@@ -34,7 +34,7 @@
 
             <?php // Le formulaire s'affiche une fois le choix fait ?>
             <?php if ($mode !== ''): ?>
-            <form action="declarerActivite.php" method="post" class="formulaire-vertical">
+            <form action="index.php?page=declarerActivite" method="post" class="formulaire-vertical">
                 <input type="hidden" name="mode" value="<?= $mode ?>">
                 <p class="aide">Les champs marqués d'un <span class="obligatoire">*</span> sont obligatoires.</p>
 
@@ -132,7 +132,8 @@
             <h2>Mes activités déclarées</h2>
 
             <?php // Recherche et filtres ?>
-            <form method="get" action="declarerActivite.php" class="filtres-activites">
+            <form method="get" action="index.php?page=declarerActivite" class="filtres-activites">
+                <input type="hidden" name="page" value="declarerActivite">
                 <div class="bord-champ champ-recherche">
                     <label for="recherche">Rechercher</label>
                     <input type="text" id="recherche" name="recherche" placeholder="Titre de l'activité" value="<?= htmlspecialchars($recherche) ?>">
@@ -175,7 +176,7 @@
                 <div class="filtres-boutons">
                     <button type="submit">Filtrer</button>
                     <?php if ($filtreActif): ?>
-                        <a href="declarerActivite.php" class="lien-effacer">Effacer</a>
+                        <a href="index.php?page=declarerActivite" class="lien-effacer">Effacer</a>
                     <?php endif; ?>
                 </div>
             </form>
@@ -188,17 +189,17 @@
                         <tr>
                             <th>Catégorie</th>
                             <th>
-                                <a class="lien-tri" href="?<?= $filtresUrl ?>&tri=type&ordre=<?= $tri === 'type' ? $ordreInverse : 'asc' ?>">
+                                <a class="lien-tri" href="?page=declarerActivite&<?= $filtresUrl ?>&tri=type&ordre=<?= $tri === 'type' ? $ordreInverse : 'asc' ?>">
                                     Type <?= $tri === 'type' ? ($ordre === 'asc' ? '▲' : '▼') : '' ?>
                                 </a>
                             </th>
                             <th>
-                                <a class="lien-tri" href="?<?= $filtresUrl ?>&tri=titre&ordre=<?= $tri === 'titre' ? $ordreInverse : 'asc' ?>">
+                                <a class="lien-tri" href="?page=declarerActivite&<?= $filtresUrl ?>&tri=titre&ordre=<?= $tri === 'titre' ? $ordreInverse : 'asc' ?>">
                                     Titre <?= $tri === 'titre' ? ($ordre === 'asc' ? '▲' : '▼') : '' ?>
                                 </a>
                             </th>
                             <th>
-                                <a class="lien-tri" href="?<?= $filtresUrl ?>&tri=date&ordre=<?= $tri === 'date' ? $ordreInverse : 'desc' ?>">
+                                <a class="lien-tri" href="?page=declarerActivite&<?= $filtresUrl ?>&tri=date&ordre=<?= $tri === 'date' ? $ordreInverse : 'desc' ?>">
                                     Du <?= $tri === 'date' ? ($ordre === 'asc' ? '▲' : '▼') : '' ?>
                                 </a>
                             </th>
@@ -206,7 +207,7 @@
                             <th>Rôle</th>
                             <th>Détails</th>
                             <th>
-                                <a class="lien-tri" href="?<?= $filtresUrl ?>&tri=etat&ordre=<?= $tri === 'etat' ? $ordreInverse : 'desc' ?>">
+                                <a class="lien-tri" href="?page=declarerActivite&<?= $filtresUrl ?>&tri=etat&ordre=<?= $tri === 'etat' ? $ordreInverse : 'desc' ?>">
                                     Statut <?= $tri === 'etat' ? ($ordre === 'asc' ? '▲' : '▼') : '' ?>
                                 </a>
                             </th>

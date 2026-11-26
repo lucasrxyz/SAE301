@@ -43,7 +43,7 @@ if ($personnel && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $personnelModele->modifier($idPersonnel, $ancienNom, $nom, $prenom, $mail);
 
         // Recharge la page avec le message de réussite
-        header('Location: modifierPersonnel.php?id=' . $idPersonnel . '&modifie=1');
+        header('Location: index.php?page=modifierPersonnel&id=' . $idPersonnel . '&modifie=1');
         exit;
     }
 }

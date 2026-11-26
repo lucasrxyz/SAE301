@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Importer mes enseignements</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
     <?php // Barre de navigation, commune à toutes les pages ?>
@@ -24,7 +24,7 @@
         <?php endif; ?>
 
         <?php // Choix du fichier (enctype est obligatoire pour envoyer un fichier) ?>
-        <form method="post" action="importerEnseignement.php" enctype="multipart/form-data">
+        <form method="post" action="index.php?page=importerEnseignement" enctype="multipart/form-data">
             <label for="fichier">Fichier ICS (5 Mo maximum)</label>
             <input type="file" name="fichier" id="fichier" accept=".ics" required>
             <button type="submit" name="previsualiser" value="1">Prévisualiser</button>
@@ -54,9 +54,9 @@
                 </table>
             </div>
             <?php // Bouton pour confirmer l'import, ou annuler ?>
-            <form method="post" action="importerEnseignement.php">
+            <form method="post" action="index.php?page=importerEnseignement">
                 <button type="submit" name="importer" value="1">Importer</button>
-                <a href="importerEnseignement.php">Annuler</a>
+                <a href="index.php?page=importerEnseignement">Annuler</a>
             </form>
         <?php endif; ?>
     </main>

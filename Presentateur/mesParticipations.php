@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $activiteModele->repondre($idActivite, $idPersonnel, $confirme);
 
     // Recharge la page avec le message de réussite
-    header('Location: mesParticipations.php?reponse=' . ($confirme === 'true' ? 'confirmee' : 'refusee'));
+    header('Location: index.php?page=mesParticipations&reponse=' . ($confirme === 'true' ? 'confirmee' : 'refusee'));
     exit;
 }
 

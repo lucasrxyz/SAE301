@@ -108,7 +108,7 @@ if ($personnel && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $rattachementModele->ajouter($idPersonnel, $idDepartement, $idGroupe, $typeRattachementChoisi, $dateDebutSaisie, $dateFinEnregistree);
 
             // Recharge la page avec le message de réussite
-            header('Location: ajouterRattachement.php?id=' . $idPersonnel . '&ajoute=1');
+            header('Location: index.php?page=ajouterRattachement&id=' . $idPersonnel . '&ajoute=1');
             exit;
         }
     }

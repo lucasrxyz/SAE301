@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idPersonnel = $personnelModele->ajouter($nomSaisi, $prenomSaisi, $mailSaisi, $dateArriveeSaisie, $statutSaisi, $quotite);
 
         // Envoie vers la page pour lui ajouter un rattachement
-        header('Location: ajouterRattachement.php?id=' . $idPersonnel);
+        header('Location: index.php?page=ajouterRattachement&id=' . $idPersonnel);
         exit;
     }
 }

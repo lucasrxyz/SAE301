@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['apercu']) || isset($
                 $nbImportees = $publicationModele->importer($publications, $idPersonnel);
 
                 // Recharge la page avec le nombre d'imports
-                header('Location: importerPublications.php?importees=' . $nbImportees);
+                header('Location: index.php?page=importerPublications&importees=' . $nbImportees);
                 exit;
             }
         }

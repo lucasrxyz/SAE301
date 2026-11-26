@@ -51,7 +51,7 @@ class Droits
     public static function exiger($action)
     {
         if (!self::verifier($action)) {
-            header('Location: accesRefuse.php');
+            header('Location: index.php?page=accesRefuse');
             exit;
         }
     }
@@ -60,12 +60,12 @@ class Droits
     public static function pageAccueil()
     {
         if (self::verifier('voir_tableau_bord')) {
-            return 'tableauDeBord.php';
+            return 'index.php?page=tableauDeBord';
         }
         if (self::verifier('declarer_activite')) {
-            return 'declarerActivite.php';
+            return 'index.php?page=declarerActivite';
         }
-        return 'accesRefuse.php';
+        return 'index.php?page=accesRefuse';
     }
 
     // Dit ce que la personne peut voir : le laboratoire, un département, un groupe ou elle-même

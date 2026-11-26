@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Pas connecté : on renvoie vers la page de connexion
 if (empty($_SESSION['identifiant'])) {
-    header('Location: connexion.php');
+    header('Location: index.php?page=connexion');
     exit;
 }
 
@@ -19,7 +19,7 @@ require_once __DIR__ . '/../Model/Activite.php';
 // Si le compte a été désactivé entre-temps, on déconnecte la personne
 $compteModele = new Compte($pdo);
 if (!$compteModele->estActif($_SESSION['id_compte'])) {
-    header('Location: deconnexion.php');
+    header('Location: index.php?page=deconnexion');
     exit;
 }
 

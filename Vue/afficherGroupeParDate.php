@@ -4,7 +4,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Groupes par période</title>
-        <link rel="stylesheet" href="../Vue/style.css" />
+        <link rel="stylesheet" href="Vue/style.css" />
     </head>
     <body>
         <?php // Barre de navigation, commune à toutes les pages ?>
@@ -15,6 +15,7 @@
 
             <?php // Choix de la période ?>
             <form action="" method="get" class="form">
+                <input type="hidden" name="page" value="afficherGroupeParDate">
                 <label>Du <input type="date" name="debut" value="<?= htmlspecialchars($debut) ?>" required /></label>
                 <label>au <input type="date" name="fin" value="<?= htmlspecialchars($fin) ?>" required /></label>
                 <button type="submit">Afficher</button>

@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $estRH && ($_POST['desactiver'] ?? 
         $erreurDesactivation = 'La date de départ doit être au moins le ' . date('d/m/Y', strtotime($dateMinimum)) . '.';
     } else {
         $personnelModele->desactiver($idPersonnel, $datedepart);
-        header('Location: ficheDetailleePersonnel.php?id=' . $idPersonnel . '&desactive=1');
+        header('Location: index.php?page=ficheDetailleePersonnel&id=' . $idPersonnel . '&desactive=1');
         exit;
     }
 }
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $estRH && isset($_POST['modifier_id
         $erreurIdentite = 'Cet IdHAL est déjà utilisé par ' . $doublonIdhal['prenom'] . ' ' . $doublonIdhal['nom'] . '.';
     } else {
         $personnelModele->modifierIdentifiants($idPersonnel, $orcid, $idhal);
-        header('Location: ficheDetailleePersonnel.php?id=' . $idPersonnel . '&identifiants=1');
+        header('Location: index.php?page=ficheDetailleePersonnel&id=' . $idPersonnel . '&identifiants=1');
         exit;
     }
 }
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $estRH && isset($_POST['changer_nom
         $erreurIdentite = 'Le nouveau nom est identique au nom actuel.';
     } else {
         $personnelModele->changerNom($idPersonnel, $nomActuel, $nouveauNom, $dateChangement);
-        header('Location: ficheDetailleePersonnel.php?id=' . $idPersonnel . '&nomchange=1');
+        header('Location: index.php?page=ficheDetailleePersonnel&id=' . $idPersonnel . '&nomchange=1');
         exit;
     }
 }
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cloturer_rattachement
         $erreurClotureRattachement = 'La date de fin ne peut pas être antérieure à la date de début.';
     } else {
         $rattachementModele->cloturer((int) $idRattachementCloture, $dateFinClotureSaisie);
-        header('Location: ficheDetailleePersonnel.php?id=' . $idPersonnel . '&rattachement_cloture=1');
+        header('Location: index.php?page=ficheDetailleePersonnel&id=' . $idPersonnel . '&rattachement_cloture=1');
         exit;
     }
 }
@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['changer_statut']) && 
         $erreurStatut = 'La date d\'effet doit être après le début du statut actuel (' . date('d/m/Y', strtotime($debutStatutActuel)) . ').';
     } else {
         $personnelModele->changerStatut($idPersonnel, $nouveauStatut, $nouvelleQuotite, $dateEffet);
-        header('Location: ficheDetailleePersonnel.php?id=' . $idPersonnel . '&statut_change=1');
+        header('Location: index.php?page=ficheDetailleePersonnel&id=' . $idPersonnel . '&statut_change=1');
         exit;
     }
 }
@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nommer_responsable'])
         $erreurResponsable = 'La date d\'effet doit être après le début du rattachement (' . date('d/m/Y', strtotime($rattachement['date_debut'])) . ').';
     } else {
         $rattachementModele->nommerResponsable($rattachement, $idPersonnel, $dateEffet);
-        header('Location: ficheDetailleePersonnel.php?id=' . $idPersonnel . '&responsable_nomme=1');
+        header('Location: index.php?page=ficheDetailleePersonnel&id=' . $idPersonnel . '&responsable_nomme=1');
         exit;
     }
 }

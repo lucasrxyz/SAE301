@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Connexion | Université Polytechnique Hauts-de-France</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
 
     <?php // Barre simple avec le logo, car personne n'est connecté ?>
     <nav class="navbar">
           <div class="navbar-logo">
-              <img src="../Vue/images/logo-uphf.png" alt="Université Polytechnique Hauts-de-France">
+              <img src="Vue/images/logo-uphf.png" alt="Université Polytechnique Hauts-de-France">
           </div>
     </nav>
 
@@ -27,7 +27,7 @@
             <?php endif; ?>
 
             <?php // Formulaire de connexion ?>
-            <form class="connexion-form" action="connexion.php" method="post">
+            <form class="connexion-form" action="index.php?page=connexion" method="post">
                 <label for="identifiant">Identifiant</label>
                 <input type="text" name="identifiant" id="identifiant" autocomplete="username" required value="<?= htmlspecialchars($identifiant) ?>">
 

@@ -85,7 +85,7 @@ if (isset($_POST['enregistrer'])) {
         }
 
         // Recharge la page avec le message de réussite
-        header('Location: declarerActivite.php?enregistree=1');
+        header('Location: index.php?page=declarerActivite&enregistree=1');
         exit;
     }
 }

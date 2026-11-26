@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $compteModele->creer($idPersonnelChoisi, $identifiantSaisi, $motDePasse, $idRoleChoisi);
 
         // Recharge la page avec le message de réussite
-        header('Location: creerCompte.php?cree=1');
+        header('Location: index.php?page=creerCompte&cree=1');
         exit;
     }
 }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter un rattachement</title>
-    <link rel="stylesheet" href="../Vue/style.css">
+    <link rel="stylesheet" href="Vue/style.css">
 </head>
 <body>
 
@@ -75,11 +75,11 @@
                     <button type="submit">Ajouter le rattachement</button>
                 </form>
 
-                <p><a href="ficheDetailleePersonnel.php?id=<?= urlencode((string) $personnel['id']) ?>">Retour à la fiche</a></p>
+                <p><a href="index.php?page=ficheDetailleePersonnel&id=<?= urlencode((string) $personnel['id']) ?>">Retour à la fiche</a></p>
             <?php else: ?>
                 <h1>Ajouter un rattachement</h1>
                 <p class="message-erreur"><?= htmlspecialchars($erreurRattachement) ?></p>
-                <p><a href="afficherListePersonnel.php">Retour à la liste</a></p>
+                <p><a href="index.php?page=afficherListePersonnel">Retour à la liste</a></p>
             <?php endif; ?>
         </section>
     </main>
